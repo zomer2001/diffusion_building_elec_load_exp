@@ -17,7 +17,7 @@ device = torch.device('cuda')
 # 定义稀疏率和数据长度
 sparsity_rates = [90, 80,70, 50,40, 30,20]
 lengths = [2160]
-methods = ['oridata', 'ours', 'diffts', 'timegan', 'cgan']
+methods = ['oridata', 'wgan', 'diffts','diffts-fft', 'timegan', 'cgan']
 base_dir = '../fakedata'
 test_data_folder = '../testdata'
 
@@ -129,7 +129,7 @@ for test_folder in os.listdir(test_data_folder):
                 else:
                     # 读取合成数据
                     X_train, y_train = X_oridata, y_oridata  # 默认使用 oridata
-                    if method in ['ours', 'diffts']:
+                    if method in ['diffts-fft', 'diffts']:
                         sparsity_folder = os.path.join(base_dir, method, str(sparsity), building_name)
                         for sub_folder in os.listdir(sparsity_folder):
                             sub_folder_path = os.path.join(sparsity_folder, sub_folder)
@@ -148,7 +148,7 @@ for test_folder in os.listdir(test_data_folder):
                                             X_train = torch.cat([X_oridata, X_synth], dim=0)
                                             y_train = torch.cat([y_oridata, y_synth], dim=0)
                                             break
-                    elif method in ['timegan', 'cgan']:
+                    elif method in ['timegan', 'cgan','wgan']:
                         sparsity_folder = os.path.join(base_dir, method, str(sparsity))
                         file_name = f'generated_{building_name}.npy'
                         file_path = os.path.join(sparsity_folder, 'train', file_name)
@@ -168,13 +168,13 @@ for test_folder in os.listdir(test_data_folder):
 
                 # 设置不同方法的 epochs
                 if method == 'oridata':
-                    num_epochs = 5
-                elif method == 'ours':
-                    num_epochs = 90
+                    num_epochs = 2
+                elif method == 'diffts-fft':
+                    num_epochs = 8
                 elif method == 'diffts':
-                    num_epochs = 70
+                    num_epochs = 2
                 else:  # timegan, cgan
-                    num_epochs = 5
+                    num_epochs = 2
 
                 # 初始化模型、损失函数和优化器
                 model = GRUModel(input_size=6).to(device)
@@ -202,7 +202,7 @@ for test_folder in os.listdir(test_data_folder):
                         pbar.update(1)
 
                 # 保存训练曲线
-                #save_training_curve(history, building_name, sparsity, method)
+                save_training_curve(history, building_name, sparsity, method)
 
                 # 测试模型
                 model.eval()
@@ -219,7 +219,7 @@ for test_folder in os.listdir(test_data_folder):
 
 # 保存所有结果到总 CSV
 if results_all:
-    output_dir = '../results/gru'
+    output_dir = '../results/gru_2160'
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
     results_df = pd.DataFrame(results_all)

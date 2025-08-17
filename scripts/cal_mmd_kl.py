@@ -9,10 +9,10 @@ warnings.filterwarnings('ignore')
 
 # 定义稀疏率和数据长度
 sparsity_rates = [90, 70, 50, 30]
-lengths = [720]
-methods = ['ours', 'diffts', 'timegan', 'cgan']
-base_dir = 'fakedata'
-test_data_folder = 'train_and_testdata'
+lengths = [4320]
+methods = ['diffts-fft', 'diffts', 'timegan', 'cgan','wgan']
+base_dir = '../fakedata'
+test_data_folder = '../testdata'
 
 # 计算 KL 散度
 def compute_kl_divergence(data1, data2, bins=100):
@@ -74,7 +74,7 @@ for test_folder in os.listdir(test_data_folder):
         length = int(parts[-2])
         sparsity = int(parts[-1])
 
-        if length == 720 and sparsity in sparsity_rates:
+        if length == 4320 and sparsity in sparsity_rates:
             # 读取测试集数据
             test_file = os.path.join(test_data_folder, test_folder, 'samples', 'energy_norm_truth_24_test.npy')
             if not os.path.exists(test_file):
@@ -104,7 +104,7 @@ for test_folder in os.listdir(test_data_folder):
 
                 # 读取合成数据
                 synth_data = None
-                if method in ['ours', 'diffts']:
+                if method in ['diffts-fft', 'diffts']:
                     sparsity_folder = os.path.join(base_dir, method, str(sparsity), building_name)
                     for sub_folder in os.listdir(sparsity_folder):
                         sub_folder_path = os.path.join(sparsity_folder, sub_folder)
@@ -118,7 +118,7 @@ for test_folder in os.listdir(test_data_folder):
                                             print(f"Invalid shape for {file_path}: {synth_data.shape}, skipping...")
                                             synth_data = None
                                         break
-                elif method in ['timegan', 'cgan']:
+                elif method in ['timegan', 'cgan','wgan']:
                     sparsity_folder = os.path.join(base_dir, method, str(sparsity))
                     file_name = f'generated_{building_name}.npy'
                     file_path = os.path.join(sparsity_folder, 'train', file_name)
@@ -147,7 +147,7 @@ for test_folder in os.listdir(test_data_folder):
 
 # 保存所有结果到统一 CSV
 if results_all:
-    output_dir = 'results/distribution'
+    output_dir = '../results/distribution_4320'
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
     results_df = pd.DataFrame(results_all)
