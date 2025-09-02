@@ -48,7 +48,7 @@ MARKER_CONFIG = {
 
 # ==================== 数据处理 ====================
 # 1. 读取CSV文件
-df = pd.read_csv('summary_metrics.csv')
+df = pd.read_csv("script\modified_methods.csv")
 
 # 确保 Sparsity 是数值型且排序
 df['Sparsity'] = pd.to_numeric(df['Sparsity'], errors='coerce')
@@ -56,9 +56,9 @@ df.sort_values(by='Sparsity', inplace=True)
 
 # 确保"ours"方法在最后
 methods = df['Method'].unique().tolist()
-if 'diffts-fft' in methods:
-    methods.remove('diffts-fft')
-    methods.append('diffts-fft')
+if 'OURS' in methods:
+    methods.remove('OURS')
+    methods.append('OURS')
 print(f"调整后的方法顺序: {methods}")
 
 # 2. 打印绘图数据 (只关注MMD)

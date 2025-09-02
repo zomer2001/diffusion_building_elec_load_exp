@@ -36,7 +36,7 @@ PALETTE = sns.color_palette([
 
 # ==================== 数据处理 ====================
 # 读取数据
-df = pd.read_csv('../../results/lstm_2160/all_results.csv')
+df = pd.read_csv('../../results/bilstm_2160/all_results.csv')
 
 # 1. 方法名称映射和排序
 method_mapping = {
