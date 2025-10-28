@@ -6,14 +6,14 @@ import numpy as np
 # ==================== 全局样式设置 ====================
 plt.rcParams.update({
     'font.family': 'Times New Roman',
-    'font.size': 12,
-    'axes.titlesize': 14,
-    'axes.labelsize': 12,
-    'xtick.labelsize': 11,
-    'ytick.labelsize': 11,
-    'legend.fontsize': 11,
-    'figure.dpi': 300,
-    'savefig.dpi': 300,
+    'font.size': 14,  # 增大基础字体大小
+    'axes.titlesize': 16,  # 增大标题字体
+    'axes.labelsize': 15,  # 增大轴标签字体
+    'xtick.labelsize': 13,  # 增大x轴刻度标签字体
+    'ytick.labelsize': 13,  # 增大y轴刻度标签字体
+    'legend.fontsize': 13,  # 增大图例字体
+    'figure.dpi': 600,  # 提高分辨率
+    'savefig.dpi': 600,  # 提高保存分辨率
     'mathtext.fontset': 'stix',
     'axes.grid': True,
     'grid.linestyle': '--',
@@ -47,7 +47,7 @@ method_mapping = {
     'diffts': 'DDPM',
     'diffts-fft': 'OURS',
     'wgan': 'VAEGAN',
-    'oridata': 'oridata'
+    'oridata': 'Real Data'
 }
 
 # 存储所有模型的数据
@@ -82,7 +82,7 @@ combined_df['Method'] = pd.Categorical(combined_df['Method'], categories=method_
 combined_df = combined_df.sort_values('Method')
 
 # ==================== 折线图绘制 ====================
-plt.figure(figsize=(10, 6), tight_layout=True)
+plt.figure(figsize=(12, 8), tight_layout=True)  # 增大图形尺寸
 ax = plt.gca()
 
 # 绘制折线图
@@ -94,29 +94,30 @@ sns.lineplot(
     style='Model',
     markers=True,
     dashes=False,
-    markersize=10,
-    linewidth=2,
+    markersize=16,  # 增大标记大小
+    linewidth=3,    # 增大线宽
     palette=MODEL_PALETTE,
     ax=ax
 )
 
 # 设置标题和标签
 plt.title('MAE Comparison Across Different Models (70% Training Data)',
-          fontsize=14, pad=12, weight='semibold')
-plt.xlabel('Generation Method', weight='semibold')
-plt.ylabel('MAE', weight='semibold')
+          fontsize=20, pad=15, weight='bold')  # 增大标题字体
+plt.xlabel('Generation Method', weight='bold', fontsize=18)  # 增大标签字体
+plt.ylabel('MAE', weight='bold', fontsize=18)  # 增大标签字体
 
 # 优化图例
 handles, labels = ax.get_legend_handles_labels()
 ax.legend(
     handles, labels,
     title='Prediction Model',
-    title_fontsize='12',
+    title_fontsize='14',  # 增大图例标题字体
     frameon=True,
     shadow=True,
     fancybox=True,
     bbox_to_anchor=(1.05, 1),
-    loc='upper left'
+    loc='upper left',
+    fontsize=16  # 增大图例字体
 )
 
 # 添加数据标签
@@ -125,17 +126,20 @@ for model in MODEL_PALETTE.keys():
     for i, row in model_data.iterrows():
         ax.text(row['Method'], row['MAE'], f"{row['MAE']:.3f}",
                 color=MODEL_PALETTE[model],
-                fontsize=10, ha='center', va='bottom')
+                fontsize=14, ha='center', va='bottom', weight='bold')  # 增大标签字体
 
 # 添加网格
 plt.grid(True, linestyle=':', alpha=0.5)
 
 # 调整x轴标签角度
-plt.xticks(rotation=15)
+plt.xticks( fontsize=18)  # 增大x轴标签字体
+
+# 设置y轴刻度标签字体大小
+plt.yticks(fontsize=18)
 
 # 保存结果
-plt.savefig('mae_comparison_across_models.pdf', bbox_inches='tight', dpi=300)
-plt.savefig('mae_comparison_across_models.png', bbox_inches='tight', dpi=300)
+plt.savefig('mae_comparison_across_models.pdf', bbox_inches='tight', dpi=600)
+plt.savefig('mae_comparison_across_models.png', bbox_inches='tight', dpi=600)
 print("已保存折线图：mae_comparison_across_models.pdf 和 mae_comparison_across_models.png")
 
 # 显示处理后的数据

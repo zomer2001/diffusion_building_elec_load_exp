@@ -7,14 +7,14 @@ from matplotlib.patches import Rectangle
 # ==================== 全局样式设置 ====================
 plt.rcParams.update({
     'font.family': 'Times New Roman',
-    'font.size': 12,
-    'axes.titlesize': 14,
-    'axes.labelsize': 12,
-    'xtick.labelsize': 11,
-    'ytick.labelsize': 11,
-    'legend.fontsize': 11,
-    'figure.dpi': 300,
-    'savefig.dpi': 300,
+    'font.size': 14,  # 增大基础字体
+    'axes.titlesize': 16,  # 增大标题字体
+    'axes.labelsize': 15,  # 增大轴标签字体
+    'xtick.labelsize': 13,  # 增大刻度标签字体
+    'ytick.labelsize': 13,
+    'legend.fontsize': 13,  # 增大图例字体
+    'figure.dpi': 1200,  # 提高分辨率
+    'savefig.dpi': 1200,
     'mathtext.fontset': 'stix',
     'axes.grid': True,
     'grid.linestyle': ':',
@@ -73,8 +73,9 @@ metric_names = ['MAE', 'MSE', 'RMSE', 'MAPE (%)']
 titles = ['(a) MAE Comparison', '(b) MSE Comparison',
           '(c) RMSE Comparison', '(d) MAPE Comparison']
 
-fig, axes = plt.subplots(2, 2, figsize=(14, 12), constrained_layout=True)
-fig.suptitle('Performance Comparison of Different Methods', fontsize=16, weight='bold')
+# 增大图形尺寸
+fig, axes = plt.subplots(2, 2, figsize=(16, 14), constrained_layout=True)
+fig.suptitle('Performance Comparison of Different Methods', fontsize=18, weight='bold', y=0.98)
 
 # 自定义标记样式
 hatch_pattern = '////'  # OURS的填充样式
@@ -96,7 +97,7 @@ for i, (ax, metric, name, title) in enumerate(zip(
         ax=ax,
         palette=PALETTE,
         edgecolor='black',
-        linewidth=0.5,
+        linewidth=0.8,  # 增大边框宽度
         saturation=0.9,
         dodge=True
     )
@@ -109,59 +110,74 @@ for i, (ax, metric, name, title) in enumerate(zip(
         if method == 'OURS':
             bar.set_hatch(hatch_pattern)
             bar.set_edgecolor('black')
-            bar.set_linewidth(1.2)
+            bar.set_linewidth(1.5)  # 增大OURS边框宽度
 
     # 设置标题和标签
-    ax.set_title(title, fontsize=13, pad=12, weight='semibold')
-    ax.set_xlabel('Training Data Split (%)', weight='semibold')
-    ax.set_ylabel(name, weight='semibold')
+    ax.set_title(title, fontsize=15, pad=15, weight='semibold')
+    ax.set_xlabel('Training Data Split (%)', weight='semibold', fontsize=14)
+    ax.set_ylabel(name, weight='semibold', fontsize=14)
 
     # 修改x轴标签
-    ax.set_xticklabels(['30%', '50%', '70%', '90%'])
+    ax.set_xticklabels(['30%', '50%', '70%', '90%'], fontsize=13)
+    ax.tick_params(axis='y', labelsize=13)
 
-    # 优化图例
-    if i != 0:
-        ax.get_legend().remove()
-    else:
+    # 只在第一个子图创建图例
+    if i == 0:
+        # 获取默认图例的句柄和标签
         handles, labels = ax.get_legend_handles_labels()
+
         # 创建自定义图例项
         legend_handles = []
-        for handle, label in zip(handles, labels):
-            if label == 'kk':
-                # 创建一个带填充样式的矩形
-                patch = Rectangle((0, 0), 1, 1,
-                                  facecolor=handle.get_facecolor(),
+        for j, label in enumerate(labels):
+            # 获取该方法的颜色
+            color = PALETTE[j % len(PALETTE)]
+
+            if label == 'OURS':
+                # 创建一个带填充样式的矩形，增大尺寸
+                patch = Rectangle((0, 0), 1.2, 1.2,  # 增大尺寸
+                                  facecolor=color,
                                   edgecolor='black',
                                   hatch=hatch_pattern,
-                                  linewidth=1.2)
+                                  linewidth=1.5)
                 legend_handles.append(patch)
             else:
-                legend_handles.append(handle)
+                # 创建一个普通矩形
+                patch = Rectangle((0, 0), 1.2, 1.2,
+                                  facecolor=color,
+                                  edgecolor='black',
+                                  linewidth=1.5)
+                legend_handles.append(patch)
 
+        # 在第一个子图中创建图例
         legend = ax.legend(
             legend_handles, labels,
             title='Methods',
-            title_fontsize='12',
+            title_fontsize=15,  # 增大图例标题字体
             frameon=True,
-            bbox_to_anchor=(1.05, 1),
-            loc='upper left'
+            loc='best',  # 自动选择最佳位置
+            fontsize=13,  # 增大图例字体
+            framealpha=0.8
         )
+
         # 加粗显示我们的方法
         for text in legend.get_texts():
             if text.get_text() == 'OURS':
                 text.set_fontweight('bold')
+    else:
+        # 移除其他子图的图例
+        ax.get_legend().remove()
 
 # 调整布局并保存
 plt.tight_layout()
-plt.subplots_adjust(top=0.92)
 
 # 保存为图片格式
-plt.savefig('performance_comparison.pdf', bbox_inches='tight', dpi=300)
-plt.savefig('performance_comparison.png', bbox_inches='tight', dpi=300)
+plt.savefig('performance_comparison.pdf', bbox_inches='tight', dpi=600)
+plt.savefig('performance_comparison.png', bbox_inches='tight', dpi=600)
 print("已保存柱状图：performance_comparison.pdf 和 performance_comparison.png")
 
 # ==================== MAE折线图绘制 ====================
-plt.figure(figsize=(8, 6), tight_layout=True)
+# 增大图形尺寸
+plt.figure(figsize=(10, 8), tight_layout=True)
 ax = plt.gca()
 
 sns.lineplot(
@@ -173,35 +189,70 @@ sns.lineplot(
     style='Method',
     markers=True,
     dashes=False,
-    markersize=8,
-    linewidth=2,
+    markersize=10,  # 增大标记尺寸
+    linewidth=3,  # 增大线宽
     palette=PALETTE,
     ax=ax
 )
 
 # 设置标题和标签
-plt.title('MAE Trends with Increasing Training Data', fontsize=14, pad=12, weight='semibold')
-plt.xlabel('Training Data Split (%)', weight='semibold')
-plt.ylabel('MAE', weight='semibold')
-plt.xticks([30, 50, 70, 90], ['30%', '50%', '70%', '90%'])
+plt.title('MAE Trends with Increasing Training Data', fontsize=16, pad=15, weight='semibold')
+plt.xlabel('Training Data Split (%)', weight='semibold', fontsize=15)
+plt.ylabel('MAE', weight='semibold', fontsize=15)
+plt.xticks([30, 50, 70, 90], ['30%', '50%', '70%', '90%'], fontsize=13)
+plt.yticks(fontsize=13)
 
-# 优化图例
+# 优化图例 - 放置在图表中央
 handles, labels = ax.get_legend_handles_labels()
-ax.legend(
-    handles[1:], labels[1:],
+# 创建自定义图例项
+legend_handles = []
+for j, label in enumerate(labels):
+    # 获取该方法的颜色
+    color = PALETTE[j % len(PALETTE)]
+
+    if label == 'OURS':
+        # 创建一个带填充样式的矩形，增大尺寸
+        patch = Rectangle((0, 0), 1.2, 1.2,  # 增大尺寸
+                          facecolor=color,
+                          edgecolor='black',
+                          hatch=hatch_pattern,
+                          linewidth=1.5)
+        legend_handles.append(patch)
+    else:
+        # 创建一个普通矩形
+        patch = Rectangle((0, 0), 1.2, 1.2,
+                          facecolor=color,
+                          edgecolor='black',
+                          linewidth=1.5)
+        legend_handles.append(patch)
+
+# 将图例放置在图表中央
+legend = ax.legend(
+    legend_handles, labels,
     title='Methods',
-    loc='upper left',
-    bbox_to_anchor=(1, 1),
-    title_fontsize='12',
-    frameon=True
+    title_fontsize=15,  # 增大图例标题字体
+    loc='upper center',
+    bbox_to_anchor=(0.5, 0.98),  # 放置在中央上方
+    ncol=3,  # 三列排列
+    fontsize=13,  # 增大图例字体
+    frameon=True,
+    columnspacing=1.5,  # 增加列间距
+    handletextpad=0.5,  # 调整图例项与文本间距
+    handlelength=1.5,  # 增大图例项长度
+    handleheight=1.5  # 增大图例项高度
 )
+
+# 加粗显示我们的方法
+for text in legend.get_texts():
+    if text.get_text() == 'OURS':
+        text.set_fontweight('bold')
 
 # 添加网格
 plt.grid(True, linestyle=':', alpha=0.7)
 
 # 保存结果
-plt.savefig('mae_trends.pdf', bbox_inches='tight', dpi=300)
-plt.savefig('mae_trends.png', bbox_inches='tight', dpi=300)
+plt.savefig('mae_trends.pdf', bbox_inches='tight', dpi=600)
+plt.savefig('mae_trends.png', bbox_inches='tight', dpi=600)
 print("已保存折线图：mae_trends.pdf 和 mae_trends.png")
 
 # 显示处理后的数据摘要

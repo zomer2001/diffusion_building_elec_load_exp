@@ -10,14 +10,14 @@ from matplotlib.patches import Rectangle
 # ==================== 高级学术样式设置 ====================
 rcParams.update({
     'font.family': 'Times New Roman',
-    'font.size': 12,
-    'axes.titlesize': 14,
-    'axes.labelsize': 12,
-    'xtick.labelsize': 11,
-    'ytick.labelsize': 11,
-    'legend.fontsize': 11,
-    'figure.dpi': 600,
-    'savefig.dpi': 600,
+    'font.size': 15,  # 增加字体大小
+    'axes.titlesize': 18,
+    'axes.labelsize': 16,
+    'xtick.labelsize': 14,
+    'ytick.labelsize': 14,
+    'legend.fontsize': 14,
+    'figure.dpi': 1200,
+    'savefig.dpi': 1200,
     'mathtext.fontset': 'stix',
     'axes.grid': True,
     'grid.linestyle': '--',
@@ -25,10 +25,10 @@ rcParams.update({
     'legend.frameon': True,
     'legend.framealpha': 0.95,
     'legend.edgecolor': '0.3',
-    'axes.linewidth': 0.8,
+    'axes.linewidth': 1.0,
     'axes.edgecolor': '0.3',
-    'xtick.major.width': 0.8,
-    'ytick.major.width': 0.8,
+    'xtick.major.width': 1.0,
+    'ytick.major.width': 1.0,
     'figure.constrained_layout.use': True,
 })
 
@@ -81,7 +81,7 @@ def process_data(csv_path, sample_size=60):
 # ==================== 高级可视化函数 ====================
 def create_combined_plot(stats_df, sample_size):
     # 创建图形和轴
-    fig = plt.figure(figsize=(14, 8), facecolor=PALETTE['background'])
+    fig = plt.figure(figsize=(16, 10), facecolor=PALETTE['background'])
     ax1 = plt.gca()
 
     # 设置网格样式
@@ -89,7 +89,7 @@ def create_combined_plot(stats_df, sample_size):
 
     # 设置学术化标题
     plt.title(f'Building Type Performance Analysis',
-              fontsize=14, pad=20, weight='bold', color=PALETTE['text'])
+              fontsize=20, pad=20, weight='bold', color=PALETTE['text'])  # 增大标题字体
 
     # 绘制柱状图（数量）
     bars = ax1.bar(
@@ -98,7 +98,7 @@ def create_combined_plot(stats_df, sample_size):
         color=PALETTE['bar'],
         alpha=0.9,
         edgecolor='white',
-        linewidth=1.2,
+        linewidth=1.5,
         label='Number of Buildings'
     )
 
@@ -108,17 +108,17 @@ def create_combined_plot(stats_df, sample_size):
         ax1.text(bar.get_x() + bar.get_width() / 2., height,
                  f'{int(height)}',
                  ha='center', va='bottom',
-                 fontsize=10, color='white', weight='bold',
+                 fontsize=18, color='white', weight='bold',  # 增大标签字体
                  bbox=dict(facecolor=PALETTE['bar'], alpha=0.9, boxstyle='round,pad=0.2'))
 
     # 设置第一个y轴（数量）
-    ax1.set_xlabel('Building Type', fontweight='semibold', color=PALETTE['text'])
-    ax1.set_ylabel('Number of Buildings', fontweight='semibold', color=PALETTE['text'])
+    ax1.set_xlabel('Building Type', fontweight='semibold', color=PALETTE['text'], fontsize=18)
+    ax1.set_ylabel('Number of Buildings', fontweight='semibold', color=PALETTE['text'], fontsize=16)
     ax1.yaxis.set_major_locator(MaxNLocator(integer=True))
 
     # 设置y轴范围，留出空间给MAE标签
     max_count = stats_df['Count'].max()
-    ax1.set_ylim(0, max_count * 1.2)
+    ax1.set_ylim(0, max_count * 1.25)
 
     # 创建第二个y轴（MAE）
     ax2 = ax1.twinx()
@@ -129,10 +129,10 @@ def create_combined_plot(stats_df, sample_size):
         stats_df['MAE_Mean'],
         color=PALETTE['line'],
         marker='o',
-        markersize=10,
+        markersize=16,  # 增大标记大小
         markeredgecolor='white',
-        markeredgewidth=1.5,
-        linewidth=2.5,
+        markeredgewidth=2.0,
+        linewidth=3.0,
         label='Average MAE'
     )
 
@@ -141,15 +141,15 @@ def create_combined_plot(stats_df, sample_size):
         ax2.text(i, mae, f'{mae:.3f}',
                  color='white',
                  ha='center', va='center',
-                 fontsize=10, weight='bold',
+                 fontsize=16, weight='bold',  # 增大标签字体
                  bbox=dict(facecolor=PALETTE['line'], alpha=0.9, boxstyle='round,pad=0.3'))
 
     # 设置第二个y轴
-    ax2.set_ylabel('Average MAE', fontweight='semibold', color=PALETTE['text'])
+    ax2.set_ylabel('Average MAE', fontweight='semibold', color=PALETTE['text'], fontsize=18)
 
     # 设置y轴范围，留出空间给标签
     max_mae = stats_df['MAE_Mean'].max()
-    ax2.set_ylim(0, max_mae * 1.25)
+    ax2.set_ylim(0, max_mae * 1.3)
 
     # 合并图例
     lines1, labels1 = ax1.get_legend_handles_labels()
@@ -159,24 +159,20 @@ def create_combined_plot(stats_df, sample_size):
                frameon=True,
                shadow=False,
                fancybox=True,
-               edgecolor='0.3')
+               edgecolor='0.3',
+               fontsize=16)  # 增大图例字体
 
     # 旋转x轴标签
-    plt.xticks(rotation=45, ha='right', rotation_mode='anchor')
-
-    # 添加水印
-    fig.text(0.5, 0.5, f'Random Sample: {sample_size} Rows',
-             fontsize=40, color='#e0e0e0', alpha=0.15,
-             ha='center', va='center', rotation=30)
+    plt.xticks(rotation=45, ha='right', rotation_mode='anchor', fontsize=18)
 
     # 添加边框
     for spine in ax1.spines.values():
         spine.set_edgecolor('#b0b0b0')
-        spine.set_linewidth(0.8)
+        spine.set_linewidth(1.0)
 
     for spine in ax2.spines.values():
         spine.set_edgecolor('#b0b0b0')
-        spine.set_linewidth(0.8)
+        spine.set_linewidth(1.0)
 
     return fig
 
@@ -206,6 +202,6 @@ if __name__ == "__main__":
     fig = create_combined_plot(building_stats, sample_size)
 
     # 高质量保存
-    fig.savefig('building_type_analysis.pdf', bbox_inches='tight', dpi=600)
-    fig.savefig('building_type_analysis.png', bbox_inches='tight', dpi=600)
+    fig.savefig('building_type_analysis.pdf', bbox_inches='tight', dpi=1200)
+    fig.savefig('building_type_analysis.png', bbox_inches='tight', dpi=1200)
     print("\n已保存图表：building_type_analysis.pdf 和 building_type_analysis.png")

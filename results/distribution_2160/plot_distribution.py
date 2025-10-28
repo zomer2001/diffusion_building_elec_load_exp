@@ -1,5 +1,3 @@
-# 更新后的代码，输出两个图：与oridata比较和与testdata比较
-
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -9,14 +7,14 @@ from matplotlib.patches import Rectangle
 # ==================== 学术论文风格设置 ====================
 plt.rcParams.update({
     'font.family': 'Times New Roman',
-    'font.size': 10,
-    'axes.titlesize': 11,
-    'axes.labelsize': 10,
-    'xtick.labelsize': 9,
-    'ytick.labelsize': 9,
-    'legend.fontsize': 9,
-    'figure.dpi': 600,
-    'savefig.dpi': 600,
+    'font.size': 14,  # 增大基础字体大小
+    'axes.titlesize': 16,  # 增大标题字体
+    'axes.labelsize': 15,  # 增大轴标签字体
+    'xtick.labelsize': 13,  # 增大x轴刻度标签字体
+    'ytick.labelsize': 13,  # 增大y轴刻度标签字体
+    'legend.fontsize': 14,  # 增大图例字体
+    'figure.dpi': 1200,  # 提高分辨率
+    'savefig.dpi': 1200,  # 提高保存分辨率
     'mathtext.fontset': 'stix',
     'axes.grid': True,
     'grid.linestyle': '--',
@@ -24,10 +22,10 @@ plt.rcParams.update({
     'legend.frameon': True,
     'legend.framealpha': 0.9,
     'legend.edgecolor': '0.3',
-    'axes.linewidth': 0.8,
+    'axes.linewidth': 1.0,  # 增加线条宽度
     'axes.edgecolor': '0.3',
-    'xtick.major.width': 0.8,
-    'ytick.major.width': 0.8
+    'xtick.major.width': 1.0,
+    'ytick.major.width': 1.0
 })
 
 # 更新更现代、更具审美的配色方案
@@ -70,7 +68,7 @@ print(df[['Method', 'Sparsity', 'MMD_testdata']])
 
 
 # ==================== 学术柱状图绘图函数 ====================
-def plot_academic_bar(dataframe, metric, title, file_prefix, figsize=(7, 4)):
+def plot_academic_bar(dataframe, metric, title, file_prefix, figsize=(8, 5)):
     """
     绘制学术风格柱状图 - 已改进配色和图例位置
     """
@@ -91,20 +89,20 @@ def plot_academic_bar(dataframe, metric, title, file_prefix, figsize=(7, 4)):
         hue_order=methods,
         palette=MODERN_PALETTE,  # 使用新的现代配色
         edgecolor='black',
-        linewidth=0.5,
+        linewidth=0.8,  # 增加边框宽度
         saturation=0.85,  # 增加饱和度使颜色更鲜明
         dodge=True,
         ax=ax
     )
 
     # 设置标题和标签
-    plt.title(title, fontsize=11, pad=12)
-    plt.xlabel('Sparsity Level (%)', labelpad=8)
-    plt.ylabel('MMD', labelpad=8)
+    plt.title(title, fontsize=16, pad=15, weight='bold')  # 增大标题字体
+    plt.xlabel('Sparsity Level (%)', labelpad=10, fontsize=15, weight='bold')  # 增大标签字体
+    plt.ylabel('MMD', labelpad=10, fontsize=15, weight='bold')  # 增大标签字体
 
     # 设置刻度标签更清晰
-    plt.xticks(rotation=0)
-    plt.yticks()
+    plt.xticks(rotation=0, fontsize=13)  # 增大x轴标签字体
+    plt.yticks(fontsize=13)  # 增大y轴标签字体
 
     # 设置细化的网格线
     ax.yaxis.grid(True, linestyle='--', alpha=0.2)
@@ -120,18 +118,18 @@ def plot_academic_bar(dataframe, metric, title, file_prefix, figsize=(7, 4)):
             for bar in container:
                 bar.set_hatch(hatch)
 
-    # 创建自定义学术图例
+    # 创建自定义学术图例 - 增大图标尺寸
     legend_handles = []
     for i, method in enumerate(methods):
         method_lower = method.lower()
         _, hatch = MARKER_CONFIG.get(method_lower, (None, None))
 
-        # 创建图例项
+        # 创建图例项 - 增大尺寸
         patch = Rectangle(
-            (0, 0), 1, 1,
+            (0, 0), 1.5, 1.5,  # 增大尺寸 (1.5x1.5)
             facecolor=MODERN_PALETTE[i % len(MODERN_PALETTE)],
             edgecolor='black',
-            linewidth=0.5,
+            linewidth=0.8,  # 增加边框宽度
             hatch=hatch
         )
         legend_handles.append(patch)
@@ -147,7 +145,12 @@ def plot_academic_bar(dataframe, metric, title, file_prefix, figsize=(7, 4)):
         frameon=True,
         framealpha=0.9,
         edgecolor='0.5',
-        fancybox=False
+        fancybox=False,
+        fontsize=14,  # 增大图例字体
+        title_fontsize='15',  # 增大图例标题字体
+        handlelength=2.0,  # 增大图例项长度
+        handleheight=2.0,  # 增大图例项高度
+        markerscale=1.5  # 增大图例标记比例
     )
 
     # 设置图例标题更突出
@@ -157,11 +160,11 @@ def plot_academic_bar(dataframe, metric, title, file_prefix, figsize=(7, 4)):
     plt.subplots_adjust(right=0.8)
 
     # 优化布局
-    plt.tight_layout(pad=2.0)
+    plt.tight_layout(pad=3.0)  # 增加内边距
 
     # 保存高质量图像
     for ext in ['.pdf', '.png']:
-        plt.savefig(f'{file_prefix}{ext}', bbox_inches='tight', dpi=600)
+        plt.savefig(f'{file_prefix}{ext}', bbox_inches='tight', dpi=1200)
     print(f"已保存学术图表: {file_prefix}.pdf 和 {file_prefix}.png")
     plt.close()
 
@@ -191,8 +194,8 @@ def plot_comparison_panel(dataframe, file_prefix):
     绘制比较面板图 - 包含原始数据和测试数据的比较
     """
     # 创建图形
-    fig, axs = plt.subplots(1, 2, figsize=(14, 5), dpi=600)
-    fig.suptitle('Distribution Distance Comparison', fontsize=12, y=0.98)
+    fig, axs = plt.subplots(1, 2, figsize=(16, 6), dpi=1200)  # 增大图形尺寸
+    fig.suptitle('Distribution Distance Comparison', fontsize=18, y=0.98, weight='bold')  # 增大标题字体
 
     # 原始数据子图
     ax1 = axs[0]
@@ -204,15 +207,16 @@ def plot_comparison_panel(dataframe, file_prefix):
         hue_order=methods,
         palette=MODERN_PALETTE,
         edgecolor='black',
-        linewidth=0.5,
+        linewidth=0.8,  # 增加边框宽度
         saturation=0.85,
         dodge=True,
         ax=ax1
     )
-    ax1.set_title('Distribution Distance to Original Data (MMD)', fontsize=11)
-    ax1.set_xlabel('Sparsity Level (%)', labelpad=8)
-    ax1.set_ylabel('MMD', labelpad=8)
+    ax1.set_title('Distribution Distance to Original Data (MMD)', fontsize=15, weight='bold')  # 增大子标题字体
+    ax1.set_xlabel('Sparsity Level (%)', labelpad=10, fontsize=14, weight='bold')  # 增大标签字体
+    ax1.set_ylabel('MMD', labelpad=10, fontsize=14, weight='bold')  # 增大标签字体
     ax1.yaxis.grid(True, linestyle='--', alpha=0.2)
+    ax1.tick_params(axis='both', labelsize=13)  # 增大刻度标签字体
 
     # 测试数据子图
     ax2 = axs[1]
@@ -224,15 +228,16 @@ def plot_comparison_panel(dataframe, file_prefix):
         hue_order=methods,
         palette=MODERN_PALETTE,
         edgecolor='black',
-        linewidth=0.5,
+        linewidth=0.8,  # 增加边框宽度
         saturation=0.85,
         dodge=True,
         ax=ax2
     )
-    ax2.set_title('Distribution Distance to Test Data (MMD)', fontsize=11)
-    ax2.set_xlabel('Sparsity Level (%)', labelpad=8)
-    ax2.set_ylabel('', labelpad=8)  # 共享y轴标签
+    ax2.set_title('Distribution Distance to Test Data (MMD)', fontsize=15, weight='bold')  # 增大子标题字体
+    ax2.set_xlabel('Sparsity Level (%)', labelpad=10, fontsize=14, weight='bold')  # 增大标签字体
+    ax2.set_ylabel('', labelpad=10, fontsize=14, weight='bold')  # 共享y轴标签
     ax2.yaxis.grid(True, linestyle='--', alpha=0.2)
+    ax2.tick_params(axis='both', labelsize=13)  # 增大刻度标签字体
 
     # 应用图案到柱状图
     for ax in axs:
@@ -246,23 +251,23 @@ def plot_comparison_panel(dataframe, file_prefix):
         # 移除子图图例
         ax.get_legend().remove()
 
-    # 创建自定义图例
+    # 创建自定义图例 - 增大图标尺寸
     legend_handles = []
     for i, method in enumerate(methods):
         method_lower = method.lower()
         _, hatch = MARKER_CONFIG.get(method_lower, (None, None))
 
         patch = Rectangle(
-            (0, 0), 1, 1,
+            (0, 0), 2, 2,  # 增大尺寸 (1.5x1.5)
             facecolor=MODERN_PALETTE[i % len(MODERN_PALETTE)],
             edgecolor='black',
-            linewidth=0.5,
+            linewidth=0.8,  # 增加边框宽度
             hatch=hatch
         )
         legend_handles.append(patch)
 
-    # 添加共享图例
-    fig.legend(
+    # 添加共享图例 - 增大图标尺寸
+    leg = fig.legend(
         handles=legend_handles,
         labels=methods,
         title='Methods',
@@ -272,15 +277,21 @@ def plot_comparison_panel(dataframe, file_prefix):
         frameon=True,
         framealpha=0.9,
         edgecolor='0.5',
-        fancybox=False
+        fancybox=False,
+        fontsize=14,  # 增大图例字体
+        title_fontsize='15',  # 增大图例标题字体
+        handlelength=2.0,  # 增大图例项长度
+        handleheight=2.0,  # 增大图例项高度
+        markerscale=1.5  # 增大图例标记比例
     )
+    leg.get_title().set_fontweight('bold')  # 设置图例标题为粗体
 
     # 调整布局
-    plt.tight_layout(pad=3.0, rect=[0, 0, 1, 0.92])
+    plt.tight_layout(pad=4.0, rect=[0, 0, 1, 0.92])  # 增加内边距
 
     # 保存高质量图像
     for ext in ['.pdf', '.png']:
-        plt.savefig(f'{file_prefix}{ext}', bbox_inches='tight', dpi=600)
+        plt.savefig(f'{file_prefix}{ext}', bbox_inches='tight', dpi=1200)
     print(f"已保存面板比较图: {file_prefix}.pdf 和 {file_prefix}.png")
     plt.close()
 
