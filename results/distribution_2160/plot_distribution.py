@@ -12,7 +12,7 @@ plt.rcParams.update({
     'axes.labelsize': 15,  # 增大轴标签字体
     'xtick.labelsize': 13,  # 增大x轴刻度标签字体
     'ytick.labelsize': 13,  # 增大y轴刻度标签字体
-    'legend.fontsize': 14,  # 增大图例字体
+    'legend.wspace': 14,  # 增大图例字体
     'figure.dpi': 1200,  # 提高分辨率
     'savefig.dpi': 1200,  # 提高保存分辨率
     'mathtext.fontset': 'stix',
@@ -96,13 +96,13 @@ def plot_academic_bar(dataframe, metric, title, file_prefix, figsize=(8, 5)):
     )
 
     # 设置标题和标签
-    plt.title(title, fontsize=16, pad=15, weight='bold')  # 增大标题字体
-    plt.xlabel('Sparsity Level (%)', labelpad=10, fontsize=15, weight='bold')  # 增大标签字体
-    plt.ylabel('MMD', labelpad=10, fontsize=15, weight='bold')  # 增大标签字体
+    plt.title(title, fontsize=18, pad=15, weight='bold')  # 增大标题字体
+    plt.xlabel('Sparsity Level (%)', labelpad=10, fontsize=17, weight='bold')  # 增大标签字体
+    plt.ylabel('MMD', labelpad=10, fontsize=17, weight='bold')  # 增大标签字体
 
     # 设置刻度标签更清晰
-    plt.xticks(rotation=0, fontsize=13)  # 增大x轴标签字体
-    plt.yticks(fontsize=13)  # 增大y轴标签字体
+    plt.xticks(rotation=0, fontsize=15)  # 增大x轴标签字体
+    plt.yticks(fontsize=15)  # 增大y轴标签字体
 
     # 设置细化的网格线
     ax.yaxis.grid(True, linestyle='--', alpha=0.2)
@@ -195,7 +195,7 @@ def plot_comparison_panel(dataframe, file_prefix):
     """
     # 创建图形
     fig, axs = plt.subplots(1, 2, figsize=(16, 6), dpi=1200)  # 增大图形尺寸
-    fig.suptitle('Distribution Distance Comparison', fontsize=18, y=0.98, weight='bold')  # 增大标题字体
+    fig.suptitle('Distribution Distance Comparison', fontsize=20, y=0.98, weight='bold')  # 增大标题字体
 
     # 原始数据子图
     ax1 = axs[0]
@@ -212,9 +212,9 @@ def plot_comparison_panel(dataframe, file_prefix):
         dodge=True,
         ax=ax1
     )
-    ax1.set_title('Distribution Distance to Original Data (MMD)', fontsize=15, weight='bold')  # 增大子标题字体
-    ax1.set_xlabel('Sparsity Level (%)', labelpad=10, fontsize=14, weight='bold')  # 增大标签字体
-    ax1.set_ylabel('MMD', labelpad=10, fontsize=14, weight='bold')  # 增大标签字体
+    ax1.set_title('Distribution Distance to Original Data (MMD)', fontsize=18, weight='bold')  # 增大子标题字体
+    ax1.set_xlabel('Sparsity Level (%)', labelpad=10, fontsize=16, weight='bold')  # 增大标签字体
+    ax1.set_ylabel('MMD', labelpad=10, fontsize=16, weight='bold')  # 增大标签字体
     ax1.yaxis.grid(True, linestyle='--', alpha=0.2)
     ax1.tick_params(axis='both', labelsize=13)  # 增大刻度标签字体
 
@@ -233,9 +233,9 @@ def plot_comparison_panel(dataframe, file_prefix):
         dodge=True,
         ax=ax2
     )
-    ax2.set_title('Distribution Distance to Test Data (MMD)', fontsize=15, weight='bold')  # 增大子标题字体
-    ax2.set_xlabel('Sparsity Level (%)', labelpad=10, fontsize=14, weight='bold')  # 增大标签字体
-    ax2.set_ylabel('', labelpad=10, fontsize=14, weight='bold')  # 共享y轴标签
+    ax2.set_title('Distribution Distance to Test Data (MMD)', fontsize=18, weight='bold')  # 增大子标题字体
+    ax2.set_xlabel('Sparsity Level (%)', labelpad=10, fontsize=16, weight='bold')  # 增大标签字体
+    ax2.set_ylabel('', labelpad=10, fontsize=16, weight='bold')  # 共享y轴标签
     ax2.yaxis.grid(True, linestyle='--', alpha=0.2)
     ax2.tick_params(axis='both', labelsize=13)  # 增大刻度标签字体
 

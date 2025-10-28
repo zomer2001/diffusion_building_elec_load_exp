@@ -75,7 +75,7 @@ titles = ['(a) MAE Comparison', '(b) MSE Comparison',
 
 # 增大图形尺寸
 fig, axes = plt.subplots(2, 2, figsize=(16, 14), constrained_layout=True)
-fig.suptitle('Performance Comparison of Different Methods', fontsize=18, weight='bold', y=0.98)
+fig.suptitle('Predictive Performance Comparison of Different Methods', fontsize=21, weight='bold', y=0.98)
 
 # 自定义标记样式
 hatch_pattern = '////'  # OURS的填充样式
@@ -113,13 +113,13 @@ for i, (ax, metric, name, title) in enumerate(zip(
             bar.set_linewidth(1.5)  # 增大OURS边框宽度
 
     # 设置标题和标签
-    ax.set_title(title, fontsize=15, pad=15, weight='semibold')
-    ax.set_xlabel('Training Data Split (%)', weight='semibold', fontsize=14)
-    ax.set_ylabel(name, weight='semibold', fontsize=14)
+    ax.set_title(title, fontsize=19, pad=15, weight='semibold')
+    ax.set_xlabel('Training Data Split (%)', weight='semibold', fontsize=19)
+    ax.set_ylabel(name, weight='semibold', fontsize=19)
 
     # 修改x轴标签
-    ax.set_xticklabels(['30%', '50%', '70%', '90%'], fontsize=13)
-    ax.tick_params(axis='y', labelsize=13)
+    ax.set_xticklabels(['30%', '50%', '70%', '90%'], fontsize=16)
+    ax.tick_params(axis='y', labelsize=15)
 
     # 只在第一个子图创建图例
     if i == 0:
