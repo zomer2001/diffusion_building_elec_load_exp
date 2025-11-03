@@ -9,20 +9,20 @@ from sklearn.preprocessing import StandardScaler
 # ==================== 全局样式设置 ====================
 plt.rcParams.update({
     'font.family': 'Times New Roman',
-    'font.size': 14,  # 增大字体大小
-    'axes.titlesize': 16,  # 增大标题字体
-    'axes.labelsize': 15,  # 增大轴标签字体
-    'xtick.labelsize': 13,  # 增大刻度标签字体
+    'font.size': 14,  # 基础字体大小
+    'axes.titlesize': 16,  # 轴标题字体
+    'axes.labelsize': 15,  # 轴标签字体
+    'xtick.labelsize': 13,  # 刻度标签字体
     'ytick.labelsize': 13,
-    'legend.fontsize': 13,  # 增大图例字体
-    'figure.dpi': 1200,  # 提高分辨率到1200
+    'legend.fontsize': 13,  # 图例字体
+    'figure.dpi': 1200,  # 高分辨率
     'savefig.dpi': 1200,
     'mathtext.fontset': 'stix',
     'axes.grid': False,
     'legend.frameon': True,
     'legend.framealpha': 0.8,
     'legend.loc': 'best',
-    'axes.linewidth': 1.0,  # 增大轴线宽度
+    'axes.linewidth': 1.0,  # 轴线宽度
     'axes.edgecolor': 'black'
 })
 
@@ -30,12 +30,12 @@ plt.rcParams.update({
 COLOR_PALETTE = {
     'oridata': '#1f77b4',  # 蓝色 - 原始数据
     'testdata': '#d62728',  # 红色 - 测试数据
-    'DDPM': '#ff7f0e',  # 橙色 - Ours方法(diffts-fft)
-    'OURS': '#2ca02c'  # 绿色 - DDPM方法(diffts)
+    'DDPM': '#ff7f0e',  # 橙色 - DDPM方法
+    'OURS': '#2ca02c'  # 绿色 - OURS方法
 }
 
-# 定义稀疏率和数据长度
-sparsity_rates = [90, 70, 50, 30]
+# 定义稀疏率和路径
+sparsity_rates = [70]
 base_dir = '../fakedata'
 test_data_folder = '../testdata'
 output_dir = '../results/tsne/ddpm_and_ours'
@@ -43,7 +43,7 @@ os.makedirs(output_dir, exist_ok=True)
 
 
 def prepare_tsne_data(data, max_samples=None):
-    """准备用于t-SNE分析的数据"""
+    """准备t-SNE输入数据（展平+采样）"""
     if data is None or len(data) == 0:
         return None
 
@@ -56,7 +56,7 @@ def prepare_tsne_data(data, max_samples=None):
 
 
 def load_generated_data(folder_path):
-    """加载生成的合成数据"""
+    """加载生成的合成数据（.npy文件）"""
     data = []
     if os.path.exists(folder_path):
         for sub_folder in os.listdir(folder_path):
@@ -75,7 +75,7 @@ def load_generated_data(folder_path):
 
 
 def plot_tsne(data_dict, building_name, sparsity):
-    """绘制高质量的t-SNE分布图"""
+    """绘制t-SNE分布图（调整为长方形+大标题）"""
     # 准备数据
     datasets = []
     data_types = []
@@ -110,11 +110,11 @@ def plot_tsne(data_dict, building_name, sparsity):
         'Data Type': labels
     })
 
-    # 绘制t-SNE图 - 减小图像尺寸但提高分辨率
-    plt.figure(figsize=(8, 6), tight_layout=True)  # 减小图像尺寸
+    # 绘制t-SNE图（改为长方形：宽12，高6）
+    plt.figure(figsize=(12, 6), tight_layout=True)  # 长方形尺寸（宽>高）
     ax = plt.gca()
 
-    # 增大点的大小
+    # 绘制散点图
     sns.scatterplot(
         x='TSNE-1',
         y='TSNE-2',
@@ -122,31 +122,31 @@ def plot_tsne(data_dict, building_name, sparsity):
         style='Data Type',
         data=tsne_df,
         palette=[COLOR_PALETTE[dt] for dt in tsne_df['Data Type'].unique()],
-        s=120,  # 增大点的大小
+        s=120,  # 点大小
         alpha=0.8,
         ax=ax,
         markers={'oridata': 'o', 'testdata': 's', 'OURS': 'D', 'DDPM': '^'}
     )
 
-    # 设置标题和标签 - 增大字体
+    # 标题字体增大到18号
     plt.title(f't-SNE Distribution - Building: {building_name} ({sparsity}% Sparsity)',
-              fontsize=16, pad=15, weight='bold')
+              fontsize=18, pad=15, weight='bold')  # 标题字体18号
     plt.xlabel('t-SNE Dimension 1', fontsize=14, weight='bold')
     plt.ylabel('t-SNE Dimension 2', fontsize=14, weight='bold')
 
-    # 美化图例 - 增大字体和标记
+    # 图例设置
     legend = ax.legend(
         title='Data Type',
-        title_fontsize=14,  # 增大图例标题字体
-        fontsize=13,  # 增大图例字体
+        title_fontsize=14,
+        fontsize=13,
         loc='best',
         frameon=True,
         framealpha=0.9,
         edgecolor='black',
-        markerscale=2.0  # 增大标记大小
+        markerscale=2.0
     )
 
-    # 保存结果 - 使用1200 dpi
+    # 保存图像
     filename = f"{building_name.replace(' ', '_').replace('/', '_')}_sparsity_{sparsity}_tsne.png"
     output_path = os.path.join(output_dir, filename)
     plt.savefig(output_path, bbox_inches='tight', dpi=1200)
@@ -154,7 +154,7 @@ def plot_tsne(data_dict, building_name, sparsity):
     plt.close()
 
 
-# 主逻辑
+# 主逻辑：遍历数据并生成t-SNE图
 processed_buildings = set()
 
 for test_folder in os.listdir(test_data_folder):
@@ -183,25 +183,22 @@ for test_folder in os.listdir(test_data_folder):
         oridata = np.load(oridata_file)
         test_data = np.load(test_file)
 
-        # 加载DDPM (diffts) 数据
+        # 加载DDPM和OURS生成数据
         ddpm_folder = os.path.join(base_dir, 'diffts', str(sparsity), building_name)
         ddpm_data = load_generated_data(ddpm_folder)
         print(f"加载了 {len(ddpm_data) if ddpm_data is not None else 0} 个DDPM生成的样本")
 
-        # 加载OURS (diffts-fft) 数据
         ours_folder = os.path.join(base_dir, 'diffts-fft', str(sparsity), building_name)
         ours_data = load_generated_data(ours_folder)
         print(f"加载了 {len(ours_data) if ours_data is not None else 0} 个OURS生成的样本")
 
-        # 创建数据字典
+        # 生成t-SNE图
         data_dict = {
             'oridata': oridata,
             'testdata': test_data,
             'DDPM': ddpm_data,
             'OURS': ours_data
         }
-
-        # 生成并保存t-SNE图
         plot_tsne(data_dict, building_name, sparsity)
 
 print("所有t-SNE图生成完成！")
