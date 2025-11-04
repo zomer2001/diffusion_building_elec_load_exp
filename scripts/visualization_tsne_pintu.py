@@ -5,7 +5,7 @@ import numpy as np
 
 # ==================== 配置参数 ====================
 # 存放4张图的文件夹路径（请替换为你的文件夹路径）
-image_folder = "../results/tsne/ddpm_and_ours"  # 与生成图的output_dir一致
+image_folder = "../results/tsne/chosen"  # 与生成图的output_dir一致
 # 输出拼接图的路径和文件名
 output_path = "../results/tsne/merged_tsne_fig.png"
 # 图片排序方式（按文件名排序，确保顺序为a→b→c→d）

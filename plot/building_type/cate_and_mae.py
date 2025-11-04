@@ -15,8 +15,8 @@ rcParams.update({
     'xtick.labelsize': 19,
     'ytick.labelsize': 19,
     'legend.fontsize': 16,  # 图例保持稍小
-    'figure.dpi': 1200,
-    'savefig.dpi': 1200,
+    'figure.dpi': 600,
+    'savefig.dpi': 600,
     'mathtext.fontset': 'stix',
     'axes.grid': True,
     'grid.linestyle': '--',
@@ -83,7 +83,7 @@ def create_combined_plot(stats_df, sample_size):
 
     # 主标题（21号）
     plt.title(f'Building Type Performance Analysis',
-              fontsize=21, pad=20, weight='bold', color=PALETTE['text'])
+              fontsize=23, pad=20, weight='bold', color=PALETTE['text'])
 
     # 柱状图（数量）
     bars = ax1.bar(
@@ -106,8 +106,8 @@ def create_combined_plot(stats_df, sample_size):
                  bbox=dict(facecolor=PALETTE['bar'], alpha=0.9, boxstyle='round,pad=0.2'))
 
     # x, y轴标签（19号）
-    ax1.set_xlabel('Building Type', fontweight='semibold', color=PALETTE['text'], fontsize=19)
-    ax1.set_ylabel('Number of Buildings', fontweight='semibold', color=PALETTE['text'], fontsize=19)
+    ax1.set_xlabel('Building Type', fontweight='semibold', color=PALETTE['text'], fontsize=23)
+    ax1.set_ylabel('Number of Buildings', fontweight='semibold', color=PALETTE['text'], fontsize=20)
     ax1.yaxis.set_major_locator(MaxNLocator(integer=True))
 
     max_count = stats_df['Count'].max()
@@ -148,7 +148,7 @@ def create_combined_plot(stats_df, sample_size):
                shadow=False,
                fancybox=True,
                edgecolor='0.3',
-               fontsize=16)
+               fontsize=18)
 
     # x轴标签旋转（19号）
     plt.xticks(rotation=45, ha='right', rotation_mode='anchor', fontsize=19)
@@ -186,6 +186,6 @@ if __name__ == "__main__":
     print("\n创建图表中...")
     fig = create_combined_plot(building_stats, sample_size)
 
-    fig.savefig('building_type_analysis.pdf', bbox_inches='tight', dpi=1200)
-    fig.savefig('building_type_analysis.png', bbox_inches='tight', dpi=1200)
+    fig.savefig('building_type_analysis.pdf', bbox_inches='tight', dpi=600)
+    fig.savefig('building_type_analysis.png', bbox_inches='tight', dpi=600)
     print("\n已保存图表：building_type_analysis.pdf 和 building_type_analysis.png")
