@@ -6,13 +6,13 @@ import numpy as np
 # ==================== 全局样式设置 ====================
 plt.rcParams.update({
     'font.family': 'Times New Roman',
-    'font.size': 16,  # 进一步增大基础字体
-    'axes.titlesize': 20,  # 增大标题字体
-    'axes.labelsize': 18,  # 增大轴标签字体
-    'xtick.labelsize': 16,  # 增大x轴刻度标签字体
-    'ytick.labelsize': 16,  # 增大y轴刻度标签字体
-    'legend.fontsize': 16,  # 增大图例字体
-    'figure.dpi': 600,  # 保持高分辨率
+    'font.size': 16,
+    'axes.titlesize': 20,
+    'axes.labelsize': 18,
+    'xtick.labelsize': 16,
+    'ytick.labelsize': 16,
+    'legend.fontsize': 16,
+    'figure.dpi': 600,
     'savefig.dpi': 600,
     'mathtext.fontset': 'stix',
     'axes.grid': True,
@@ -23,7 +23,7 @@ plt.rcParams.update({
     'legend.loc': 'best',
 })
 
-# 专业配色方案（保持不变）
+# 专业配色方案
 MODEL_PALETTE = {
     'RNN': '#4C72B0',  # 蓝色
     'GRU': '#55A868',  # 绿色
@@ -31,7 +31,7 @@ MODEL_PALETTE = {
     'BiLSTM': '#8172B2'  # 紫色
 }
 
-# 折线图标记样式（新增：为不同模型设置独特标记）
+# 折线图标记样式
 MODEL_MARKERS = {
     'RNN': 'o',    # 圆形
     'GRU': 's',    # 方形
@@ -40,7 +40,6 @@ MODEL_MARKERS = {
 }
 
 # ==================== 数据处理 ====================
-# 定义CSV文件路径和对应的模型名称（保持不变）
 csv_files = {
     'RNN': '../../results/rnn_2160/all_results.csv',
     'GRU': '../../results/gru_2160/all_results.csv',
@@ -48,7 +47,6 @@ csv_files = {
     'BiLSTM': '../../results/bilstm_2160/all_results.csv'
 }
 
-# 方法名称映射（保持不变）
 method_mapping = {
     'timegan': 'TIMEGAN',
     'cgan': 'CGAN',
@@ -58,10 +56,7 @@ method_mapping = {
     'oridata': 'Real Data'
 }
 
-# 存储所有模型的数据（保持不变）
 all_data = []
-
-# 读取并处理每个CSV文件（保持不变）
 for model_name, file_path in csv_files.items():
     try:
         df = pd.read_csv(file_path)
@@ -73,7 +68,6 @@ for model_name, file_path in csv_files.items():
     except Exception as e:
         print(f"Error processing {model_name} data: {str(e)}")
 
-# 合并所有数据（保持不变）
 combined_df = pd.concat(all_data, ignore_index=True)
 method_order = ['TIMEGAN', 'CGAN', 'DDPM', 'VAEGAN', 'Real Data', 'OURS']
 combined_df['Method'] = pd.Categorical(combined_df['Method'], categories=method_order, ordered=True)
@@ -83,28 +77,28 @@ combined_df = combined_df.sort_values('Method')
 plt.figure(figsize=(12, 8), tight_layout=True)
 ax = plt.gca()
 
-# 绘制折线图（调整标记样式和线宽）
+# 绘制折线图
 sns.lineplot(
     data=combined_df,
     x='Method',
     y='MAE',
     hue='Model',
     style='Model',
-    markers=MODEL_MARKERS,  # 使用自定义标记
+    markers=MODEL_MARKERS,
     dashes=False,
-    markersize=10,  # 增大标记大小
-    linewidth=4,    # 进一步加粗线条
+    markersize=10,
+    linewidth=4,
     palette=MODEL_PALETTE,
     ax=ax
 )
 
-# 设置标题和标签（保持字体增大）
+# 设置标题和标签
 plt.title('MAE Comparison Across Different Models (70% Training Data)',
           fontsize=22, pad=15, weight='bold')
 plt.xlabel('Generation Method', weight='bold', fontsize=20)
 plt.ylabel('MAE', weight='bold', fontsize=20)
 
-# 优化图例（保持原位置和样式）
+# 优化图例（放在图内右上角，不遮挡核心数据）
 handles, labels = ax.get_legend_handles_labels()
 ax.legend(
     handles, labels,
@@ -113,33 +107,30 @@ ax.legend(
     frameon=True,
     shadow=True,
     fancybox=True,
-    bbox_to_anchor=(1.05, 1),
-    loc='upper left',
+    loc='upper right',  # 图例位置：图内右上角
+    # 移除bbox_to_anchor，避免图例跑到图外
     fontsize=16
 )
 
-# 添加数据标签（增大字体）
+# 添加数据标签
 for model in MODEL_PALETTE.keys():
     model_data = combined_df[combined_df['Model'] == model]
     for i, row in model_data.iterrows():
         ax.text(row['Method'], row['MAE'], f"{row['MAE']:.3f}",
                 color=MODEL_PALETTE[model],
-                fontsize=16, ha='center', va='bottom', weight='bold')  # 增大标签字体
+                fontsize=16, ha='center', va='bottom', weight='bold')
 
-# 添加网格（保持不变）
+# 添加网格
 plt.grid(True, linestyle=':', alpha=0.5)
 
-# 调整x轴标签：不旋转 + 增大字体
-plt.xticks(rotation=0, fontsize=18)  # 明确设置不旋转
-
-# 设置y轴刻度标签字体大小
+# 调整x轴标签
+plt.xticks(rotation=0, fontsize=18)
 plt.yticks(fontsize=18)
 
-# 保存结果（保持不变）
+# 保存结果
 plt.savefig('mae_comparison_across_models.pdf', bbox_inches='tight', dpi=600)
 plt.savefig('mae_comparison_across_models.png', bbox_inches='tight', dpi=600)
 print("已保存折线图：mae_comparison_across_models.pdf 和 mae_comparison_across_models.png")
 
-# 显示处理后的数据（保持不变）
 print("\n=== 处理后数据 ===")
 print(combined_df)
