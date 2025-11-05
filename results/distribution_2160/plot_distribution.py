@@ -89,8 +89,8 @@ def create_double_bar_plot_with_spaced_legend(dataframe, file_prefix, figsize=(1
         ax=ax1
     )
 
-    ax1.set_title('Distribution Distance to Original Data (MMD)', fontsize=20, weight='bold', pad=15)
-    ax1.set_xlabel('Sparsity Level (%)', labelpad=10, fontsize=18, weight='bold')
+    ax1.set_title('Distribution Distance to Original Data (MMD)', fontsize=22, weight='bold', pad=15)
+    ax1.set_xlabel('Sparsity Level (%)', labelpad=10, fontsize=20, weight='bold')
     ax1.set_ylabel('MMD', labelpad=10, fontsize=17, weight='bold')
     ax1.tick_params(axis='both', labelsize=15)
     ax1.yaxis.grid(True, linestyle='--', alpha=0.2)
@@ -110,8 +110,8 @@ def create_double_bar_plot_with_spaced_legend(dataframe, file_prefix, figsize=(1
         ax=ax2
     )
 
-    ax2.set_title('Distribution Distance to Test Data (MMD)', fontsize=20, weight='bold', pad=15)
-    ax2.set_xlabel('Sparsity Level (%)', labelpad=10, fontsize=18, weight='bold')
+    ax2.set_title('Distribution Distance to Test Data (MMD)', fontsize=22, weight='bold', pad=15)
+    ax2.set_xlabel('Sparsity Level (%)', labelpad=10, fontsize=20, weight='bold')
     ax2.set_ylabel('', labelpad=10, fontsize=17, weight='bold')
     ax2.tick_params(axis='both', labelsize=15)
     ax2.yaxis.grid(True, linestyle='--', alpha=0.2)
@@ -154,7 +154,7 @@ def create_double_bar_plot_with_spaced_legend(dataframe, file_prefix, figsize=(1
         edgecolor='0.5',
         fancybox=False,
         fontsize=16,
-        title_fontsize='17',
+        title_fontsize='18',
         handlelength=1.8,
         handleheight=1.8,
         ncol=len(methods),  # 水平排列图例项
