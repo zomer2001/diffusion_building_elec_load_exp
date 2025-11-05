@@ -83,7 +83,7 @@ def create_combined_plot(stats_df, sample_size):
 
     # 主标题（21号）
     plt.title(f'Building Type Performance Analysis',
-              fontsize=23, pad=20, weight='bold', color=PALETTE['text'])
+              fontsize=25, pad=20, weight='bold', color=PALETTE['text'])
 
     # 柱状图（数量）
     bars = ax1.bar(
@@ -106,7 +106,7 @@ def create_combined_plot(stats_df, sample_size):
                  bbox=dict(facecolor=PALETTE['bar'], alpha=0.9, boxstyle='round,pad=0.2'))
 
     # x, y轴标签（19号）
-    ax1.set_xlabel('Building Type', fontweight='semibold', color=PALETTE['text'], fontsize=23)
+    ax1.set_xlabel('Building Type', fontweight='semibold', color=PALETTE['text'], fontsize=24)
     ax1.set_ylabel('Number of Buildings', fontweight='semibold', color=PALETTE['text'], fontsize=20)
     ax1.yaxis.set_major_locator(MaxNLocator(integer=True))
 
@@ -151,8 +151,13 @@ def create_combined_plot(stats_df, sample_size):
                fontsize=18)
 
     # x轴标签旋转（19号）
-    plt.xticks(rotation=45, ha='right', rotation_mode='anchor', fontsize=19)
-    plt.yticks(fontsize=19)
+    ax1.set_xticklabels(
+        stats_df['Building_Type'],  # x轴标签内容
+
+
+        fontsize=20  # 这里修改为你需要的字号（例如20）
+    )
+    plt.yticks(fontsize=20)
 
     # 边框样式
     for spine in ax1.spines.values():
