@@ -26,19 +26,17 @@ plt.rcParams.update({
     'axes.edgecolor': 'black'
 })
 
-# 配色方案
+# 配色方案 - 只保留oridata和ours的颜色
 COLOR_PALETTE = {
     'oridata': '#1f77b4',  # 蓝色 - 原始数据
-    'testdata': '#d62728',  # 红色 - 测试数据
-    'DDPM': '#ff7f0e',  # 橙色 - Ours方法(diffts-fft)
-    'OURS': '#2ca02c'  # 绿色 - DDPM方法(diffts)
+    'ours': '#2ca02c'  # 绿色 - 我们的方法生成的数据
 }
 
-# 定义稀疏率和数据长度
-sparsity_rates = [90, 70, 50, 30]
+# 只处理70%稀疏率
+target_sparsity = 70
 base_dir = '../fakedata'
 test_data_folder = '../testdata'
-output_dir = '../results/pca/ddpm_and_ours'  # 修改为PCA输出目录
+output_dir = '../results/pca/ours_vs_oridata_70'  # 修改输出目录
 os.makedirs(output_dir, exist_ok=True)
 
 
@@ -75,14 +73,14 @@ def load_generated_data(folder_path):
 
 
 def plot_pca(data_dict, building_name, sparsity):
-    """绘制高质量的PCA分布图"""
-    # 准备数据
+    """绘制高质量的PCA分布图 - 只比较oridata和ours"""
+    # 准备数据 - 只处理oridata和ours
     datasets = []
     data_types = []
 
-    for data_type in ['oridata', 'testdata', 'DDPM', 'OURS']:
+    for data_type in ['oridata', 'ours']:  # 只保留这两种数据类型
         if data_type in data_dict and data_dict[data_type] is not None:
-            max_samples = 500 if data_type in ['DDPM', 'OURS'] else None
+            max_samples = 500 if data_type == 'ours' else None
             prepared_data = prepare_pca_data(data_dict[data_type], max_samples)
             if prepared_data is not None:
                 datasets.append(prepared_data)
@@ -129,21 +127,21 @@ def plot_pca(data_dict, building_name, sparsity):
         s=80,
         alpha=0.8,
         ax=ax,
-        markers={'oridata': 'o', 'testdata': 's', 'OURS': 'D', 'DDPM': '^'}
+        markers={'oridata': 'o', 'ours': 'D'}  # 只保留两种标记
     )
 
     # 设置标题和标签
-    plt.title(f'PCA Distribution - Building: {building_name} ({sparsity}% Sparsity)\n'
-              f'Explained Variance: PC1={explained_variance[0]:.1%}, PC2={explained_variance[1]:.1%}, Total={total_variance:.1%}',
-              fontsize=14, pad=15, weight='bold')
-    plt.xlabel(f'Principal Component 1 ({explained_variance[0]:.1%} variance)', fontsize=12, weight='bold')
-    plt.ylabel(f'Principal Component 2 ({explained_variance[1]:.1%} variance)', fontsize=12, weight='bold')
+    plt.title(f'PCA Distribution - {building_name} ({sparsity}% Sparsity)\n'
+              f'Explained Variance:{total_variance:.1%}',
+              fontsize=22, pad=15, weight='bold')
+    plt.xlabel(f'Principal Component 1 ({explained_variance[0]:.1%} variance)', fontsize=18, weight='bold')
+    plt.ylabel(f'Principal Component 2 ({explained_variance[1]:.1%} variance)', fontsize=18, weight='bold')
 
     # 美化图例
     legend = ax.legend(
         title='Data Type',
-        title_fontsize=11,
-        fontsize=10,
+        title_fontsize=17,
+        fontsize=17,
         loc='best',
         frameon=True,
         framealpha=0.9,
@@ -169,31 +167,28 @@ for test_folder in os.listdir(test_data_folder):
         length = int(parts[-2])
         sparsity = int(parts[-1])
 
+        # 只处理70%稀疏率的数据
+        if sparsity != target_sparsity or length != 2160:
+            continue
+
         key = f"{building_name}_{sparsity}"
-        if key in processed_buildings or length != 2160 or sparsity not in sparsity_rates:
+        if key in processed_buildings:
             continue
 
         processed_buildings.add(key)
 
         print(f"处理建筑: {building_name}, 稀疏率: {sparsity}%")
 
-        # 读取原始数据和测试数据
+        # 读取原始数据
         oridata_file = os.path.join(test_data_folder, test_folder, 'samples', 'energy_norm_truth_24_train.npy')
-        test_file = os.path.join(test_data_folder, test_folder, 'samples', 'energy_norm_truth_24_test.npy')
 
-        if not os.path.exists(oridata_file) or not os.path.exists(test_file):
-            print(f"原始数据或测试数据文件不存在, 跳过...")
+        if not os.path.exists(oridata_file):
+            print(f"原始数据文件不存在, 跳过...")
             continue
 
         oridata = np.load(oridata_file)
-        test_data = np.load(test_file)
 
-        # 加载DDPM (diffts) 数据
-        ddpm_folder = os.path.join(base_dir, 'diffts', str(sparsity), building_name)
-        ddpm_data = load_generated_data(ddpm_folder)
-        print(f"加载了 {len(ddpm_data) if ddpm_data is not None else 0} 个DDPM生成的样本")
-
-        # 加载OURS (diffts-fft) 数据
+        # 加载OURS生成的数据（diffts-fft）
         ours_folder = os.path.join(base_dir, 'diffts-fft', str(sparsity), building_name)
         ours_data = load_generated_data(ours_folder)
         print(f"加载了 {len(ours_data) if ours_data is not None else 0} 个OURS生成的样本")
@@ -201,12 +196,10 @@ for test_folder in os.listdir(test_data_folder):
         # 创建数据字典
         data_dict = {
             'oridata': oridata,
-            'testdata': test_data,
-            'DDPM': ddpm_data,
-            'OURS': ours_data
+            'ours': ours_data  # 我们生成的数据
         }
 
         # 生成并保存PCA图
         plot_pca(data_dict, building_name, sparsity)
 
-print("所有PCA图生成完成！")
+print(f"所有{target_sparsity}%稀疏率的PCA图生成完成！")
