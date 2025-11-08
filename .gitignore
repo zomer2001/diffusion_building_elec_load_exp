@@ -3,3 +3,4 @@ testdata
 fakedata
 .idea
 results/tsne
+results/pca

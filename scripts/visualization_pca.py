@@ -5,128 +5,120 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import StandardScaler
-import matplotlib as mpl
 
 # ==================== 全局样式设置 ====================
-# 设置学术论文风格的绘图参数
 plt.rcParams.update({
-    'font.family': 'Times New Roman',  # 主字体
-    'font.size': 10,  # 基础字体大小
-    'axes.titlesize': 12,  # 标题大小
-    'axes.labelsize': 11,  # 坐标轴标签大小
-    'xtick.labelsize': 10,  # X轴刻度大小
-    'ytick.labelsize': 10,  # Y轴刻度大小
-    'legend.fontsize': 10,  # 图例大小
-    'figure.dpi': 300,  # 输出分辨率
+    'font.family': 'Times New Roman',
+    'font.size': 10,
+    'axes.titlesize': 12,
+    'axes.labelsize': 11,
+    'xtick.labelsize': 10,
+    'ytick.labelsize': 10,
+    'legend.fontsize': 10,
+    'figure.dpi': 300,
     'savefig.dpi': 300,
-    'mathtext.fontset': 'stix',  # 数学公式字体
-    'axes.grid': False,  # 关闭网格线
-    'legend.frameon': True,  # 图例边框
-    'legend.framealpha': 0.8,  # 图例透明度
-    'legend.loc': 'best',  # 图例位置
-    'axes.linewidth': 0.8,  # 坐标轴线宽
-    'axes.edgecolor': 'black'  # 坐标轴颜色
+    'mathtext.fontset': 'stix',
+    'axes.grid': False,
+    'legend.frameon': True,
+    'legend.framealpha': 0.8,
+    'legend.loc': 'best',
+    'axes.linewidth': 0.8,
+    'axes.edgecolor': 'black'
 })
 
-# 创建专业配色方案 (色盲友好)
+# 配色方案
 COLOR_PALETTE = {
     'oridata': '#1f77b4',  # 蓝色 - 原始数据
-    'ours': '#ff7f0e',  # 橙色 - Ours方法生成的数据
-    'timegan': '#2ca02c',  # 绿色 - TimeGAN方法生成的数据
-    'testdata': '#d62728'  # 红色 - 测试数据
+    'testdata': '#d62728',  # 红色 - 测试数据
+    'DDPM': '#ff7f0e',  # 橙色 - Ours方法(diffts-fft)
+    'OURS': '#2ca02c'  # 绿色 - DDPM方法(diffts)
 }
 
 # 定义稀疏率和数据长度
 sparsity_rates = [90, 70, 50, 30]
-base_dir = '../../fakedata'
-test_data_folder = '../../train_and_testdata'
-output_dir = '../../results/pca/timegan_and_ours'
-
-# 确保输出目录存在
+base_dir = '../fakedata'
+test_data_folder = '../testdata'
+output_dir = '../results/pca/ddpm_and_ours'  # 修改为PCA输出目录
 os.makedirs(output_dir, exist_ok=True)
 
 
-# 数据处理函数 - PCA版本
 def prepare_pca_data(data, max_samples=None):
     """准备用于PCA分析的数据"""
     if data is None or len(data) == 0:
         return None
 
-    # 如果没有指定最大样本数或数据量小于最大样本数，返回所有数据
     if max_samples is None or len(data) <= max_samples:
         return data.reshape(data.shape[0], -1)
 
-    # 否则随机采样
     indices = np.random.choice(len(data), max_samples, replace=False)
     sampled_data = data[indices]
     return sampled_data.reshape(sampled_data.shape[0], -1)
 
 
-# PCA可视化函数
+def load_generated_data(folder_path):
+    """加载生成的合成数据"""
+    data = []
+    if os.path.exists(folder_path):
+        for sub_folder in os.listdir(folder_path):
+            sub_folder_path = os.path.join(folder_path, sub_folder)
+            if os.path.isdir(sub_folder_path):
+                for file in os.listdir(sub_folder_path):
+                    if file.endswith('.npy'):
+                        file_path = os.path.join(sub_folder_path, file)
+                        try:
+                            data.append(np.load(file_path))
+                        except Exception as e:
+                            print(f"加载文件失败: {file_path}, 错误: {str(e)}")
+        if data:
+            return np.concatenate(data, axis=0)
+    return None
+
+
 def plot_pca(data_dict, building_name, sparsity):
     """绘制高质量的PCA分布图"""
-    # 首先确定timegan的数据量作为基准
-    timegan_data = data_dict.get('timegan', None)
-    max_samples = len(timegan_data) if timegan_data is not None and len(timegan_data) > 0 else None
-
-    # 提取有效数据
-    data_types = []
+    # 准备数据
     datasets = []
+    data_types = []
 
-    # 对于oridata和testdata，使用全部数据
-    for data_type in ['oridata', 'testdata']:
-        if data_type in data_dict and data_dict[data_type] is not None and len(data_dict[data_type]) > 0:
-            prepared_data = prepare_pca_data(data_dict[data_type], max_samples=None)
+    for data_type in ['oridata', 'testdata', 'DDPM', 'OURS']:
+        if data_type in data_dict and data_dict[data_type] is not None:
+            max_samples = 500 if data_type in ['DDPM', 'OURS'] else None
+            prepared_data = prepare_pca_data(data_dict[data_type], max_samples)
             if prepared_data is not None:
-                data_types.append(data_type)
                 datasets.append(prepared_data)
-
-    # 对于ours和timegan，使用与timegan相同的数据量
-    for data_type in ['ours', 'timegan']:
-        if data_type in data_dict and data_dict[data_type] is not None and len(data_dict[data_type]) > 0:
-            prepared_data = prepare_pca_data(data_dict[data_type], max_samples=800)
-            if prepared_data is not None:
                 data_types.append(data_type)
-                datasets.append(prepared_data)
 
-    if len(datasets) < 2:  # 至少需要两组数据
+    if len(datasets) < 2:
         print(f"数据不足，无法为{building_name}_{sparsity}生成PCA图")
         return
 
-    # 合并数据
+    # 合并和标准化数据
     combined_data = np.vstack(datasets)
-
-    # 标准化数据
-    scaler = StandardScaler()
-    scaled_data = scaler.fit_transform(combined_data)
+    scaled_data = StandardScaler().fit_transform(combined_data)
 
     # 运行PCA
     pca = PCA(n_components=2, random_state=42)
     pca_results = pca.fit_transform(scaled_data)
 
-    # 创建数据标签
-    labels = []
-    start_idx = 0
-    for i, data_type in enumerate(data_types):
-        n_points = datasets[i].shape[0]
-        labels.extend([data_type] * n_points)
+    # 计算方差解释比例
+    explained_variance = pca.explained_variance_ratio_
+    total_variance = explained_variance.sum()
 
     # 创建绘图数据框
+    labels = []
+    for i, data_type in enumerate(data_types):
+        labels.extend([data_type] * datasets[i].shape[0])
+
     pca_df = pd.DataFrame({
         'PC1': pca_results[:, 0],
         'PC2': pca_results[:, 1],
         'Data Type': labels
     })
 
-    # 计算方差解释率
-    variance_ratio = pca.explained_variance_ratio_
-    total_variance = sum(variance_ratio)
-
-    # 创建PCA图
+    # 绘制PCA图
     plt.figure(figsize=(10, 8), tight_layout=True)
     ax = plt.gca()
 
-    # 使用自定义色板和样式
     sns.scatterplot(
         x='PC1',
         y='PC2',
@@ -134,21 +126,18 @@ def plot_pca(data_dict, building_name, sparsity):
         style='Data Type',
         data=pca_df,
         palette=[COLOR_PALETTE[dt] for dt in pca_df['Data Type'].unique()],
-        s=80,  # 点的大小
-        alpha=0.8,  # 透明度
+        s=80,
+        alpha=0.8,
         ax=ax,
-        markers={'oridata': 'o', 'testdata': 's', 'ours': '^', 'timegan': 'D'}
+        markers={'oridata': 'o', 'testdata': 's', 'OURS': 'D', 'DDPM': '^'}
     )
 
     # 设置标题和标签
-    plt.title(f'PCA Distribution - {building_name} ({sparsity}% Sparsity)',
+    plt.title(f'PCA Distribution - Building: {building_name} ({sparsity}% Sparsity)\n'
+              f'Explained Variance: PC1={explained_variance[0]:.1%}, PC2={explained_variance[1]:.1%}, Total={total_variance:.1%}',
               fontsize=14, pad=15, weight='bold')
-    plt.xlabel(f'Principal Component 1 ({variance_ratio[0] * 100:.1f}% Variance)', fontsize=12, weight='bold')
-    plt.ylabel(f'Principal Component 2 ({variance_ratio[1] * 100:.1f}% Variance)', fontsize=12, weight='bold')
-
-    # 添加总方差解释信息
-    plt.figtext(0.5, 0.01, f'Total Variance Explained: {total_variance * 100:.1f}%',
-                ha="center", fontsize=10, style='italic')
+    plt.xlabel(f'Principal Component 1 ({explained_variance[0]:.1%} variance)', fontsize=12, weight='bold')
+    plt.ylabel(f'Principal Component 2 ({explained_variance[1]:.1%} variance)', fontsize=12, weight='bold')
 
     # 美化图例
     legend = ax.legend(
@@ -162,9 +151,6 @@ def plot_pca(data_dict, building_name, sparsity):
         markerscale=1.5
     )
 
-    # 美化图形
-    sns.despine(offset=10, trim=True)
-
     # 保存结果
     filename = f"{building_name.replace(' ', '_').replace('/', '_')}_sparsity_{sparsity}_pca.png"
     output_path = os.path.join(output_dir, filename)
@@ -173,115 +159,54 @@ def plot_pca(data_dict, building_name, sparsity):
     plt.close()
 
 
-# 主逻辑 - 遍历所有建筑和稀疏率
+# 主逻辑
 processed_buildings = set()
-
-print("开始处理PCA降维可视化...")
 
 for test_folder in os.listdir(test_data_folder):
     parts = test_folder.split('_')
     if len(parts) >= 4:
-        # 从文件夹名解析建筑名、长度和稀疏率
-        building_name = '_'.join(parts[:-1])  # 保留建筑名部分
+        building_name = '_'.join(parts[:-1])
         length = int(parts[-2])
         sparsity = int(parts[-1])
 
-        # 防止重复处理同一建筑
         key = f"{building_name}_{sparsity}"
-        if key in processed_buildings:
+        if key in processed_buildings or length != 2160 or sparsity not in sparsity_rates:
             continue
+
         processed_buildings.add(key)
 
-        if length == 720 and sparsity in sparsity_rates:
-            print(f"处理建筑: {building_name}, 稀疏率: {sparsity}%")
+        print(f"处理建筑: {building_name}, 稀疏率: {sparsity}%")
 
-            # 读取测试集数据
-            test_file = os.path.join(test_data_folder, test_folder, 'samples', 'energy_norm_truth_24_test.npy')
-            if not os.path.exists(test_file):
-                print(f"测试文件 {test_file} 不存在, 跳过...")
-                continue
-            test_data = np.load(test_file)
+        # 读取原始数据和测试数据
+        oridata_file = os.path.join(test_data_folder, test_folder, 'samples', 'energy_norm_truth_24_train.npy')
+        test_file = os.path.join(test_data_folder, test_folder, 'samples', 'energy_norm_truth_24_test.npy')
 
-            # 读取原始训练数据
-            oridata_file = os.path.join(test_data_folder, test_folder, 'samples', 'energy_norm_truth_24_train.npy')
-            if not os.path.exists(oridata_file):
-                print(f"原始数据文件 {oridata_file} 不存在, 跳过...")
-                continue
-            oridata = np.load(oridata_file)
+        if not os.path.exists(oridata_file) or not os.path.exists(test_file):
+            print(f"原始数据或测试数据文件不存在, 跳过...")
+            continue
 
-            # 读取Ours生成的合成数据
-            ours_data = []
-            sparsity_folder = os.path.join(base_dir, 'ours', str(sparsity), building_name)
-            if os.path.exists(sparsity_folder):
-                for sub_folder in os.listdir(sparsity_folder):
-                    sub_folder_path = os.path.join(sparsity_folder, sub_folder)
-                    if os.path.isdir(sub_folder_path):
-                        for file in os.listdir(sub_folder_path):
-                            if file.endswith('.npy'):
-                                file_path = os.path.join(sub_folder_path, file)
-                                if os.path.exists(file_path):
-                                    try:
-                                        data = np.load(file_path)
-                                        ours_data.append(data)
-                                    except Exception as e:
-                                        print(f"加载Ours文件失败: {file_path}, 错误: {str(e)}")
-                # 如果找到了ours数据，合并所有文件
-                if ours_data:
-                    ours_data = np.concatenate(ours_data, axis=0)
-                    print(f"加载了 {len(ours_data)} 个Ours生成的样本")
-                else:
-                    ours_data = None
-                    print(f"未找到有效的Ours数据")
-            else:
-                ours_data = None
-                print(f"Ours文件夹不存在: {sparsity_folder}")
+        oridata = np.load(oridata_file)
+        test_data = np.load(test_file)
 
-            # 读取TimeGAN生成的合成数据
-            timegan_file = os.path.join(base_dir, 'timegan', str(sparsity), 'train', f'generated_{building_name}.npy')
-            if os.path.exists(timegan_file):
-                try:
-                    timegan_data = np.load(timegan_file)
-                    print(f"加载了 {len(timegan_data)} 个TimeGAN生成的样本")
-                except Exception as e:
-                    print(f"加载TimeGAN文件失败: {timegan_file}, 错误: {str(e)}")
-                    timegan_data = None
-            else:
-                timegan_data = None
-                print(f"TimeGAN文件不存在: {timegan_file}")
-            diffts_data = []
-            sparsity_folder = os.path.join(base_dir, 'diffts', str(sparsity), building_name)
-            if os.path.exists(sparsity_folder):
-                for sub_folder in os.listdir(sparsity_folder):
-                    sub_folder_path = os.path.join(sparsity_folder, sub_folder)
-                    if os.path.isdir(sub_folder_path):
-                        for file in os.listdir(sub_folder_path):
-                            if file.endswith('.npy'):
-                                file_path = os.path.join(sub_folder_path, file)
-                                if os.path.exists(file_path):
-                                    try:
-                                        data = np.load(file_path)
-                                        diffts_data.append(data)
-                                    except Exception as e:
-                                        print(f"加载Ours文件失败: {file_path}, 错误: {str(e)}")
-                # 如果找到了ours数据，合并所有文件
-                if diffts_data:
-                    diffts_data = np.concatenate(diffts_data, axis=0)
-                    print(f"加载了 {len(ours_data)} 个Ours生成的样本")
-                else:
-                    diffts_data = None
-                    print(f"未找到有效的Ours数据")
-            else:
-                diffts_data = None
-                print(f"Ours文件夹不存在: {sparsity_folder}")
-            # 创建数据字典
-            data_dict = {
-                'oridata': oridata,
-                'testdata': test_data,
-                'ours': ours_data,
-                'timegan': diffts_data
-            }
+        # 加载DDPM (diffts) 数据
+        ddpm_folder = os.path.join(base_dir, 'diffts', str(sparsity), building_name)
+        ddpm_data = load_generated_data(ddpm_folder)
+        print(f"加载了 {len(ddpm_data) if ddpm_data is not None else 0} 个DDPM生成的样本")
 
-            # 生成并保存PCA图
-            plot_pca(data_dict, building_name, sparsity)
+        # 加载OURS (diffts-fft) 数据
+        ours_folder = os.path.join(base_dir, 'diffts-fft', str(sparsity), building_name)
+        ours_data = load_generated_data(ours_folder)
+        print(f"加载了 {len(ours_data) if ours_data is not None else 0} 个OURS生成的样本")
 
-print("所有PCA可视化完成！\n输出目录:", output_dir)
+        # 创建数据字典
+        data_dict = {
+            'oridata': oridata,
+            'testdata': test_data,
+            'DDPM': ddpm_data,
+            'OURS': ours_data
+        }
+
+        # 生成并保存PCA图
+        plot_pca(data_dict, building_name, sparsity)
+
+print("所有PCA图生成完成！")
