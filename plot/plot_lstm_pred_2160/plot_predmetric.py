@@ -113,12 +113,12 @@ for i, (ax, metric, name, title) in enumerate(zip(
             bar.set_linewidth(1.5)  # 增大OURS边框宽度
 
     # 设置标题和标签
-    ax.set_title(title, fontsize=19, pad=15, weight='semibold')
+    ax.set_title(title, fontsize=20, pad=15, weight='semibold')
     ax.set_xlabel('Training Data Split (%)', weight='semibold', fontsize=19)
     ax.set_ylabel(name, weight='semibold', fontsize=19)
 
     # 修改x轴标签
-    ax.set_xticklabels(['30%', '50%', '70%', '90%'], fontsize=16)
+    ax.set_xticklabels(['30%', '50%', '70%', '90%'], fontsize=19)
     ax.tick_params(axis='y', labelsize=15)
 
     # 只在第一个子图创建图例
@@ -152,10 +152,10 @@ for i, (ax, metric, name, title) in enumerate(zip(
         legend = ax.legend(
             legend_handles, labels,
             title='Methods',
-            title_fontsize=15,  # 增大图例标题字体
+            title_fontsize=17,  # 增大图例标题字体
             frameon=True,
             loc='best',  # 自动选择最佳位置
-            fontsize=13,  # 增大图例字体
+            fontsize=16,  # 增大图例字体
             framealpha=0.8
         )
 
