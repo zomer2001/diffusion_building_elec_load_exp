@@ -35,7 +35,7 @@ COLOR_PALETTE = {
 }
 
 # 定义稀疏率和数据长度
-sparsity_rates = [90, 70, 50, 30]
+sparsity_rates = [70]
 base_dir = '../fakedata'
 test_data_folder = '../testdata'
 output_dir = '../results/tsne/ddpm_and_ours'
@@ -128,7 +128,7 @@ def plot_tsne(data_dict, building_name, sparsity):
     )
 
     # 设置标题和标签
-    plt.title(f't-SNE Distribution - Building: {building_name} ({sparsity}% Sparsity)',
+    plt.title(f't-SNE Distribution: {building_name}',
               fontsize=14, pad=15, weight='bold')
     plt.xlabel('t-SNE Dimension 1', fontsize=12, weight='bold')
     plt.ylabel('t-SNE Dimension 2', fontsize=12, weight='bold')
