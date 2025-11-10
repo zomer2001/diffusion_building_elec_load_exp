@@ -10,8 +10,8 @@ plt.rcParams.update({
     'font.size': 16,  # 增大基础字体大小
     'axes.titlesize': 20,  # 增大标题字体
     'axes.labelsize': 17,  # 增大轴标签字体
-    'xtick.labelsize': 15,  # 增大x轴刻度标签字体
-    'ytick.labelsize': 15,  # 增大y轴刻度标签字体
+    'xtick.labelsize': 17,  # 增大x轴刻度标签字体
+    'ytick.labelsize': 17,  # 增大y轴刻度标签字体
     'legend.fontsize': 16,  # 增大图例字体
     'figure.dpi': 1200,
     'savefig.dpi': 1200,
