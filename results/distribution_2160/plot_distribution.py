@@ -43,6 +43,24 @@ MARKER_CONFIG = {
     'timegan': ('D', None),
     'ours': ('^', '//')
 }
+# 修改为学术蓝色调配色方案
+MODERN_PALETTE = [
+    '#a6cee3',  # cgan - 浅蓝色
+    '#1f78b4',  # diffts - 中等蓝色
+    '#6a3d9a',  # timegan - 蓝紫色
+    '#33a02c'   # ours - 保持绿色以突出显示
+]
+
+# 全蓝色调版本（如果需要完全蓝色）
+BLUE_PALETTE = [
+    '#d1e5f0',  # cgan - 最浅蓝
+    '#92c5de',  # diffts - 浅蓝
+    '#4393c3',  # timegan - 中蓝
+    '#2166ac'   # ours - 深蓝（突出显示）
+]
+
+# 使用全蓝色调
+MODERN_PALETTE = BLUE_PALETTE
 
 # ==================== 数据处理 ====================
 df = pd.read_csv("script\modified_methods.csv")
