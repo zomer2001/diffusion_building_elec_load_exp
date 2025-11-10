@@ -74,7 +74,8 @@ combined_df['Method'] = pd.Categorical(combined_df['Method'], categories=method_
 combined_df = combined_df.sort_values('Method')
 
 # ==================== 折线图绘制 ====================
-plt.figure(figsize=(12, 8), tight_layout=True)
+# 修改：将图形尺寸调整为更扁的比例 (16, 6)
+plt.figure(figsize=(16, 6), tight_layout=True)
 ax = plt.gca()
 
 # 绘制折线图

@@ -10,8 +10,8 @@ plt.rcParams.update({
     'font.size': 16,  # 增大基础字体大小
     'axes.titlesize': 20,  # 增大标题字体
     'axes.labelsize': 17,  # 增大轴标签字体
-    'xtick.labelsize': 15,  # 增大x轴刻度标签字体
-    'ytick.labelsize': 15,  # 增大y轴刻度标签字体
+    'xtick.labelsize': 17,  # 增大x轴刻度标签字体
+    'ytick.labelsize': 17,  # 增大y轴刻度标签字体
     'legend.fontsize': 16,  # 增大图例字体
     'figure.dpi': 1200,
     'savefig.dpi': 1200,
@@ -92,7 +92,7 @@ def create_double_bar_plot_with_spaced_legend(dataframe, file_prefix, figsize=(1
     ax1.set_title('Distribution Distance to Original Data (MMD)', fontsize=22, weight='bold', pad=15)
     ax1.set_xlabel('Sparsity Level (%)', labelpad=10, fontsize=20, weight='bold')
     ax1.set_ylabel('MMD', labelpad=10, fontsize=17, weight='bold')
-    ax1.tick_params(axis='both', labelsize=15)
+    ax1.tick_params(axis='both', labelsize=19)
     ax1.yaxis.grid(True, linestyle='--', alpha=0.2)
 
     # 第二个图：与测试数据比较
@@ -113,7 +113,7 @@ def create_double_bar_plot_with_spaced_legend(dataframe, file_prefix, figsize=(1
     ax2.set_title('Distribution Distance to Test Data (MMD)', fontsize=22, weight='bold', pad=15)
     ax2.set_xlabel('Sparsity Level (%)', labelpad=10, fontsize=20, weight='bold')
     ax2.set_ylabel('', labelpad=10, fontsize=17, weight='bold')
-    ax2.tick_params(axis='both', labelsize=15)
+    ax2.tick_params(axis='both', labelsize=19)
     ax2.yaxis.grid(True, linestyle='--', alpha=0.2)
 
     # 应用图案到两个图的柱状图

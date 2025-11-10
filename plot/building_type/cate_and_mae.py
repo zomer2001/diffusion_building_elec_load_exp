@@ -107,7 +107,7 @@ def create_combined_plot(stats_df, sample_size):
 
     # x, y轴标签（19号）
     ax1.set_xlabel('Building Type', fontweight='semibold', color=PALETTE['text'], fontsize=24)
-    ax1.set_ylabel('Number of Buildings', fontweight='semibold', color=PALETTE['text'], fontsize=20)
+    ax1.set_ylabel('Number of Buildings', fontweight='semibold', color=PALETTE['text'], fontsize=21)
     ax1.yaxis.set_major_locator(MaxNLocator(integer=True))
 
     max_count = stats_df['Count'].max()
@@ -155,9 +155,9 @@ def create_combined_plot(stats_df, sample_size):
         stats_df['Building_Type'],  # x轴标签内容
 
 
-        fontsize=20  # 这里修改为你需要的字号（例如20）
+        fontsize=21  # 这里修改为你需要的字号（例如20）
     )
-    plt.yticks(fontsize=20)
+    plt.yticks(fontsize=21)
 
     # 边框样式
     for spine in ax1.spines.values():
