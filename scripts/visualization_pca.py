@@ -12,9 +12,9 @@ plt.rcParams.update({
     'font.size': 10,
     'axes.titlesize': 12,
     'axes.labelsize': 11,
-    'xtick.labelsize': 10,
-    'ytick.labelsize': 10,
-    'legend.fontsize': 10,
+    'xtick.labelsize': 18,
+    'ytick.labelsize': 18,
+    'legend.fontsize': 17,
     'figure.dpi': 300,
     'savefig.dpi': 300,
     'mathtext.fontset': 'stix',
@@ -131,17 +131,17 @@ def plot_pca(data_dict, building_name, sparsity):
     )
 
     # 设置标题和标签
-    plt.title(f'PCA Distribution - {building_name} ({sparsity}% Sparsity)\n'
+    plt.title(f'PCA Distribution\n'
               f'Explained Variance:{total_variance:.1%}',
               fontsize=22, pad=15, weight='bold')
-    plt.xlabel(f'Principal Component 1 ({explained_variance[0]:.1%} variance)', fontsize=18, weight='bold')
-    plt.ylabel(f'Principal Component 2 ({explained_variance[1]:.1%} variance)', fontsize=18, weight='bold')
+    plt.xlabel(f'Principal Component 1 ({explained_variance[0]:.1%} variance)', fontsize=20, weight='bold')
+    plt.ylabel(f'Principal Component 2 ({explained_variance[1]:.1%} variance)', fontsize=20, weight='bold')
 
     # 美化图例
     legend = ax.legend(
         title='Data Type',
-        title_fontsize=17,
-        fontsize=17,
+        title_fontsize=19,
+        fontsize=19,
         loc='best',
         frameon=True,
         framealpha=0.9,
