@@ -30,7 +30,6 @@ plt.rcParams.update({
 
 # 配色方案 (适配 5 种方法)
 MODERN_PALETTE = [
-    '#f7fbff',  # baseline / weakest - 几乎白
     '#deebf7',  # 新增①：极浅蓝（介于白和浅蓝之间）
     '#d1e5f0',  # cgan - 很浅蓝
     '#92c5de',  # diffts - 浅蓝
