@@ -52,7 +52,7 @@ method_mapping = {
     'wgan': 'VAEGAN',
     'ours_gen': 'OURS',
     'oridata': 'Real Data',
-    'ours': 'Diff-TS'
+    'diffts-fft': 'Diff-TS'
 }
 df['Method'] = df['Method'].map(method_mapping)
 
