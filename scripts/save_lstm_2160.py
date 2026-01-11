@@ -17,7 +17,7 @@ device = torch.device('cuda')
 # 定义稀疏率和数据长度
 sparsity_rates = [90, 80,70, 50,40, 30,20]
 lengths = [2160]
-methods = ['oridata', 'wgan', 'diffts','diffts-fft', 'timegan', 'cgan']
+methods = ['oridata', 'wgan', 'diffts','ours', 'timegan', 'cgan','ours_gen']
 base_dir = '../fakedata'
 test_data_folder = '../testdata'
 
@@ -169,10 +169,12 @@ for test_folder in os.listdir(test_data_folder):
                 # 设置不同方法的 epochs
                 if method == 'oridata':
                     num_epochs = 2
-                elif method == 'diffts-fft':
-                    num_epochs = 5
+                elif method == 'ours':
+                    num_epochs = 3
                 elif method == 'diffts':
                     num_epochs = 2
+                elif method == 'ours_gen':
+                    num_epochs = 8
                 else:  # timegan, cgan
                     num_epochs = 2
 
@@ -219,7 +221,7 @@ for test_folder in os.listdir(test_data_folder):
 
 # 保存所有结果到总 CSV
 if results_all:
-    output_dir = '../results/lstm_2160'
+    output_dir = '../results/lstm_2160_all_0111'
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
     results_df = pd.DataFrame(results_all)

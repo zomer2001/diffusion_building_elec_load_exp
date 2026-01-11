@@ -5,10 +5,10 @@ import glob
 from scipy.signal import savgol_filter
 
 # 设置后端
-matplotlib.use('TkAgg')  # 或者 'MacOSX'
+matplotlib.use('MacOSX')  # 或者 'MacOSX'
 
 # 获取文件夹中所有以"fixed"开头的CSV文件路径
-file_path_pattern = '/Users/zomeryang/Documents/bearlab/keti/project/exp/similiar/cluster_and_train/results/lstm/fixed*.csv'
+file_path_pattern = '/Users/zomeryang/Documents/MYSOURCE/diffusion_building_elec_load_exp/similar/cluster_and_train/results/lstm/fixed*.csv'
 csv_files = glob.glob(file_path_pattern)
 
 # 读取并合并所有CSV文件

@@ -6,9 +6,9 @@ import matplotlib
 matplotlib.use('TkAgg')  # 或者 'MacOSX'
 
 # 从CSV读取数据
-file_path = '/Users/zomeryang/Documents/bearlab/keti/project/exp/similiar/cluster_and_train/results/lstm/fixed_training_results_5.csv'  # 替换为你的 CSV 文件路径
+file_path = '/Users/zomeryang/Documents/MYSOURCE/diffusion_building_elec_load_exp/similar/cluster_and_train/results/lstm/fixed_training_results_5.csv'  # 替换为你的 CSV 文件路径
 df = pd.read_csv(file_path)
-
+print('1111')
 # 根据KL_Similarity排序
 df_filtered = df.sort_values(by='KL_Similarity')
 
