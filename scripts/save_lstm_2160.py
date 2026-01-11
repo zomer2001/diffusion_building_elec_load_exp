@@ -17,7 +17,7 @@ device = torch.device('cuda')
 # 定义稀疏率和数据长度
 sparsity_rates = [90, 80,70, 50,40, 30,20]
 lengths = [2160]
-methods = ['oridata', 'wgan', 'diffts','ours', 'timegan', 'cgan','ours_gen']
+methods = ['oridata', 'wgan', 'diffts','diffts-fft', 'timegan', 'cgan','ours_gen']
 base_dir = '../fakedata'
 test_data_folder = '../testdata'
 
@@ -129,7 +129,7 @@ for test_folder in os.listdir(test_data_folder):
                 else:
                     # 读取合成数据
                     X_train, y_train = X_oridata, y_oridata  # 默认使用 oridata
-                    if method in ['diffts-fft', 'diffts']:
+                    if method in ['diffts', 'ours_gen','diffts-fft']:
                         sparsity_folder = os.path.join(base_dir, method, str(sparsity), building_name)
                         for sub_folder in os.listdir(sparsity_folder):
                             sub_folder_path = os.path.join(sparsity_folder, sub_folder)

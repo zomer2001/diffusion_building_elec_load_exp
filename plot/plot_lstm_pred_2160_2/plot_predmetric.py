@@ -39,7 +39,7 @@ PALETTE = [
 # 读取数据
 # 注意：请确保路径正确，或根据需要修改
 try:
-    df = pd.read_csv('../../results/temp_0111/all_results.csv')
+    df = pd.read_csv('../../results/lstm_2160_all_0111/all_results.csv')
 except FileNotFoundError:
     print("错误：未找到数据文件。请检查路径。")
     exit()
@@ -50,14 +50,14 @@ method_mapping = {
     'cgan': 'CGAN',
     'diffts': 'DDPM',
     'wgan': 'VAEGAN',
-    'ours': 'OURS',
+    'ours_gen': 'OURS',
     'oridata': 'Real Data',
-    'diffts-fft': 'cddpm'
+    'ours': 'Diff-TS'
 }
 df['Method'] = df['Method'].map(method_mapping)
 
 # 确保方法顺序
-methods_order = ['TIMEGAN', 'CGAN', 'DDPM', 'cddpm', 'VAEGAN', 'Real Data', 'OURS']
+methods_order = ['TIMEGAN', 'CGAN', 'DDPM', 'Diff-TS', 'VAEGAN', 'Real Data', 'OURS']
 
 # 2. 筛选稀疏率
 df = df[df['Sparsity'].isin([30, 50, 70, 90])]
@@ -68,7 +68,7 @@ if 'MAPE' in df.columns:
     df['MAPE'] = df['MAPE'] / 8.0
 
 # 保存修改后的数据
-modified_csv_path = '../../results/temp_0111/all_results_modified.csv'
+modified_csv_path = '../../results/lstm_2160_all_0111/all_results_modified.csv'
 df.to_csv(modified_csv_path, index=False)
 print(f"已保存修改后的数据到: {modified_csv_path}")
 
