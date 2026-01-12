@@ -1,188 +1,248 @@
+import os
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib
 
-# 设置后端
-matplotlib.use('TkAgg')  # 或者 'MacOSX'
+# =========================
+# Backend & Style
+# =========================
+matplotlib.use('TkAgg')
 
-# 路径设置
-oridata_path = '/Users/zomeryang/Documents/bearlab/keti/project/exp/24_real_exp/train_and_testdata/Cockatoo_industrial_Nathaniel_start8000_2160_50/samples/energy_norm_truth_24_train.npy'
-testdata_path = '/Users/zomeryang/Documents/bearlab/keti/project/exp/24_real_exp/train_and_testdata/Cockatoo_industrial_Nathaniel_start8000_2160_50/samples/energy_norm_truth_24_test.npy'
-ours_path = '/Users/zomeryang/Documents/bearlab/keti/project/exp/24_real_exp/fakedata/ours/50/Cockatoo_industrial_Nathaniel_start8000_2160/Cockatoo_industrial_Nathaniel_start8000_2160_75/ddpm_fake_Cockatoo_industrial_Nathaniel_start8000_2160_75.npy'
-diffts_path = '/Users/zomeryang/Documents/bearlab/keti/project/exp/24_real_exp/fakedata/diffts/50/Cockatoo_industrial_Nathaniel_start8000_2160/Cockatoo_industrial_Nathaniel_start8000_2160_50/ddpm_fake_Cockatoo_industrial_Nathaniel_start8000_2160_50.npy'
+def set_academic_style():
+    plt.rcParams.update({
+        'font.family': 'Times New Roman',
+        'font.size': 16,
+        'axes.titlesize': 18,
+        'axes.labelsize': 18,
+        'xtick.labelsize': 15,
+        'ytick.labelsize': 15,
+        'legend.fontsize': 15,
+        'lines.linewidth': 2.5,
+        'axes.grid': True,
+        'grid.alpha': 0.3,
+        'figure.facecolor': 'white'
+    })
 
 
-def load_data(path):
-    """读取npy文件"""
-    return np.load(path)
+# =========================
+# Path Configuration (与 t-SNE 一致)
+# =========================
+base_dir = '../fakedata'
+test_data_folder = '../testdata'
+sparsity_rates = [70]
+
+
+# =========================
+# Utility Functions
+# =========================
+def smooth_curve(x, window=5):
+    if window <= 1:
+        return x
+    return np.convolve(x, np.ones(window) / window, mode='same')
+
+
+def filter_varying_samples(data_load):
+    valid_idx = []
+    for i, s in enumerate(data_load):
+        if np.all(s == 0):
+            continue
+        if np.all(s == s[0]):
+            continue
+        if np.any(np.diff(s) != 0):
+            valid_idx.append(i)
+    return valid_idx
 
 
 def find_most_similar_load(target_load, candidates_load, num_samples=5):
-    """寻找最相似的负荷数据"""
-    diff = np.abs(candidates_load - target_load)  # 计算差值
-    total_diff = np.sum(diff, axis=1)  # 计算每行的差值绝对和
-    min_indices = np.argsort(total_diff)[:num_samples]  # 取差值最小的前几个
-    return candidates_load[min_indices], min_indices  # 返回相似样本及其索引
-def find_most_similar_load2(target_load, candidates_load, num_samples=5):
-    """寻找最相似的负荷数据（支持多个目标负荷）"""
-    # 计算每个目标负荷与候选负荷之间的差异
-    diffs = np.abs(candidates_load[:, np.newaxis] - target_load)  # 扩展维度进行广播计算
-    total_diffs = np.sum(diffs, axis=2)  # 按列求和，得到每个候选负荷与所有目标负荷的总差异
+    diff = np.abs(candidates_load - target_load)
+    total_diff = np.sum(diff, axis=1)
+    idx = np.argsort(total_diff)[:num_samples]
+    return candidates_load[idx], idx
 
-    # 对每个候选负荷，计算其与所有目标负荷的差异和，选出最相似的负荷
-    min_indices = np.argsort(np.sum(total_diffs, axis=1))[:num_samples]  # 取差值最小的前几个候选负荷的索引
-    return candidates_load[min_indices], min_indices  # 返回相似样本及其索引
 
-def plot_comparison(oridata_sample, ours_similar, diffts_similar, testdata_similar, sample_index):
-    """绘制原始负荷数据与最相似负荷数据的对比图"""
-    fig = plt.figure(figsize=(16, 12))  # 增加高度以适应更多行
+def find_most_similar_load2(target_loads, candidates_load, num_samples=5):
+    diffs = np.abs(candidates_load[:, None] - target_loads)
+    total = np.sum(diffs, axis=2)
+    idx = np.argsort(np.sum(total, axis=1))[:num_samples]
+    return candidates_load[idx], idx
 
-    # 第一行：原始数据与生成数据对比 (左右并排)
-    plt.subplot(4, 2, 1)  # 第一行左图
-    for idx, similar_sample in enumerate(ours_similar):
-        plt.plot(similar_sample, label=f'Ours Similar {idx + 1}')
-    plt.plot(oridata_sample, label='Original', linestyle='--', color='black', linewidth=2)
-    plt.title(f'Ours Comparison - Sample {sample_index + 1}')
-    plt.ylabel('Load')
-    #plt.legend()
-    plt.grid(True)
 
-    plt.subplot(4, 2, 2)  # 第一行右图
-    for idx, similar_sample in enumerate(diffts_similar):
-        plt.plot(similar_sample, label=f'diffTS Similar {idx + 1}')
-    plt.plot(oridata_sample, label='Original', linestyle='--', color='black', linewidth=2)
-    plt.title(f'diffTS Comparison - Sample {sample_index + 1}')
-    #plt.legend()
-    plt.grid(True)
+def load_generated_data(folder_path):
+    """与 t-SNE 脚本完全一致的生成数据读取方式"""
+    data = []
+    if os.path.exists(folder_path):
+        for sub_folder in os.listdir(folder_path):
+            sub_path = os.path.join(folder_path, sub_folder)
+            if os.path.isdir(sub_path):
+                for file in os.listdir(sub_path):
+                    if file.endswith('.npy'):
+                        try:
+                            data.append(np.load(os.path.join(sub_path, file)))
+                        except Exception as e:
+                            print(f'加载失败: {file}, 错误: {e}')
+        if data:
+            return np.concatenate(data, axis=0)
+    return None
 
-    # 第二行：testdata与生成数据对比 (左右并排)
-    plt.subplot(4, 2, 3)  # 第二行左图
-    for idx, similar_sample in enumerate(ours_similar):
-        plt.plot(similar_sample, label=f'Ours Similar {idx + 1}')
-    plt.plot(testdata_similar[0], label='Test Data', linestyle='--', color='black', linewidth=2)
-    plt.title(f'Ours vs Test Data')
-    plt.ylabel('Load')
-    #plt.legend()
-    plt.grid(True)
 
-    plt.subplot(4, 2, 4)  # 第二行右图
-    for idx, similar_sample in enumerate(diffts_similar):
-        plt.plot(similar_sample, label=f'diffTS Similar {idx + 1}')
-    plt.plot(testdata_similar[0], label='Test Data', linestyle='--', color='black', linewidth=2)
-    plt.title(f'diffTS vs Test Data')
-    #plt.legend()
-    plt.grid(True)
+# =========================
+# Visualization
+# =========================
+def plot_group(ax, reference, group, title, ref_label, color):
+    time_axis = np.arange(len(reference))
 
-    # 新增第三行：testdata最相似的样本对比 (左右并排)
-    plt.subplot(4, 2, 5)  # 第三行左图
-    for idx, similar_sample in enumerate(ours_similar):
-        plt.plot(similar_sample, label=f'Ours Similar {idx + 1}')
-    plt.plot(testdata_similar[1], label='Closest Test Data 1', linestyle='--', color='green', linewidth=2)
-    plt.title(f'Ours vs Closest Test Data 1')
-    plt.ylabel('Load')
-    #plt.legend()
-    plt.grid(True)
+    ref_s = smooth_curve(reference)
+    group_s = np.array([smooth_curve(g) for g in group])
 
-    plt.subplot(4, 2, 6)  # 第三行右图
-    for idx, similar_sample in enumerate(diffts_similar):
-        plt.plot(similar_sample, label=f'diffTS Similar {idx + 1}')
-    plt.plot(testdata_similar[1], label='Closest Test Data 1', linestyle='--', color='green', linewidth=2)
-    plt.title(f'diffTS vs Closest Test Data 1')
-    #plt.legend()
-    plt.grid(True)
+    # 分布包络
+    ax.fill_between(
+        time_axis,
+        group_s.min(axis=0),
+        group_s.max(axis=0),
+        color=color,
+        alpha=0.18,
+        linewidth=0
+    )
 
-    # 新增第四行：testdata第二相似的样本对比 (左右并排)
-    plt.subplot(4, 2, 7)  # 第四行左图
-    for idx, similar_sample in enumerate(ours_similar):
-        plt.plot(similar_sample, label=f'Ours Similar {idx + 1}')
-    plt.plot(testdata_similar[2], label='Closest Test Data 2', linestyle='--', color='purple', linewidth=2)
-    plt.title(f'Ours vs Closest Test Data 2')
-    plt.xlabel('Time')
-    plt.ylabel('Load')
-    #plt.legend()
-    plt.grid(True)
+    # 弱化单条生成曲线
+    for g in group_s:
+        ax.plot(time_axis, g, color=color, alpha=0.35)
 
-    plt.subplot(4, 2, 8)  # 第四行右图
-    for idx, similar_sample in enumerate(diffts_similar):
-        plt.plot(similar_sample, label=f'diffTS Similar {idx + 1}')
-    plt.plot(testdata_similar[2], label='Closest Test Data 2', linestyle='--', color='purple', linewidth=2)
-    plt.title(f'diffTS vs Closest Test Data 2')
-    plt.xlabel('Time')
-    #plt.legend()
-    plt.grid(True)
+    # 对照曲线
+    ax.plot(
+        time_axis,
+        ref_s,
+        color='#2f2f2f',
+        linestyle='--',
+        linewidth=3.5,
+        label=ref_label
+    )
+
+    ax.set_title(title)
+    ax.set_ylabel('Normalized Load')
+
+
+def plot_comparison(oridata_sample, ours_similar, diffts_similar, testdata_similar, building_name):
+    set_academic_style()
+
+    fig, axes = plt.subplots(4, 2, figsize=(18, 14), sharex=True)
+
+    color_ours = '#2ca02c'     # 与 t-SNE 中 OURS 保持一致
+    color_diffts = '#ff7f0e'   # 与 Diff-TS 保持一致
+
+    # Row 1
+    plot_group(
+        axes[0, 0], oridata_sample, ours_similar,
+        f'Ours: Pattern Consistency ({building_name})',
+        'Training Load', color_ours
+    )
+    plot_group(
+        axes[0, 1], oridata_sample, diffts_similar,
+        f'Diff-TS: Pattern Consistency ({building_name})',
+        'Training Load', color_diffts
+    )
+
+    # Row 2
+    plot_group(
+        axes[1, 0], testdata_similar[0], ours_similar,
+        'Ours: Similarity to Test Load',
+        'Test Load', color_ours
+    )
+    plot_group(
+        axes[1, 1], testdata_similar[0], diffts_similar,
+        'Diff-TS: Similarity to Test Load',
+        'Test Load', color_diffts
+    )
+
+    # Row 3 & 4
+    for r, idx in zip([2, 3], [1, 2]):
+        plot_group(
+            axes[r, 0], testdata_similar[idx], ours_similar,
+            f'Ours: Coverage of Closest Test Load {idx}',
+            f'Test Load {idx}', color_ours
+        )
+        plot_group(
+            axes[r, 1], testdata_similar[idx], diffts_similar,
+            f'Diff-TS: Coverage of Closest Test Load {idx}',
+            f'Test Load {idx}', color_diffts
+        )
+
+    for ax in axes[-1, :]:
+        ax.set_xlabel('Time (hour)')
 
     plt.tight_layout()
     plt.show()
 
 
-def filter_varying_samples(data_load):
-    """
-    筛选具有变化的样本（非恒定值序列）
+# =========================
+# Main Loop (完全对齐 t-SNE)
+# =========================
+processed_buildings = set()
 
-    条件：
-    1. 不是全零样本
-    2. 不是所有值都相同的恒定值序列
-    3. 序列中存在前后不同的值（变化）
-    """
-    varying_indices = []
-    for idx, sample in enumerate(data_load):
-        # 检查样本是否为全零或恒定值
-        if np.all(sample == 0) or np.all(sample == sample[0]):
-            continue
+for test_folder in os.listdir(test_data_folder):
+    parts = test_folder.split('_')
+    if len(parts) < 4:
+        continue
 
-        # 检查序列中是否有变化（相邻值不同）
-        has_variation = False
-        for i in range(1, len(sample)):
-            if sample[i] != sample[i - 1]:
-                has_variation = True
-                break
+    building_name = '_'.join(parts[:-1])
+    length = int(parts[-2])
+    sparsity = int(parts[-1])
 
-        if has_variation:
-            varying_indices.append(idx)
+    key = f'{building_name}_{sparsity}'
+    if key in processed_buildings or length != 2160 or sparsity not in sparsity_rates:
+        continue
 
-    return varying_indices
+    processed_buildings.add(key)
+    print(f'Processing building: {building_name}, sparsity={sparsity}%')
 
+    # === 训练 & 测试数据 ===
+    oridata_file = os.path.join(
+        test_data_folder, test_folder, 'samples', 'energy_norm_truth_24_train.npy'
+    )
+    test_file = os.path.join(
+        test_data_folder, test_folder, 'samples', 'energy_norm_truth_24_test.npy'
+    )
 
-if __name__ == '__main__':
-    # 读取所有数据集
-    oridata = load_data(oridata_path)
-    ours_data = load_data(ours_path)
-    diffts_data = load_data(diffts_path)
-    testdata = load_data(testdata_path)
+    if not os.path.exists(oridata_file) or not os.path.exists(test_file):
+        print('Missing train/test data, skip.')
+        continue
 
-    # 假设负荷数据在第一列
-    oridata_load = oridata[:, :, 0]  # 原始数据负荷列
-    ours_load = ours_data[:, :, 0]  # ours数据负荷列
-    diffts_load = diffts_data[:, :, 0]  # diffTS数据负荷列
-    testdata_load = testdata[:, :, 0]  # 测试数据负荷列
+    oridata = np.load(oridata_file)[:, :, 0]
+    testdata = np.load(test_file)[:, :, 0]
 
-    # 筛选具有变化的样本
-    varying_indices = filter_varying_samples(oridata_load)
-    print(f"Found {len(varying_indices)} samples with variations in original data")
+    # === 生成数据 ===
+    diffts_folder = os.path.join(base_dir, 'diffts-fft', str(sparsity), building_name)
+    ours_folder = os.path.join(base_dir, 'ours_gen', str(sparsity), building_name)
 
-    # 确保有足够的非恒定样本进行处理
-    if len(varying_indices) < 4:
-        print("Warning: Only found", len(varying_indices), "samples with variations")
-        selected_indices = varying_indices[:len(varying_indices)]
-    else:
-        # 随机选择4个具有变化的样本
-        selected_indices = np.random.choice(varying_indices, 16, replace=False)
-        print("Selected varying sample indices:", selected_indices)
+    diffts_data = load_generated_data(diffts_folder)
+    ours_data = load_generated_data(ours_folder)
 
-    # 处理筛选后的样本
-    for count, i in enumerate(selected_indices):
-        print(f"Processing sample {count + 1}/{len(selected_indices)} (Index: {i})...")
-        oridata_sample = oridata_load[i]  # 选择有变化的样本
+    if diffts_data is None or ours_data is None:
+        print('Missing generated data, skip.')
+        continue
 
-        # 分别从各数据集中寻找最相似的样本
-        ours_similar, _ = find_most_similar_load(oridata_sample, ours_load, num_samples=5)
-        diffts_similar, _ = find_most_similar_load(oridata_sample, diffts_load, num_samples=5)
+    diffts_load = diffts_data[:, :, 0]
+    ours_load = ours_data[:, :, 0]
 
-        # 新增：从testdata中选择两个与原始数据最相似的样本
-        testdata_similar, test_indices = find_most_similar_load(oridata_sample, testdata_load, num_samples=3)
-        ours_similar, _ = find_most_similar_load2(testdata_similar, ours_load, num_samples=5)
+    # === 选取有变化的样本 ===
+    valid_indices = filter_varying_samples(oridata)
+    selected_indices = np.random.choice(valid_indices, 3, replace=False)
 
-        print(f"Selected testdata indices for comparison: {test_indices}")
+    for idx in selected_indices:
+        oridata_sample = oridata[idx]
 
-        # 绘制对比图
-        plot_comparison(oridata_sample, ours_similar, diffts_similar, testdata_similar, i)
+        diffts_similar, _ = find_most_similar_load(oridata_sample, diffts_load, 5)
+        ours_similar, _ = find_most_similar_load(oridata_sample, ours_load, 5)
+
+        test_similar, _ = find_most_similar_load(oridata_sample, testdata, 3)
+        ours_similar, _ = find_most_similar_load2(test_similar, ours_load, 5)
+
+        plot_comparison(
+            oridata_sample,
+            ours_similar,
+            diffts_similar,
+            test_similar,
+            building_name
+        )
+
+print('All comparison plots finished.')
