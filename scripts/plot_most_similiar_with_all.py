@@ -226,7 +226,15 @@ for test_folder in os.listdir(test_data_folder):
 
     # === 选取有变化的样本 ===
     valid_indices = filter_varying_samples(oridata)
+
+
+    # ===== 防御式判断：没有合适 indices 直接跳过 =====
+    if len(valid_indices) < 3:
+        print(f'No valid varying samples (<3), skip building: {building_name}')
+        continue
+
     selected_indices = np.random.choice(valid_indices, 3, replace=False)
+    
 
     for idx in selected_indices:
         oridata_sample = oridata[idx]
