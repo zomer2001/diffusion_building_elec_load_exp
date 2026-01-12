@@ -195,9 +195,9 @@ for test_folder in os.listdir(test_data_folder):
 
         # 生成t-SNE图
         data_dict = {
-            'oridata': oridata,
-            'testdata': test_data,
-            'DDPM': ddpm_data,
+            'Traindata': oridata,
+            'Testdata': test_data,
+            'Diff-TS': ddpm_data,
             'OURS': ours_data
         }
         plot_tsne(data_dict, building_name, sparsity)
