@@ -111,7 +111,7 @@ def plot_tsne(data_dict, building_name, sparsity):
     })
 
     # 修改：将图片尺寸改为正方形 (10, 10) 保持1:1比例
-    plt.figure(figsize=(10, 8), tight_layout=True)
+    plt.figure(figsize=(12, 8), tight_layout=True)
     ax = plt.gca()
 
     # 绘制散点图（点大小从120缩小到80）
