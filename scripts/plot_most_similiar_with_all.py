@@ -139,7 +139,7 @@ def plot_distribution_comparison(
 
     ax.set_xlabel('Time (hour)')
     ax.set_ylabel('Normalized Load')
-    ax.set_title(f'Distribution Comparison: Test vs {method_name}')
+    ax.set_title(f'Distribution Comparison: Test data vs {method_name}')
     ax.legend(frameon=False)
 
     plt.tight_layout()
