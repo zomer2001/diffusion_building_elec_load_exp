@@ -193,16 +193,16 @@ for test_folder in os.listdir(test_data_folder):
     diffts_load = diffts_data[:, :, 0]
 
     valid_indices = filter_varying_samples(oridata)
-    if len(valid_indices) < 3:
+    if len(valid_indices) < 5:
         continue
 
-    selected_indices = np.random.choice(valid_indices, 3, replace=False)
+    selected_indices = np.random.choice(valid_indices, 5, replace=False)
 
     for idx in selected_indices:
         ref = oridata[idx]
 
-        test_similar = find_most_similar_load(ref, testdata, 5)
-        ours_similar = find_most_similar_load(ref, ours_load, 5)
+        test_similar = find_most_similar_load(ref, testdata, 3)
+        ours_similar = find_most_similar_load(ref, ours_load, 4)
         diffts_similar = find_most_similar_load(ref, diffts_load, 7)
 
         plot_distribution_comparison(
