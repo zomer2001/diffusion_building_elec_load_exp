@@ -98,16 +98,17 @@ def plot_distribution_comparison(
 
     fig, ax = plt.subplots(figsize=(9, 4.5))
 
-    # ---------- Test individual curves ----------
-    for t in test_s:
-        ax.plot(
-            time_axis, t,
-            color='#1f77b4',
-            alpha=0.18,
-            linewidth=1.2
-        )
+    # ---------- Test data: ONLY distribution band ----------
+    ax.fill_between(
+        time_axis,
+        test_s.min(axis=0),
+        test_s.max(axis=0),
+        color='#1f77b4',
+        alpha=0.25,
+        label='Test Data Distribution'
+    )
 
-    # ---------- Generated individual curves ----------
+    # ---------- Generated data: faint individual curves ----------
     gen_color = '#2ca02c' if method_name == 'Ours' else '#ff7f0e'
     for g in gen_s:
         ax.plot(
@@ -117,17 +118,7 @@ def plot_distribution_comparison(
             linewidth=1.2
         )
 
-    # ---------- Test distribution envelope ----------
-    ax.fill_between(
-        time_axis,
-        test_s.min(axis=0),
-        test_s.max(axis=0),
-        color='#1f77b4',
-        alpha=0.18,
-        label='Test Data Distribution'
-    )
-
-    # ---------- Generated distribution envelope ----------
+    # ---------- Generated data: distribution band ----------
     ax.fill_between(
         time_axis,
         gen_s.min(axis=0),
@@ -142,7 +133,7 @@ def plot_distribution_comparison(
         time_axis,
         ref_s,
         color='#2b2b2b',
-        linewidth=3.4,
+        linewidth=3.6,
         label='Training Reference'
     )
 
@@ -202,17 +193,17 @@ for test_folder in os.listdir(test_data_folder):
     diffts_load = diffts_data[:, :, 0]
 
     valid_indices = filter_varying_samples(oridata)
-    if len(valid_indices) < 5:
+    if len(valid_indices) < 3:
         continue
 
-    selected_indices = np.random.choice(valid_indices, 5, replace=False)
+    selected_indices = np.random.choice(valid_indices, 3, replace=False)
 
     for idx in selected_indices:
         ref = oridata[idx]
 
-        test_similar = find_most_similar_load(ref, testdata, 8)
-        ours_similar = find_most_similar_load(ref, ours_load, 8)
-        diffts_similar = find_most_similar_load(ref, diffts_load, 8)
+        test_similar = find_most_similar_load(ref, testdata, 5)
+        ours_similar = find_most_similar_load(ref, ours_load, 5)
+        diffts_similar = find_most_similar_load(ref, diffts_load, 7)
 
         plot_distribution_comparison(
             ref, test_similar, ours_similar,
