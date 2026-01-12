@@ -30,7 +30,7 @@ plt.rcParams.update({
 COLOR_PALETTE = {
     'Traindata': '#1f77b4',  # 蓝色 - 原始数据
     'Testdata': '#d62728',  # 红色 - 测试数据
-    'Diff-TS': '#ff7f0e',  # 橙色 - DDPM方法
+    'CDDM': '#ff7f0e',  # 橙色 - DDPM方法
     'OURS': '#2ca02c'  # 绿色 - OURS方法
 }
 
@@ -80,9 +80,9 @@ def plot_tsne(data_dict, building_name, sparsity):
     datasets = []
     data_types = []
 
-    for data_type in ['Traindata', 'Testdata', 'Diff-TS', 'OURS']:
+    for data_type in ['Traindata', 'Testdata', 'CDDM', 'OURS']:
         if data_type in data_dict and data_dict[data_type] is not None:
-            max_samples = 500 if data_type in ['Diff-TS', 'OURS'] else None
+            max_samples = 500 if data_type in ['CDDM', 'OURS'] else None
             prepared_data = prepare_tsne_data(data_dict[data_type], max_samples)
             if prepared_data is not None:
                 datasets.append(prepared_data)
@@ -125,7 +125,7 @@ def plot_tsne(data_dict, building_name, sparsity):
         s=120,  # 点大小缩小（原120→80）
         alpha=0.8,  # 透明度不变，确保点重叠时仍可区分
         ax=ax,
-        markers={'Traindata': 'o', 'Testdata': 's', 'OURS': 'D', 'Diff-TS': '^'}
+        markers={'Traindata': 'o', 'Testdata': 's', 'OURS': 'D', 'CDDM': '^'}
     )
 
     # 标题字体进一步增大到20号（原18→20）
