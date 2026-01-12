@@ -122,7 +122,7 @@ def plot_tsne(data_dict, building_name, sparsity):
         style='Data Type',
         data=tsne_df,
         palette=[COLOR_PALETTE[dt] for dt in tsne_df['Data Type'].unique()],
-        s=80,  # 点大小缩小（原120→80）
+        s=120,  # 点大小缩小（原120→80）
         alpha=0.8,  # 透明度不变，确保点重叠时仍可区分
         ax=ax,
         markers={'Traindata': 'o', 'Testdata': 's', 'OURS': 'D', 'Diff-TS': '^'}
