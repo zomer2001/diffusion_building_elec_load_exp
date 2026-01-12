@@ -30,7 +30,7 @@ def set_academic_style():
 base_dir = '../fakedata'
 test_data_folder = '../testdata'
 result_root = './result'
-sparsity_rates = [70]
+sparsity_rates = [50]
 
 
 # =========================
@@ -201,20 +201,20 @@ for test_folder in os.listdir(test_data_folder):
     for idx in selected_indices:
         ref = oridata[idx]
 
-        test_similar = find_most_similar_load(ref, testdata, 3)
-        ours_similar = find_most_similar_load(ref, ours_load, 4)
-        diffts_similar = find_most_similar_load(ref, diffts_load, 7)
+        test_similar = find_most_similar_load(ref, testdata, 5)
+        ours_similar = find_most_similar_load(ref, ours_load, 7)
+        diffts_similar = find_most_similar_load(ref, diffts_load, 4)
 
         plot_distribution_comparison(
             ref, test_similar, ours_similar,
             'Ours',
-            os.path.join(save_dir, f'{building_name}_idx{idx}_ours.png')
+            os.path.join(save_dir, f'{building_name}_idx{idx}_s{sparsity}_ours.png')
         )
 
         plot_distribution_comparison(
             ref, test_similar, diffts_similar,
             'DiffTS',
-            os.path.join(save_dir, f'{building_name}_idx{idx}_diffts.png')
+            os.path.join(save_dir, f'{building_name}_idx{idx}_s{sparsity}_diffts.png')
         )
 
 print('All figures saved successfully.')
