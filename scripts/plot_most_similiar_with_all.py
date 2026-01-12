@@ -98,7 +98,26 @@ def plot_distribution_comparison(
 
     fig, ax = plt.subplots(figsize=(9, 4.5))
 
-    # Test distribution
+    # ---------- Test individual curves ----------
+    for t in test_s:
+        ax.plot(
+            time_axis, t,
+            color='#1f77b4',
+            alpha=0.18,
+            linewidth=1.2
+        )
+
+    # ---------- Generated individual curves ----------
+    gen_color = '#2ca02c' if method_name == 'Ours' else '#ff7f0e'
+    for g in gen_s:
+        ax.plot(
+            time_axis, g,
+            color=gen_color,
+            alpha=0.18,
+            linewidth=1.2
+        )
+
+    # ---------- Test distribution envelope ----------
     ax.fill_between(
         time_axis,
         test_s.min(axis=0),
@@ -108,22 +127,22 @@ def plot_distribution_comparison(
         label='Test Data Distribution'
     )
 
-    # Generated distribution
+    # ---------- Generated distribution envelope ----------
     ax.fill_between(
         time_axis,
         gen_s.min(axis=0),
         gen_s.max(axis=0),
-        color='#2ca02c' if method_name == 'Ours' else '#ff7f0e',
+        color=gen_color,
         alpha=0.22,
         label=f'{method_name} Generated Distribution'
     )
 
-    # Reference curve
+    # ---------- Reference curve ----------
     ax.plot(
         time_axis,
         ref_s,
         color='#2b2b2b',
-        linewidth=3.2,
+        linewidth=3.4,
         label='Training Reference'
     )
 
@@ -158,11 +177,9 @@ for test_folder in os.listdir(test_data_folder):
     processed_buildings.add(key)
     print(f'Processing: {building_name}')
 
-    # result subfolder
     save_dir = os.path.join(result_root, building_name)
     os.makedirs(save_dir, exist_ok=True)
 
-    # load data
     oridata = np.load(
         os.path.join(test_data_folder, test_folder, 'samples', 'energy_norm_truth_24_train.npy')
     )[:, :, 0]
@@ -185,17 +202,17 @@ for test_folder in os.listdir(test_data_folder):
     diffts_load = diffts_data[:, :, 0]
 
     valid_indices = filter_varying_samples(oridata)
-    if len(valid_indices) < 3:
+    if len(valid_indices) < 5:
         continue
 
-    selected_indices = np.random.choice(valid_indices, 3, replace=False)
+    selected_indices = np.random.choice(valid_indices, 5, replace=False)
 
     for idx in selected_indices:
         ref = oridata[idx]
 
-        test_similar = find_most_similar_load(ref, testdata, 5)
-        ours_similar = find_most_similar_load(ref, ours_load, 5)
-        diffts_similar = find_most_similar_load(ref, diffts_load, 5)
+        test_similar = find_most_similar_load(ref, testdata, 8)
+        ours_similar = find_most_similar_load(ref, ours_load, 8)
+        diffts_similar = find_most_similar_load(ref, diffts_load, 8)
 
         plot_distribution_comparison(
             ref, test_similar, ours_similar,
