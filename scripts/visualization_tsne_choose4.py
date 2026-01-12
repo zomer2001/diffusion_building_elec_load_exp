@@ -185,11 +185,11 @@ for test_folder in os.listdir(test_data_folder):
         test_data = np.load(test_file)
 
         # 加载DDPM和OURS生成数据
-        ddpm_folder = os.path.join(base_dir, 'diffts', str(sparsity), building_name)
+        ddpm_folder = os.path.join(base_dir, 'diffts-fft', str(sparsity), building_name)
         ddpm_data = load_generated_data(ddpm_folder)
         print(f"加载了 {len(ddpm_data) if ddpm_data is not None else 0} 个DDPM生成的样本")
 
-        ours_folder = os.path.join(base_dir, 'ours', str(sparsity), building_name)
+        ours_folder = os.path.join(base_dir, 'ours_gen', str(sparsity), building_name)
         ours_data = load_generated_data(ours_folder)
         print(f"加载了 {len(ours_data) if ours_data is not None else 0} 个OURS生成的样本")
 
