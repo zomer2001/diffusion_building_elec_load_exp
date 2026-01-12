@@ -52,12 +52,12 @@ method_mapping = {
     'wgan': 'VAEGAN',
     'ours_gen': 'OURS',
     'oridata': 'Real Data',
-    'diffts-fft': 'Diff-TS'
+    'diffts-fft': 'CDDM'
 }
 df['Method'] = df['Method'].map(method_mapping)
 
 # 确保方法顺序
-methods_order = ['TIMEGAN', 'CGAN', 'DDPM', 'Diff-TS', 'VAEGAN', 'Real Data', 'OURS']
+methods_order = ['TIMEGAN', 'CGAN', 'DDPM', 'CDDM', 'VAEGAN', 'Real Data', 'OURS']
 
 # 2. 筛选稀疏率
 df = df[df['Sparsity'].isin([30, 50, 70, 90])]

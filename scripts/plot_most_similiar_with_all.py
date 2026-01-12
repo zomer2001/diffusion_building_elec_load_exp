@@ -30,7 +30,7 @@ def set_academic_style():
 base_dir = '../fakedata'
 test_data_folder = '../testdata'
 result_root = './result'
-sparsity_rates = [50]
+sparsity_rates = [30,50,70]
 
 
 # =========================
@@ -125,7 +125,7 @@ def plot_distribution_comparison(
         gen_s.max(axis=0),
         color=gen_color,
         alpha=0.22,
-        label=f'{method_name} Generated Distribution'
+        label=f'{method_name} Synthetic Distribution'
     )
 
     # ---------- Reference curve ----------
@@ -196,6 +196,8 @@ for test_folder in os.listdir(test_data_folder):
     if len(valid_indices) < 5:
         continue
 
+    np.random.seed(42)
+
     selected_indices = np.random.choice(valid_indices, 5, replace=False)
 
     for idx in selected_indices:
@@ -213,7 +215,7 @@ for test_folder in os.listdir(test_data_folder):
 
         plot_distribution_comparison(
             ref, test_similar, diffts_similar,
-            'DiffTS',
+            'CDDM',
             os.path.join(save_dir, f'{building_name}_idx{idx}_s{sparsity}_diffts.png')
         )
 

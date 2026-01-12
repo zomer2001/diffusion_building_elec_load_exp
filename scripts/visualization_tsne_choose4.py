@@ -197,7 +197,7 @@ for test_folder in os.listdir(test_data_folder):
         data_dict = {
             'Traindata': oridata,
             'Testdata': test_data,
-            'Diff-TS': ddpm_data,
+            'CDDM': ddpm_data,
             'OURS': ours_data
         }
         plot_tsne(data_dict, building_name, sparsity)
