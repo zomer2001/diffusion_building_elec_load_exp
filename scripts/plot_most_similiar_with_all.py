@@ -11,31 +11,32 @@ matplotlib.use('TkAgg')
 def set_academic_style():
     plt.rcParams.update({
         'font.family': 'Times New Roman',
-        'font.size': 16,
-        'axes.titlesize': 18,
-        'axes.labelsize': 18,
-        'xtick.labelsize': 15,
-        'ytick.labelsize': 15,
-        'legend.fontsize': 15,
-        'lines.linewidth': 2.5,
+        'font.size': 15,
+        'axes.titlesize': 17,
+        'axes.labelsize': 16,
+        'xtick.labelsize': 14,
+        'ytick.labelsize': 14,
+        'legend.fontsize': 13,
+        'lines.linewidth': 2.3,
         'axes.grid': True,
-        'grid.alpha': 0.3,
+        'grid.alpha': 0.25,
         'figure.facecolor': 'white'
     })
 
 
 # =========================
-# Path Configuration (与 t-SNE 一致)
+# Path Configuration
 # =========================
 base_dir = '../fakedata'
 test_data_folder = '../testdata'
+result_root = './result'
 sparsity_rates = [70]
 
 
 # =========================
 # Utility Functions
 # =========================
-def smooth_curve(x, window=5):
+def smooth_curve(x, window=15):
     if window <= 1:
         return x
     return np.convolve(x, np.ones(window) / window, mode='same')
@@ -57,18 +58,10 @@ def find_most_similar_load(target_load, candidates_load, num_samples=5):
     diff = np.abs(candidates_load - target_load)
     total_diff = np.sum(diff, axis=1)
     idx = np.argsort(total_diff)[:num_samples]
-    return candidates_load[idx], idx
-
-
-def find_most_similar_load2(target_loads, candidates_load, num_samples=5):
-    diffs = np.abs(candidates_load[:, None] - target_loads)
-    total = np.sum(diffs, axis=2)
-    idx = np.argsort(np.sum(total, axis=1))[:num_samples]
-    return candidates_load[idx], idx
+    return candidates_load[idx]
 
 
 def load_generated_data(folder_path):
-    """与 t-SNE 脚本完全一致的生成数据读取方式"""
     data = []
     if os.path.exists(folder_path):
         for sub_folder in os.listdir(folder_path):
@@ -78,8 +71,8 @@ def load_generated_data(folder_path):
                     if file.endswith('.npy'):
                         try:
                             data.append(np.load(os.path.join(sub_path, file)))
-                        except Exception as e:
-                            print(f'加载失败: {file}, 错误: {e}')
+                        except:
+                            pass
         if data:
             return np.concatenate(data, axis=0)
     return None
@@ -88,94 +81,64 @@ def load_generated_data(folder_path):
 # =========================
 # Visualization
 # =========================
-def plot_group(ax, reference, group, title, ref_label, color):
+def plot_distribution_comparison(
+    reference,
+    test_group,
+    gen_group,
+    method_name,
+    save_path
+):
+    set_academic_style()
+
     time_axis = np.arange(len(reference))
 
     ref_s = smooth_curve(reference)
-    group_s = np.array([smooth_curve(g) for g in group])
+    test_s = np.array([smooth_curve(t) for t in test_group])
+    gen_s = np.array([smooth_curve(g) for g in gen_group])
 
-    # 分布包络
+    fig, ax = plt.subplots(figsize=(9, 4.5))
+
+    # Test distribution
     ax.fill_between(
         time_axis,
-        group_s.min(axis=0),
-        group_s.max(axis=0),
-        color=color,
+        test_s.min(axis=0),
+        test_s.max(axis=0),
+        color='#1f77b4',
         alpha=0.18,
-        linewidth=0
+        label='Test Data Distribution'
     )
 
-    # 弱化单条生成曲线
-    for g in group_s:
-        ax.plot(time_axis, g, color=color, alpha=0.35)
+    # Generated distribution
+    ax.fill_between(
+        time_axis,
+        gen_s.min(axis=0),
+        gen_s.max(axis=0),
+        color='#2ca02c' if method_name == 'Ours' else '#ff7f0e',
+        alpha=0.22,
+        label=f'{method_name} Generated Distribution'
+    )
 
-    # 对照曲线
+    # Reference curve
     ax.plot(
         time_axis,
         ref_s,
-        color='#2f2f2f',
-        linestyle='--',
-        linewidth=3.5,
-        label=ref_label
+        color='#2b2b2b',
+        linewidth=3.2,
+        label='Training Reference'
     )
 
-    ax.set_title(title)
+    ax.set_xlabel('Time (hour)')
     ax.set_ylabel('Normalized Load')
-
-
-def plot_comparison(oridata_sample, ours_similar, diffts_similar, testdata_similar, building_name):
-    set_academic_style()
-
-    fig, axes = plt.subplots(4, 2, figsize=(18, 14), sharex=True)
-
-    color_ours = '#2ca02c'     # 与 t-SNE 中 OURS 保持一致
-    color_diffts = '#ff7f0e'   # 与 Diff-TS 保持一致
-
-    # Row 1
-    plot_group(
-        axes[0, 0], oridata_sample, ours_similar,
-        f'Ours: Pattern Consistency ({building_name})',
-        'Training Load', color_ours
-    )
-    plot_group(
-        axes[0, 1], oridata_sample, diffts_similar,
-        f'Diff-TS: Pattern Consistency ({building_name})',
-        'Training Load', color_diffts
-    )
-
-    # Row 2
-    plot_group(
-        axes[1, 0], testdata_similar[0], ours_similar,
-        'Ours: Similarity to Test Load',
-        'Test Load', color_ours
-    )
-    plot_group(
-        axes[1, 1], testdata_similar[0], diffts_similar,
-        'Diff-TS: Similarity to Test Load',
-        'Test Load', color_diffts
-    )
-
-    # Row 3 & 4
-    for r, idx in zip([2, 3], [1, 2]):
-        plot_group(
-            axes[r, 0], testdata_similar[idx], ours_similar,
-            f'Ours: Coverage of Closest Test Load {idx}',
-            f'Test Load {idx}', color_ours
-        )
-        plot_group(
-            axes[r, 1], testdata_similar[idx], diffts_similar,
-            f'Diff-TS: Coverage of Closest Test Load {idx}',
-            f'Test Load {idx}', color_diffts
-        )
-
-    for ax in axes[-1, :]:
-        ax.set_xlabel('Time (hour)')
+    ax.set_title(f'Distribution Comparison: Test vs {method_name}')
+    ax.legend(frameon=False)
 
     plt.tight_layout()
-    plt.show()
+    plt.savefig(save_path, dpi=300)
+    plt.close()
 
 
 # =========================
-# Main Loop (完全对齐 t-SNE)
+# Main Loop
 # =========================
 processed_buildings = set()
 
@@ -193,64 +156,57 @@ for test_folder in os.listdir(test_data_folder):
         continue
 
     processed_buildings.add(key)
-    print(f'Processing building: {building_name}, sparsity={sparsity}%')
+    print(f'Processing: {building_name}')
 
-    # === 训练 & 测试数据 ===
-    oridata_file = os.path.join(
-        test_data_folder, test_folder, 'samples', 'energy_norm_truth_24_train.npy'
+    # result subfolder
+    save_dir = os.path.join(result_root, building_name)
+    os.makedirs(save_dir, exist_ok=True)
+
+    # load data
+    oridata = np.load(
+        os.path.join(test_data_folder, test_folder, 'samples', 'energy_norm_truth_24_train.npy')
+    )[:, :, 0]
+
+    testdata = np.load(
+        os.path.join(test_data_folder, test_folder, 'samples', 'energy_norm_truth_24_test.npy')
+    )[:, :, 0]
+
+    ours_data = load_generated_data(
+        os.path.join(base_dir, 'ours_gen', str(sparsity), building_name)
     )
-    test_file = os.path.join(
-        test_data_folder, test_folder, 'samples', 'energy_norm_truth_24_test.npy'
+    diffts_data = load_generated_data(
+        os.path.join(base_dir, 'diffts-fft', str(sparsity), building_name)
     )
 
-    if not os.path.exists(oridata_file) or not os.path.exists(test_file):
-        print('Missing train/test data, skip.')
+    if ours_data is None or diffts_data is None:
         continue
 
-    oridata = np.load(oridata_file)[:, :, 0]
-    testdata = np.load(test_file)[:, :, 0]
-
-    # === 生成数据 ===
-    diffts_folder = os.path.join(base_dir, 'diffts-fft', str(sparsity), building_name)
-    ours_folder = os.path.join(base_dir, 'ours_gen', str(sparsity), building_name)
-
-    diffts_data = load_generated_data(diffts_folder)
-    ours_data = load_generated_data(ours_folder)
-
-    if diffts_data is None or ours_data is None:
-        print('Missing generated data, skip.')
-        continue
-
-    diffts_load = diffts_data[:, :, 0]
     ours_load = ours_data[:, :, 0]
+    diffts_load = diffts_data[:, :, 0]
 
-    # === 选取有变化的样本 ===
     valid_indices = filter_varying_samples(oridata)
-
-
-    # ===== 防御式判断：没有合适 indices 直接跳过 =====
     if len(valid_indices) < 3:
-        print(f'No valid varying samples (<3), skip building: {building_name}')
         continue
 
     selected_indices = np.random.choice(valid_indices, 3, replace=False)
-    
 
     for idx in selected_indices:
-        oridata_sample = oridata[idx]
+        ref = oridata[idx]
 
-        diffts_similar, _ = find_most_similar_load(oridata_sample, diffts_load, 5)
-        ours_similar, _ = find_most_similar_load(oridata_sample, ours_load, 5)
+        test_similar = find_most_similar_load(ref, testdata, 5)
+        ours_similar = find_most_similar_load(ref, ours_load, 5)
+        diffts_similar = find_most_similar_load(ref, diffts_load, 5)
 
-        test_similar, _ = find_most_similar_load(oridata_sample, testdata, 3)
-        ours_similar, _ = find_most_similar_load2(test_similar, ours_load, 5)
-
-        plot_comparison(
-            oridata_sample,
-            ours_similar,
-            diffts_similar,
-            test_similar,
-            building_name
+        plot_distribution_comparison(
+            ref, test_similar, ours_similar,
+            'Ours',
+            os.path.join(save_dir, f'{building_name}_idx{idx}_ours.png')
         )
 
-print('All comparison plots finished.')
+        plot_distribution_comparison(
+            ref, test_similar, diffts_similar,
+            'DiffTS',
+            os.path.join(save_dir, f'{building_name}_idx{idx}_diffts.png')
+        )
+
+print('All figures saved successfully.')
