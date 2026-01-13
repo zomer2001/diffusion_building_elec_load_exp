@@ -7,13 +7,13 @@ from matplotlib.patches import Rectangle
 # ==================== 全局样式设置 ====================
 plt.rcParams.update({
     'font.family': 'Times New Roman',
-    'font.size': 14,
-    'axes.titlesize': 16,
-    'axes.labelsize': 15,
-    'xtick.labelsize': 13,
+    'font.size': 14,  # 增大基础字体
+    'axes.titlesize': 16,  # 增大标题字体
+    'axes.labelsize': 15,  # 增大轴标签字体
+    'xtick.labelsize': 13,  # 增大刻度标签字体
     'ytick.labelsize': 13,
-    'legend.fontsize': 13,
-    'figure.dpi': 1200,
+    'legend.fontsize': 13,  # 增大图例字体
+    'figure.dpi': 1200,  # 提高分辨率
     'savefig.dpi': 1200,
     'mathtext.fontset': 'stix',
     'axes.grid': True,
@@ -24,57 +24,47 @@ plt.rcParams.update({
     'legend.loc': 'best',
 })
 
-# ==================== 学术配色方案 ====================
+# 专业配色方案
 PALETTE = sns.color_palette([
-    '#4C72B0',  # TIMEGAN
-    '#55A868',  # CGAN
-    '#C44E52',  # DDPM
-    '#8172B2',  # VAEGAN
-    '#CCB974',  # Real Data
-    '#64B5CD',  # CDDM
-    '#08306b',  # OURS（深蓝）
+    '#4C72B0',  # 蓝色
+    '#55A868',  # 绿色
+    '#C44E52',  # 红色
+    '#8172B2',  # 紫色
+    '#CCB974',  # 金色
+    '#64B5CD'  # 青色
 ])
 
 # ==================== 数据处理 ====================
+# 读取数据
 df = pd.read_csv('../../results/lstm_2160_all_0111/all_results.csv')
 
-# -------- 方法名映射（你要求的版本）--------
+# 1. 方法名称映射和排序
 method_mapping = {
-    'oridata': 'Real Data',
-    'wgan': 'VAEGAN',
-    'diffts': 'DDPM',
-    'diffts-fft': 'CDDM',
     'timegan': 'TIMEGAN',
     'cgan': 'CGAN',
-    'ours_gen': 'OURS'
+    'diffts': 'DDPM',
+    'ours_gen': 'OURS',
+    'diffts-fft': 'CDDM',  # 确保OURS在最后
+    'oridata': 'Real Data'
 }
-
 df['Method'] = df['Method'].map(method_mapping)
 
-# -------- 方法顺序（OURS 最后）--------
-methods_order = [
-    'TIMEGAN',
-    'CGAN',
-    'DDPM',
-    'VAEGAN',
-    'CDDM',
-    'Real Data',
-    'OURS'
-]
+# 确保OURS在最后
+methods_order = ['TIMEGAN', 'CGAN', 'DDPM', 'CDDM', 'Real Data', 'OURS']
 
-# -------- 筛选稀疏率 --------
+# 2. 筛选稀疏率
 df = df[df['Sparsity'].isin([30, 50, 70, 90])]
 
-# -------- MAPE 调整 --------
+# 3. MAPE值调整
 df['MAPE_original'] = df['MAPE'].copy()
 df['MAPE'] = df['MAPE'] / 8.0
 
-# 保存修改后的 CSV
+# 保存修改后的数据
 modified_csv_path = '../../results/lstm_2160_all_0111/all_results_modified.csv'
 df.to_csv(modified_csv_path, index=False)
 print(f"已保存修改后的数据到: {modified_csv_path}")
 
-# -------- 分组均值 --------
+# 分组计算平均值
 grouped = df.groupby(['Sparsity', 'Method'])[['MAE', 'MSE', 'RMSE', 'MAPE']].mean().reset_index()
 
 # ==================== 柱状图绘制 ====================
@@ -83,80 +73,111 @@ metric_names = ['MAE', 'MSE', 'RMSE', 'MAPE (%)']
 titles = ['(a) MAE Comparison', '(b) MSE Comparison',
           '(c) RMSE Comparison', '(d) MAPE Comparison']
 
+# 增大图形尺寸
 fig, axes = plt.subplots(2, 2, figsize=(16, 14), constrained_layout=True)
-fig.suptitle(
-    'Predictive Performance Comparison of Different Methods',
-    fontsize=21, weight='bold', y=0.98
-)
+fig.suptitle('Predictive Performance Comparison of Different Methods', fontsize=21, weight='bold', y=0.98)
 
-hatch_pattern = '////'
+# 自定义标记样式
+hatch_pattern = '////'  # OURS的填充样式
 
+# 绘制四个指标
 for i, (ax, metric, name, title) in enumerate(zip(
-        axes.flatten(), metrics, metric_names, titles)):
-
-    sns.barplot(
+        [axes[0, 0], axes[0, 1], axes[1, 0], axes[1, 1]],
+        metrics,
+        metric_names,
+        titles
+)):
+    # 绘制柱状图
+    bars = sns.barplot(
         data=grouped,
         x='Sparsity',
         y=metric,
         hue='Method',
-        hue_order=methods_order,
+        hue_order=methods_order,  # 确保OURS最后
+        ax=ax,
         palette=PALETTE,
         edgecolor='black',
-        linewidth=0.8,
+        linewidth=0.8,  # 增大边框宽度
         saturation=0.9,
-        dodge=True,
-        ax=ax
+        dodge=True
     )
 
-    # OURS hatch
-    n_sparsity = grouped['Sparsity'].nunique()
+    # 为OURS添加特殊标记
     for j, bar in enumerate(ax.patches):
-        method_idx = j // n_sparsity
-        if methods_order[method_idx] == 'OURS':
+        # 计算当前bar对应的方法
+        method_idx = j // len(grouped['Sparsity'].unique())
+        method = methods_order[method_idx]
+        if method == 'OURS':
             bar.set_hatch(hatch_pattern)
-            bar.set_linewidth(1.5)
+            bar.set_edgecolor('black')
+            bar.set_linewidth(1.5)  # 增大OURS边框宽度
 
+    # 设置标题和标签
     ax.set_title(title, fontsize=20, pad=15, weight='semibold')
-    ax.set_xlabel('Training Data Split (%)', fontsize=19, weight='semibold')
-    ax.set_ylabel(name, fontsize=19, weight='semibold')
+    ax.set_xlabel('Training Data Availbility (%)', weight='semibold', fontsize=19)
+    ax.set_ylabel(name, weight='semibold', fontsize=19)
+
+    # 修改x轴标签
     ax.set_xticklabels(['30%', '50%', '70%', '90%'], fontsize=19)
     ax.tick_params(axis='y', labelsize=15)
 
+    # 只在第一个子图创建图例
     if i == 0:
+        # 获取默认图例的句柄和标签
         handles, labels = ax.get_legend_handles_labels()
+
+        # 创建自定义图例项
         legend_handles = []
-
         for j, label in enumerate(labels):
-            color = PALETTE[j]
-            patch = Rectangle(
-                (0, 0), 1.2, 1.2,
-                facecolor=color,
-                edgecolor='black',
-                hatch=hatch_pattern if label == 'OURS' else None,
-                linewidth=1.5
-            )
-            legend_handles.append(patch)
+            # 获取该方法的颜色
+            color = PALETTE[j % len(PALETTE)]
 
+            if label == 'OURS':
+                # 创建一个带填充样式的矩形，增大尺寸
+                patch = Rectangle((0, 0), 1.2, 1.2,  # 增大尺寸
+                                  facecolor=color,
+                                  edgecolor='black',
+                                  hatch=hatch_pattern,
+                                  linewidth=1.5)
+                legend_handles.append(patch)
+            else:
+                # 创建一个普通矩形
+                patch = Rectangle((0, 0), 1.2, 1.2,
+                                  facecolor=color,
+                                  edgecolor='black',
+                                  linewidth=1.5)
+                legend_handles.append(patch)
+
+        # 在第一个子图中创建图例
         legend = ax.legend(
             legend_handles, labels,
             title='Methods',
-            title_fontsize=17,
-            fontsize=16,
+            title_fontsize=17,  # 增大图例标题字体
+            frameon=True,
+            loc='best',  # 自动选择最佳位置
+            fontsize=16,  # 增大图例字体
             framealpha=0.8
         )
 
+        # 加粗显示我们的方法
         for text in legend.get_texts():
             if text.get_text() == 'OURS':
                 text.set_fontweight('bold')
     else:
+        # 移除其他子图的图例
         ax.get_legend().remove()
 
+# 调整布局并保存
+plt.tight_layout()
+
+# 保存为图片格式
 plt.savefig('performance_comparison.pdf', bbox_inches='tight', dpi=600)
 plt.savefig('performance_comparison.png', bbox_inches='tight', dpi=600)
-print("已保存柱状图：performance_comparison.pdf / png")
+print("已保存柱状图：performance_comparison.pdf 和 performance_comparison.png")
 
-# ==================== MAE 折线图 ====================
-plt.figure(figsize=(10, 8))
+# ==================== MAE折线图绘制 ====================
+# 增大图形尺寸
+plt.figure(figsize=(10, 8), tight_layout=True)
 ax = plt.gca()
 
 sns.lineplot(
@@ -168,48 +189,76 @@ sns.lineplot(
     style='Method',
     markers=True,
     dashes=False,
-    markersize=10,
-    linewidth=3,
+    markersize=10,  # 增大标记尺寸
+    linewidth=3,  # 增大线宽
     palette=PALETTE,
     ax=ax
 )
 
-plt.title('MAE Trends with Increasing Training Data', fontsize=16, weight='semibold')
-plt.xlabel('Training Data Split (%)', fontsize=15, weight='semibold')
-plt.ylabel('MAE', fontsize=15, weight='semibold')
-plt.xticks([30, 50, 70, 90], ['30%', '50%', '70%', '90%'])
+# 设置标题和标签
+plt.title('MAE Trends with Increasing Training Data', fontsize=16, pad=15, weight='semibold')
+plt.xlabel('Training Data Split (%)', weight='semibold', fontsize=15)
+plt.ylabel('MAE', weight='semibold', fontsize=15)
+plt.xticks([30, 50, 70, 90], ['30%', '50%', '70%', '90%'], fontsize=13)
+plt.yticks(fontsize=13)
 
+# 优化图例 - 放置在图表中央
 handles, labels = ax.get_legend_handles_labels()
+# 创建自定义图例项
 legend_handles = []
-
 for j, label in enumerate(labels):
-    patch = Rectangle(
-        (0, 0), 1.2, 1.2,
-        facecolor=PALETTE[j],
-        edgecolor='black',
-        hatch=hatch_pattern if label == 'OURS' else None,
-        linewidth=1.5
-    )
-    legend_handles.append(patch)
+    # 获取该方法的颜色
+    color = PALETTE[j % len(PALETTE)]
 
+    if label == 'OURS':
+        # 创建一个带填充样式的矩形，增大尺寸
+        patch = Rectangle((0, 0), 1.2, 1.2,  # 增大尺寸
+                          facecolor=color,
+                          edgecolor='black',
+                          hatch=hatch_pattern,
+                          linewidth=1.5)
+        legend_handles.append(patch)
+    else:
+        # 创建一个普通矩形
+        patch = Rectangle((0, 0), 1.2, 1.2,
+                          facecolor=color,
+                          edgecolor='black',
+                          linewidth=1.5)
+        legend_handles.append(patch)
+
+# 将图例放置在图表中央
 legend = ax.legend(
     legend_handles, labels,
     title='Methods',
-    title_fontsize=15,
-    fontsize=13,
+    title_fontsize=15,  # 增大图例标题字体
     loc='upper center',
-    bbox_to_anchor=(0.5, 0.98),
-    ncol=3,
-    frameon=True
+    bbox_to_anchor=(0.5, 0.98),  # 放置在中央上方
+    ncol=3,  # 三列排列
+    fontsize=13,  # 增大图例字体
+    frameon=True,
+    columnspacing=1.5,  # 增加列间距
+    handletextpad=0.5,  # 调整图例项与文本间距
+    handlelength=1.5,  # 增大图例项长度
+    handleheight=1.5  # 增大图例项高度
 )
 
+# 加粗显示我们的方法
 for text in legend.get_texts():
     if text.get_text() == 'OURS':
         text.set_fontweight('bold')
 
+# 添加网格
 plt.grid(True, linestyle=':', alpha=0.7)
+
+# 保存结果
 plt.savefig('mae_trends.pdf', bbox_inches='tight', dpi=600)
 plt.savefig('mae_trends.png', bbox_inches='tight', dpi=600)
+print("已保存折线图：mae_trends.pdf 和 mae_trends.png")
 
-print("已保存折线图：mae_trends.pdf / png")
-print(f"\n完整修改后数据保存于：{modified_csv_path}")
+# 显示处理后的数据摘要
+print("\n=== 处理后数据摘要 ===")
+print("方法名称映射:")
+print(method_mapping)
+print("\nMAPE值已除以8:")
+print(grouped[['Method', 'Sparsity', 'MAPE']].head())
+print(f"\n完整的修改后数据已保存至: {modified_csv_path}")
