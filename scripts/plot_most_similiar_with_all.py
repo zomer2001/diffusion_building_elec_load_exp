@@ -11,12 +11,12 @@ matplotlib.use('TkAgg')
 def set_academic_style():
     plt.rcParams.update({
         'font.family': 'Times New Roman',
-        'font.size': 15,
-        'axes.titlesize': 17,
-        'axes.labelsize': 16,
-        'xtick.labelsize': 14,
-        'ytick.labelsize': 14,
-        'legend.fontsize': 13,
+        'font.size': 18,
+        'axes.titlesize': 20,
+        'axes.labelsize': 20,
+        'xtick.labelsize': 18,
+        'ytick.labelsize': 18,
+        'legend.fontsize': 15,
         'lines.linewidth': 2.3,
         'axes.grid': True,
         'grid.alpha': 0.25,
