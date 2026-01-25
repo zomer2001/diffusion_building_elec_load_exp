@@ -8,30 +8,36 @@ from sklearn.preprocessing import StandardScaler
 
 # ==================== 全局样式设置（字体增大）====================
 plt.rcParams.update({
-    'font.family': 'sans-serif',
-    'font.sans-serif': [
-        'Times New Roman',
-        'Microsoft YaHei',
-        'SimSun',
-        'Songti SC'
-    ],
-    'font.size': 16,
-    'axes.titlesize': 18,
-    'axes.labelsize': 17,
-    'xtick.labelsize': 15,
-    'ytick.labelsize': 15,
-    'legend.fontsize': 15,
-    'figure.dpi': 600,
-    'savefig.dpi': 600,
+    'font.family': ['Times New Roman', 'SimSun', 'Microsoft YaHei'],
+    'axes.unicode_minus': False,
+
+    'font.size': 14,
+    'axes.titlesize': 16,
+    'axes.labelsize': 15,
+    'xtick.labelsize': 13,
+    'ytick.labelsize': 13,
+    'legend.fontsize': 13,
+
+    'figure.dpi': 1200,
+    'savefig.dpi': 1200,
     'mathtext.fontset': 'stix',
-    'axes.grid': False,
+
+    'axes.grid': True,
+    'grid.linestyle': ':',
+    'grid.alpha': 0.4,
     'legend.frameon': True,
     'legend.framealpha': 0.8,
     'legend.loc': 'best',
-    'axes.linewidth': 1.0,
-    'axes.edgecolor': 'black',
-    'axes.unicode_minus': False
 })
+# 专业学术配色方案
+PALETTE = {
+    'bar': '#2c7bb6',
+    'line': '#d7191c',
+    'marker': '#fdae61',
+    'text': '#2c3e50',
+    'background': '#ffffff',
+    'grid': '#e0e0e0'
+}
 
 # 配色方案（保持不变）
 COLOR_PALETTE = {
