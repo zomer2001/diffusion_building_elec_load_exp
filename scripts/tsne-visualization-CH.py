@@ -43,7 +43,7 @@ PALETTE = {
 COLOR_PALETTE = {
     'Traindata': '#1f77b4',
     'Testdata': '#d62728',
-    'CDDM': '#ff7f0e',
+    'DDPM': '#ff7f0e',
     'OURS': '#2ca02c'
 }
 
@@ -51,7 +51,7 @@ COLOR_PALETTE = {
 sparsity_rates = [70]
 base_dir = '../fakedata'
 test_data_folder = '../testdata'
-output_dir = '../results/tsne/ddpm_and_ours'
+output_dir = '../results/tsne/ddpm_and_ours_lunwen1'
 os.makedirs(output_dir, exist_ok=True)
 
 
@@ -89,9 +89,9 @@ def plot_tsne(data_dict, building_name, sparsity):
     datasets = []
     data_types = []
 
-    for data_type in ['Traindata', 'Testdata', 'CDDM', 'OURS']:
+    for data_type in ['Traindata', 'Testdata', 'DDPM', 'OURS']:
         if data_type in data_dict and data_dict[data_type] is not None:
-            max_samples = 500 if data_type in ['CDDM', 'OURS'] else None
+            max_samples = 500 if data_type in ['DDPM', 'OURS'] else None
             prepared_data = prepare_tsne_data(data_dict[data_type], max_samples)
             if prepared_data is not None:
                 datasets.append(prepared_data)
@@ -138,7 +138,7 @@ def plot_tsne(data_dict, building_name, sparsity):
             'Traindata': 'o',
             'Testdata': 's',
             'OURS': 'D',
-            'CDDM': '^'
+            'DDPM': '^'
         }
     )
 
@@ -206,18 +206,18 @@ for test_folder in os.listdir(test_data_folder):
         oridata = np.load(oridata_file)
         test_data = np.load(test_file)
 
-        ddpm_folder = os.path.join(base_dir, 'diffts-fft', str(sparsity), building_name)
+        ddpm_folder = os.path.join(base_dir, 'diffts', str(sparsity), building_name)
         ddpm_data = load_generated_data(ddpm_folder)
         print(f"加载 DDPM 样本数: {len(ddpm_data) if ddpm_data is not None else 0}")
 
-        ours_folder = os.path.join(base_dir, 'ours_gen', str(sparsity), building_name)
+        ours_folder = os.path.join(base_dir, 'diffts-fft', str(sparsity), building_name)
         ours_data = load_generated_data(ours_folder)
         print(f"加载 OURS 样本数: {len(ours_data) if ours_data is not None else 0}")
 
         data_dict = {
             'Traindata': oridata,
             'Testdata': test_data,
-            'CDDM': ddpm_data,
+            'DDPM': ddpm_data,
             'OURS': ours_data
         }
 
