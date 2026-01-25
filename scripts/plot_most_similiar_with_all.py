@@ -10,7 +10,8 @@ matplotlib.use('TkAgg')
 
 def set_academic_style():
     plt.rcParams.update({
-        'font.family': 'Times New Roman',
+        'font.family': ['Times New Roman', 'SimSun', 'Microsoft YaHei'],
+        'axes.unicode_minus': False,
         'font.size': 18,
         'axes.titlesize': 20,
         'axes.labelsize': 20,
@@ -22,6 +23,7 @@ def set_academic_style():
         'grid.alpha': 0.25,
         'figure.facecolor': 'white'
     })
+
 
 
 # =========================
@@ -105,7 +107,7 @@ def plot_distribution_comparison(
         test_s.max(axis=0),
         color='#1f77b4',
         alpha=0.25,
-        label='Test Data Distribution'
+        label='测试数据分布'
     )
 
     # ---------- Generated data: faint individual curves ----------
@@ -125,7 +127,7 @@ def plot_distribution_comparison(
         gen_s.max(axis=0),
         color=gen_color,
         alpha=0.22,
-        label=f'{method_name} Synthetic Distribution'
+        label=f'{method_name} 合成数据分布'
     )
 
     # ---------- Reference curve ----------
@@ -134,12 +136,12 @@ def plot_distribution_comparison(
         ref_s,
         color='#2b2b2b',
         linewidth=3.6,
-        label='Training Reference'
+        label='参考训练数据'
     )
 
-    ax.set_xlabel('Time (hour)')
-    ax.set_ylabel('Normalized Load')
-    ax.set_title(f'Distribution Comparison: Test data vs {method_name}')
+    ax.set_xlabel('时间 (小时)')
+    ax.set_ylabel('负荷值')
+    ax.set_title(f'负荷曲线对比: 测试数据 vs {method_name}')
     ax.legend(frameon=False)
 
     plt.tight_layout()
