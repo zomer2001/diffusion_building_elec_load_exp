@@ -31,7 +31,8 @@ def set_academic_style():
 # =========================
 base_dir = '../fakedata'
 test_data_folder = '../testdata'
-result_root = './result'
+result_root = './result/SIMILAR/CH'
+os.makedirs(result_root, exist_ok=True)
 sparsity_rates = [30,50,70]
 
 
