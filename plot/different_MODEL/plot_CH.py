@@ -106,10 +106,10 @@ sns.lineplot(
 # ==================== 中文标题与坐标轴 ====================
 plt.title(
     '不同预测模型在 70% 训练数据条件下的 MAE 对比',
-    fontsize=22, pad=15, weight='bold'
+    fontsize=24, pad=15, weight='bold'
 )
-plt.xlabel('数据生成方法', weight='bold', fontsize=20)
-plt.ylabel('MAE', weight='bold', fontsize=20)
+plt.xlabel('数据生成方法', weight='bold', fontsize=24)
+plt.ylabel('MAE', weight='bold', fontsize=24)
 
 # ==================== 图例设置 ====================
 handles, labels = ax.get_legend_handles_labels()

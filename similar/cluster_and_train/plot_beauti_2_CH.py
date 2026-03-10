@@ -13,11 +13,11 @@ except ImportError:
     matplotlib.use('Agg')
 
 plt.rcParams.update({
-    'font.size': 20,
-    'axes.labelsize': 22,
-    'axes.titlesize': 24,
-    'xtick.labelsize': 18,
-    'ytick.labelsize': 18,
+    'font.size': 18,
+    'axes.labelsize': 18,
+    'axes.titlesize': 18,
+    'xtick.labelsize': 16,
+    'ytick.labelsize': 16,
     'legend.fontsize': 16,
     'font.family': [
         'Times New Roman',
@@ -26,7 +26,6 @@ plt.rcParams.update({
         'Microsoft YaHei',
         'Arial Unicode MS'
     ],
-
     'mathtext.fontset': 'stix',
     'axes.linewidth': 1.5
 })
@@ -68,6 +67,7 @@ for m in methods:
 # --- 4. 绘图 ---
 fig, ax = plt.subplots(figsize=(12, 8))
 max_x = 0
+min_x = df['KL_Similarity'].min()
 
 smooth_curves = {}
 
@@ -103,9 +103,10 @@ for method in methods:
     max_x = max(max_x, x[-1])
 
 # --- 5. 分布区域 ---
-ax.axvspan(df['KL_Similarity'].min(), boundary_x,
+ax.axvspan(min_x, boundary_x,
            color='white', alpha=0.6, zorder=6)
-ax.axvspan(boundary_x, max_x * 1.1,
+
+ax.axvspan(boundary_x, max_x,
            color='#F7F7F7', alpha=0.5, zorder=0)
 
 ax.text(boundary_x - 0.01, ax.get_ylim()[1] * 0.92,
@@ -134,6 +135,7 @@ if our_method_name in smooth_curves:
         for m, (x_m, y_m) in smooth_curves.items():
             if m == our_method_name:
                 continue
+
             idx_near = np.argmin(np.abs(x_m - x_val))
             baseline_vals.append(y_m[idx_near])
 
@@ -154,16 +156,22 @@ if our_method_name in smooth_curves:
         )
 
 # --- 7. 收尾 ---
-ax.axvline(boundary_x, color='black',
-           linestyle=(0, (5, 5)), alpha=0.4, zorder=7)
+ax.axvline(boundary_x,
+           color='black',
+           linestyle=(0, (5, 5)),
+           alpha=0.4,
+           zorder=7)
 
 ax.set_xlabel('分布偏移程度（MMD）')
 ax.set_ylabel('预测误差（MAE）')
-ax.set_title('模型泛化性能对比',
-             fontweight='bold')
+ax.set_title('模型泛化性能对比', fontweight='bold')
+
+# 限制横轴范围，避免右侧空白
+ax.set_xlim(min_x, max_x * 1.01)
 
 handles, labels = ax.get_legend_handles_labels()
 ours_label = method_name_map[our_method_name]
+
 order = [labels.index(ours_label)] + [i for i, l in enumerate(labels) if l != ours_label]
 
 ax.legend([handles[i] for i in order],
@@ -171,10 +179,11 @@ ax.legend([handles[i] for i in order],
           loc='upper left',
           frameon=True)
 
-
 ax.grid(axis='y', linestyle='--', alpha=0.3)
 
 plt.tight_layout()
+
 plt.savefig('Generalization_Results_CH.pdf', dpi=300, bbox_inches='tight')
 plt.savefig('Generalization_Results_CH.png', dpi=300, bbox_inches='tight')
+
 plt.show()
