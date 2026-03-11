@@ -108,7 +108,7 @@ for i, (ax, metric, name, title) in enumerate(zip(
             bar.set_linewidth(1.5)
 
     ax.set_title(title, fontsize=20, pad=15, weight='semibold')
-    ax.set_xlabel('训练数据均匀度', fontsize=19, weight='semibold')
+    ax.set_xlabel('训练数据均匀度', fontsize=22, weight='semibold')
     ax.set_ylabel(name, fontsize=19, weight='semibold')
 
     # <<< MOD >>> x 轴标签语义映射

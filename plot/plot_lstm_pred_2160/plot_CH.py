@@ -119,7 +119,7 @@ for i, (ax, metric, name, title) in enumerate(zip(
 
     # 设置标题和标签
     ax.set_title(title, fontsize=20, pad=15, weight='semibold')
-    ax.set_xlabel('训练数据比例', weight='semibold', fontsize=19)
+    ax.set_xlabel('训练数据比例', weight='semibold', fontsize=22)
     ax.set_ylabel(name, weight='semibold', fontsize=19)
 
     # 修改x轴标签
