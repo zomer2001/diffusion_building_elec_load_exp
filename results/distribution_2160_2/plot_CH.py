@@ -34,14 +34,23 @@ plt.rcParams.update({
 })
 
 # 配色方案 (适配 5 种方法)
-MODERN_PALETTE = [
-    '#b3cde3',
-    '#deebf7',
-    '#d1e5f0',
-    '#92c5de',
-    '#4393c3',
-    '#2166ac'
+NATURE_PALETTE = [
+    '#f7f5c9',
+    '#A9C5EB',  # 浅蓝（cgan）
+    '#A8D8B9',  # 浅绿（diffts）
+    '#F3C7B6',  # 浅橙（timegan）
+    '#d7e3f7',
+    '#2166ac'# 稍深蓝（OURS）
 ]
+# MODERN_PALETTE = [
+#     '#b3cde3',
+#     '#deebf7',
+#     '#d1e5f0',
+#     '#92c5de',
+#     '#4393c3',
+#     '#2166ac'
+# ]
+MODERN_PALETTE = NATURE_PALETTE
 
 # 设置图案标记 (仅 ours 使用斜纹)
 MARKER_CONFIG = {
@@ -60,15 +69,16 @@ methods_order = sorted(methods_unique) + ['ours']
 methods_lower_order = [m.lower() for m in methods_order]
 
 # ==================== 绘图核心函数 ====================
-def create_academic_comparison_plot(dataframe, y_cols, titles, ylabel, file_prefix, figsize=(18, 7)):
+def create_academic_comparison_plot(dataframe, y_cols, titles, ylabels, file_prefix, figsize=(18, 7)):
     """
     创建两个并列的柱状图，图例放在两个图上方且保持更大距离
+    titles: 两个子图的标题，可置空取消
+    ylabels: 两个子图的 ylabel 列表
     """
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=figsize, dpi=1200)
-
     axes = [ax1, ax2]
 
-    for ax, y_col, title in zip(axes, y_cols, titles):
+    for ax, y_col, title, ylabel in zip(axes, y_cols, titles, ylabels):
         sns.barplot(
             data=dataframe,
             x='Sparsity',
@@ -83,9 +93,15 @@ def create_academic_comparison_plot(dataframe, y_cols, titles, ylabel, file_pref
             ax=ax
         )
 
+        # 子图标题
         ax.set_title(title, fontsize=22, weight='bold', pad=15)
         ax.set_xlabel('数据可用比例（%）', labelpad=10, fontsize=20, weight='bold')
-        ax.set_ylabel(ylabel if ax == ax1 else "", labelpad=10, fontsize=17, weight='bold')
+        ax.set_ylabel(ylabel, labelpad=10, fontsize=17, weight='bold')
+
+        # 强制 ylabel 在左侧
+        ax.yaxis.set_label_position("left")
+        ax.yaxis.tick_left()
+
         ax.set_xticks(range(len(dataframe['Sparsity'].unique())))
         ax.set_xticklabels(['30%', '50%', '70%', '90%'], fontsize=19)
         ax.tick_params(axis='both', labelsize=19)
@@ -102,6 +118,7 @@ def create_academic_comparison_plot(dataframe, y_cols, titles, ylabel, file_pref
         if ax.get_legend():
             ax.get_legend().remove()
 
+    # 自定义图例
     legend_handles = []
     for i, method in enumerate(methods_order):
         hatch = MARKER_CONFIG.get(method.lower())
@@ -146,8 +163,8 @@ def create_academic_comparison_plot(dataframe, y_cols, titles, ylabel, file_pref
 create_academic_comparison_plot(
     df,
     ['MMD_oridata', 'MMD_testdata'],
-    ['与原始数据的分布距离（MMD）', '与测试数据的分布距离（MMD）'],
-    'MMD 值',
+    ['', ''],  # 两个子图都不显示标题
+    ['与训练数据的分布差异(MMD)', '与测试数据的分布差异(MMD)'],  # 左右不同 ylabel
     'mmd_comparison_spaced_CH'
 )
 

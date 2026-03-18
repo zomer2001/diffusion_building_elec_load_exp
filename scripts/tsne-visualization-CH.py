@@ -142,24 +142,24 @@ def plot_tsne(data_dict, building_name, sparsity):
         }
     )
 
-    plt.title(
-        f't-SNE 分布可视化',
-        fontsize=24,
-        pad=15,
-        weight='bold'
-    )
+    # plt.title(
+    #     f't-SNE 分布可视化',
+    #     fontsize=24,
+    #     pad=15,
+    #     weight='bold'
+    # )
     plt.xlabel('t-SNE 维度 1', fontsize=22, weight='bold')
     plt.ylabel('t-SNE 维度 2', fontsize=18, weight='bold')
 
     ax.legend(
         title='数据来源',
-        title_fontsize=18,
-        fontsize=18,
+        title_fontsize=14,  # ↓ 标题变小
+        fontsize=13,  # ↓ 内容字体变小
         loc='best',
         frameon=True,
-        framealpha=0.9,
+        framealpha=0.5,  # ↓ 增加透明度（关键）
         edgecolor='black',
-        markerscale=2.0
+        markerscale=1.5  # ↓ marker 也稍微缩小一点更协调
     )
 
     filename = f"{building_name.replace(' ', '_').replace('/', '_')}_sparsity_{sparsity}_tsne.png"
