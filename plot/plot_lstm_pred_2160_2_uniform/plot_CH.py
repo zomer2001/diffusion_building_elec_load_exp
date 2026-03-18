@@ -136,7 +136,7 @@ for i, (ax, metric, name, title) in enumerate(zip(
 
         legend = ax.legend(
             legend_handles, labels,
-            title='Methods',
+            title='合成方法',
             title_fontsize=17,
             fontsize=16,
             frameon=True,

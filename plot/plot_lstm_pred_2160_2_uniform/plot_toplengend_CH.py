@@ -132,12 +132,12 @@ for j, label in enumerate(methods_order):
 legend = fig.legend(
     legend_handles,
     methods_order,
-    title='Methods',
+    title='合成方法',
     loc='upper center',
     bbox_to_anchor=(0.5, 1.02),
     ncol=6,
     fontsize=17,
-    title_fontsize=18,
+    title_fontsize=19,
     frameon=True
 )
 
