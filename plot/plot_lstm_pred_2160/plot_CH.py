@@ -80,7 +80,7 @@ titles = ['(a) MAE 对比结果', '(b) MSE 对比结果',
 
 # 增大图形尺寸
 fig, axes = plt.subplots(2, 2, figsize=(16, 14), constrained_layout=True)
-fig.suptitle('不同合成方法的结果对比', fontsize=21, weight='bold', y=0.98)
+# fig.suptitle('不同合成方法的结果对比', fontsize=21, weight='bold', y=0.98)
 
 # 自定义标记样式
 hatch_pattern = '////'  # OURS的填充样式

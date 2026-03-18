@@ -74,13 +74,13 @@ def create_combined_plot(stats_df, sample_size):
     ax1.grid(True, linestyle='--', color=PALETTE['grid'], alpha=0.2)
 
     # 主标题
-    plt.title(
-        '不同建筑类型的模型性能分析',
-        fontsize=25,
-        pad=20,
-        weight='bold',
-        color=PALETTE['text']
-    )
+    # plt.title(
+    #     '不同建筑类型的模型性能分析',
+    #     fontsize=25,
+    #     pad=20,
+    #     weight='bold',
+    #     color=PALETTE['text']
+    # )
 
     bars = ax1.bar(
         stats_df['Building_Type'],
