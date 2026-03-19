@@ -43,7 +43,7 @@ PALETTE = {
 COLOR_PALETTE = {
     'Traindata': '#1f77b4',
     'Testdata': '#d62728',
-    'DDPM': '#ff7f0e',
+    'CDDM': '#ff7f0e',
     'OURS': '#2ca02c'
 }
 
