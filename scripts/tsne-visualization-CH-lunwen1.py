@@ -139,7 +139,8 @@ def plot_tsne(data_dict, building_name, sparsity):
             'Testdata': 's',
             'OURS': 'D',
             'DDPM': '^'
-        }
+        },
+        legend=False
     )
 
     # plt.title(
