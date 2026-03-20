@@ -85,6 +85,7 @@ def create_combined_plot(stats_df, sample_size):
     bars = ax1.bar(
         stats_df['Building_Type'],
         stats_df['Count'],
+        width=0.7,
         color=PALETTE['bar'],
         alpha=0.9,
         edgecolor='white',

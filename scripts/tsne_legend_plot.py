@@ -67,7 +67,7 @@ def plot_long_legend():
         fontsize=15,  # 图例内容字体
         loc='center',  # 居中显示
         ncol=4,  # 4列横向排列（加长核心）
-        frameon=True,
+        frameon=False,
         framealpha=0.9,
         edgecolor='black',
         columnspacing=3.0,  # 列间距增大，拉长图例
