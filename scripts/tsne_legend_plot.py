@@ -63,16 +63,16 @@ def plot_long_legend():
     # 生成加长版图例：横向排列、增大间距、调整样式
     legend = ax.legend(
         title='数据类型',
-        title_fontsize=16,  # 标题字体稍大
-        fontsize=15,  # 图例内容字体
-        loc='center',  # 居中显示
-        ncol=4,  # 4列横向排列（加长核心）
-        frameon=False,
+        title_fontsize=16,
+        fontsize=15,
+        loc='center',
+        ncol=4,
+        frameon=True,
         framealpha=0.9,
-        edgecolor='black',
-        columnspacing=3.0,  # 列间距增大，拉长图例
-        handletextpad=1.5,  # 标记和文字间距
-        markerscale=1.8  # 标记放大，更醒目
+        edgecolor='none',  # ✅ 无边线
+        columnspacing=3.0,
+        handletextpad=1.5,
+        markerscale=1.8
     )
 
     # 保存图例（无多余空白）
