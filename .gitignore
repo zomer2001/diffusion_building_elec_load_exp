@@ -4,3 +4,4 @@ fakedata
 .idea
 results/tsne
 results/pca
+scripts/result
