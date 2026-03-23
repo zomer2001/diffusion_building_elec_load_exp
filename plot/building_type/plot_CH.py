@@ -29,6 +29,8 @@ plt.rcParams.update({
     'legend.framealpha': 0.8,
     'legend.loc': 'best',
 })
+
+
 # 专业学术配色方案
 PALETTE = {
     'bar': '#2c7bb6',
@@ -111,8 +113,8 @@ def create_combined_plot(stats_df, sample_size):
             )
         )
 
-    ax1.set_xlabel('建筑类型', fontweight='semibold', color=PALETTE['text'], fontsize=24)
-    ax1.set_ylabel('建筑数量', fontweight='semibold', color=PALETTE['text'], fontsize=21)
+    ax1.set_xlabel('建筑类型', fontweight='semibold', color='black', fontsize=24)
+    ax1.set_ylabel('建筑数量', fontweight='semibold', color='black', fontsize=21)
     ax1.yaxis.set_major_locator(MaxNLocator(integer=True))
 
     ax1.set_ylim(0, stats_df['Count'].max() * 1.25)
