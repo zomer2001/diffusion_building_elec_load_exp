@@ -108,11 +108,11 @@ for i, (ax, metric, name, title) in enumerate(zip(
             bar.set_linewidth(1.5)
 
     ax.set_title(title, fontsize=20, pad=15, weight='semibold')
-    ax.set_xlabel('训练数据均匀度', fontsize=22, weight='semibold')
+    ax.set_xlabel('数据分类粒度', fontsize=22, weight='semibold')
     ax.set_ylabel(name, fontsize=19, weight='semibold')
 
     # <<< MOD >>> x 轴标签语义映射
-    ax.set_xticklabels(['1/2', '1/4', '1/8'], fontsize=19)
+    ax.set_xticklabels(['2', '3', '4'], fontsize=19)
     ax.tick_params(axis='y', labelsize=15)
 
     if i == 0:

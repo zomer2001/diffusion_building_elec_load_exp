@@ -29,7 +29,7 @@ plt.rcParams.update({
 COLOR_PALETTE = {
     'Traindata': '#1f77b4',
     'Testdata': '#d62728',
-    'DDPM': '#ff7f0e',
+    'CDDM': '#ff7f0e',
     'OURS': '#2ca02c'
 }
 
@@ -37,7 +37,7 @@ MARKERS = {
     'Traindata': 'o',
     'Testdata': 's',
     'OURS': 'D',
-    'DDPM': '^'
+    'CDDM': '^'
 }
 
 
@@ -52,7 +52,7 @@ def plot_long_legend():
     ax.axis('off')
 
     # 绘制占位的散点（仅用于生成图例）
-    for data_type in ['Traindata', 'Testdata', 'DDPM', 'OURS']:
+    for data_type in ['Traindata', 'Testdata', 'CDDM', 'OURS']:
         ax.scatter([], [],
                    color=COLOR_PALETTE[data_type],
                    marker=MARKERS[data_type],
