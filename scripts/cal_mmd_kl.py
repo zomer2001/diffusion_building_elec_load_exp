@@ -8,12 +8,12 @@ import warnings
 warnings.filterwarnings('ignore')
 
 # ================= 基本配置 =================
-sparsity_rates = [90, 70, 50, 30]
+sparsity_rates = [100,300,500]
 lengths = [2160]
 methods = ['ours']
 
-base_dir = '../fakedata'
-test_data_folder = '../testdata'
+base_dir = '../fakedata2'
+test_data_folder = '../testdata2'
 
 
 # ================= 指标计算函数 =================
@@ -179,7 +179,7 @@ for test_folder in os.listdir(test_data_folder):
 
 # ================= 保存结果 =================
 if results_all:
-    output_dir = '../results/distribution_2160_2_newours_0111'
+    output_dir = '../results/distribution_260405'
     os.makedirs(output_dir, exist_ok=True)
 
     results_df = pd.DataFrame(results_all)
