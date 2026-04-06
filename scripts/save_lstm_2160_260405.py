@@ -169,10 +169,10 @@ for test_folder in os.listdir(test_data_folder):
                 # 设置不同方法的 epochs
                 if method == 'oridata':
                     num_epochs = 5
-                elif method == 'diffts-fft':
-                    num_epochs = 10
-                elif method == 'diffts':
-                    num_epochs = 10
+                elif method == 'CDDM':
+                    num_epochs = 15
+                elif method == 'ours':
+                    num_epochs = 20
                 elif method == 'ours_gen':
                     num_epochs = 6
                 else:  # timegan, cgan
