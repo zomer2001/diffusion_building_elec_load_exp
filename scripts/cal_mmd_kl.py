@@ -10,7 +10,7 @@ warnings.filterwarnings('ignore')
 # ================= 基本配置 =================
 sparsity_rates = [100,300,500]
 lengths = [2160]
-methods = ['ours','cgan','timegan','CDDM']
+methods = ['ours','cgan','timegan','CDDM','oridata']
 
 base_dir = '../fakedata2'
 test_data_folder = '../testdata2'
@@ -160,6 +160,9 @@ for test_folder in os.listdir(test_data_folder):
                 if synth_data.shape[1:] != (24, 6):
                     print(f"[Skip] Invalid synth shape: {synth_data.shape}")
                     synth_data = None
+
+        elif method in ['oridata']:
+            synth_data = np.load(oridata_file)
 
         if synth_data is None:
             print(f"[Skip] No valid synthetic data for {building_name}, {method}")
