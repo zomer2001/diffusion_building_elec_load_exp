@@ -10,7 +10,7 @@ warnings.filterwarnings('ignore')
 # ================= 基本配置 =================
 sparsity_rates = [100,300,500]
 lengths = [2160]
-methods = ['ours']
+methods = ['ours','cgan','timegan','CDDM']
 
 base_dir = '../fakedata2'
 test_data_folder = '../testdata2'
