@@ -17,7 +17,7 @@ device = torch.device('cuda')
 # 定义稀疏率和数据长度
 sparsity_rates = [100,300,500]
 lengths = [2160]
-methods = ['oridata', 'timegan', 'cgan','CDDM', 'ours']
+methods = ['oridata', 'timegan', 'cgan','CDDM']
 base_dir = r'..\fakedata2'
 test_data_folder = r'..\testdata2'
 
