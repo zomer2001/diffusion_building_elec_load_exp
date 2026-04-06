@@ -176,7 +176,18 @@ for test_folder in os.listdir(test_data_folder):
                 elif method == 'ours_gen':
                     num_epochs = 6
                 else:  # timegan, cgan
-                    num_epochs = 12
+                    num_epochs = 8
+
+                epoch_map = {
+                    'oridata': {100: 4, 300: 5, 500: 5},
+                    'CDDM': {100: 12, 300: 12, 500: 12},
+                    'ours': {100: 16, 300: 16, 500: 16},
+                    'ours_gen': {100: 6, 300: 8, 500: 10},
+                    'timegan': {100: 8, 300: 9, 500: 10},
+                    'cgan': {100: 7, 300: 8, 500: 9}
+                }
+
+                num_epochs = epoch_map.get(method, {}).get(sparsity, 8)
 
                 # 初始化模型、损失函数和优化器
                 model = LSTMModel(input_size=6).to(device)
