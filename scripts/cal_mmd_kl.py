@@ -73,10 +73,10 @@ for test_folder in os.listdir(test_data_folder):
         continue
 
     building_name = '_'.join(parts[:-1])
-    length = int(parts[-2])
+    #length = int(parts[-2])
     sparsity = int(parts[-1])
 
-    if length != 2160 or sparsity not in sparsity_rates:
+    if sparsity not in sparsity_rates:
         continue
 
     # ---------- 读取 test data ----------
