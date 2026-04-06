@@ -121,7 +121,7 @@ for test_folder in os.listdir(test_data_folder):
         file_path = None
 
         # ========== ours / diffts 系列 ==========
-        if method in ['diffts-fft', 'diffts', 'ours']:
+        if method in ['diffts-fft', 'CDDM', 'ours']:
             sparsity_folder = os.path.join(
                 base_dir, method, str(sparsity), building_name
             )
@@ -151,7 +151,7 @@ for test_folder in os.listdir(test_data_folder):
 
         # ========== GAN 系列（保留兼容） ==========
         elif method in ['timegan', 'cgan', 'wgan']:
-            sparsity_folder = os.path.join(base_dir, method, str(sparsity))
+            sparsity_folder = os.path.join(base_dir, method, str(sparsity//100))
             file_name = f'generated_{building_name}.npy'
             file_path = os.path.join(sparsity_folder, 'train', file_name)
 
