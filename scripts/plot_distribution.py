@@ -48,7 +48,7 @@ MARKER_CONFIG = {
 
 # ==================== 数据处理 ====================
 # 1. 读取CSV文件
-df = pd.read_csv('../results/distribution_2160/summary_metrics.csv')
+df = pd.read_csv('../results/distribution_260405/summary_metrics.csv')
 
 # 确保 Sparsity 是数值型且排序
 df['Sparsity'] = pd.to_numeric(df['Sparsity'], errors='coerce')

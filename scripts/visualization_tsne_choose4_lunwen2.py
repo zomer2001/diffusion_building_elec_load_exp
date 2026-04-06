@@ -162,11 +162,10 @@ for test_folder in os.listdir(test_data_folder):
     parts = test_folder.split('_')
     if len(parts) >= 4:
         building_name = '_'.join(parts[:-1])
-        length = int(parts[-2])
         sparsity = int(parts[-1])
 
         key = f"{building_name}_{sparsity}"
-        if key in processed_buildings or length != 2160 or sparsity not in sparsity_rates:
+        if key in processed_buildings or sparsity not in sparsity_rates:
             continue
 
         processed_buildings.add(key)
