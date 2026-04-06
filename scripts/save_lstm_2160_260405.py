@@ -170,13 +170,13 @@ for test_folder in os.listdir(test_data_folder):
                 if method == 'oridata':
                     num_epochs = 5
                 elif method == 'CDDM':
-                    num_epochs = 15
+                    num_epochs = 16
                 elif method == 'ours':
-                    num_epochs = 20
+                    num_epochs = 22
                 elif method == 'ours_gen':
                     num_epochs = 6
                 else:  # timegan, cgan
-                    num_epochs = 10
+                    num_epochs = 12
 
                 # 初始化模型、损失函数和优化器
                 model = LSTMModel(input_size=6).to(device)
