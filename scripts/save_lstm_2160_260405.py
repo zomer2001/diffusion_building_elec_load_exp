@@ -18,8 +18,8 @@ device = torch.device('cuda')
 sparsity_rates = [100,300,500]
 lengths = [2160]
 methods = ['oridata', 'timegan', 'cgan','CDDM', 'ours']
-base_dir = '../fakedata2'
-test_data_folder = '../testdata2'
+base_dir = r'..\fakedata2'
+test_data_folder = r'..\testdata2'
 
 # 评估指标函数
 def mean_absolute_percentage_error(y_true, y_pred):
@@ -221,7 +221,7 @@ for test_folder in os.listdir(test_data_folder):
 
 # 保存所有结果到总 CSV
 if results_all:
-    output_dir = '../results/lstm_260405_result'
+    output_dir = r'..\results\lstm_260405_result'
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
     results_df = pd.DataFrame(results_all)
