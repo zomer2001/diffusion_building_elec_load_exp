@@ -149,7 +149,7 @@ for test_folder in os.listdir(test_data_folder):
                                             y_train = torch.cat([y_oridata, y_synth], dim=0)
                                             break
                     elif method in ['timegan', 'cgan',]:
-                        sparsity_folder = os.path.join(base_dir, method, str(sparsity*100))
+                        sparsity_folder = os.path.join(base_dir, method, str(sparsity//100))
                         file_name = f'generated_{building_name}.npy'
                         file_path = os.path.join(sparsity_folder, 'train', file_name)
                         if os.path.exists(file_path):
