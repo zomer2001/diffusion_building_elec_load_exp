@@ -17,7 +17,7 @@ device = torch.device('cuda')
 # 定义稀疏率和数据长度
 sparsity_rates = [100,300,500]
 lengths = [2160]
-methods = ['oridata', 'timegan', 'cgan','CDDM']
+methods = ['oridata', 'timegan', 'cgan','CDDM','ours']
 base_dir = r'..\fakedata2'
 test_data_folder = r'..\testdata2'
 
@@ -180,11 +180,11 @@ for test_folder in os.listdir(test_data_folder):
 
                 epoch_map = {
                     'oridata': {100: 4, 300: 5, 500: 5},
-                    'CDDM': {100: 12, 300: 12, 500: 12},
-                    'ours': {100: 16, 300: 16, 500: 16},
+                    'CDDM': {100: 10, 300: 10, 500: 10},
+                    'ours': {100: 15, 300: 15, 500: 15},
                     'ours_gen': {100: 6, 300: 8, 500: 10},
-                    'timegan': {100: 8, 300: 9, 500: 10},
-                    'cgan': {100: 7, 300: 8, 500: 9}
+                    'timegan': {100: 7, 300: 7, 500: 7},
+                    'cgan': {100: 7, 300: 7, 500: 7}
                 }
 
                 num_epochs = epoch_map.get(method, {}).get(sparsity, 8)
