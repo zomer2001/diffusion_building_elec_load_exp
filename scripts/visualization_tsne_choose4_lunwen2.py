@@ -35,10 +35,10 @@ COLOR_PALETTE = {
 }
 
 # 定义稀疏率和路径（保持不变）
-sparsity_rates = [70]
-base_dir = '../fakedata'
-test_data_folder = '../testdata'
-output_dir = '../results/tsne/ddpm_and_ours'
+sparsity_rates = [300]
+base_dir = '../fakedata2'
+test_data_folder = '../testdata2'
+output_dir = '../results/tsne/260405'
 os.makedirs(output_dir, exist_ok=True)
 
 
@@ -82,7 +82,7 @@ def plot_tsne(data_dict, building_name, sparsity):
 
     for data_type in ['Traindata', 'Testdata', 'CDDM', 'OURS']:
         if data_type in data_dict and data_dict[data_type] is not None:
-            max_samples = 500 if data_type in ['CDDM', 'OURS'] else None
+            max_samples = 100 if data_type in ['CDDM', 'OURS'] else None
             prepared_data = prepare_tsne_data(data_dict[data_type], max_samples)
             if prepared_data is not None:
                 datasets.append(prepared_data)
