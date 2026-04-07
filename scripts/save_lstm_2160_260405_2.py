@@ -180,11 +180,11 @@ for test_folder in os.listdir(test_data_folder):
 
                 epoch_map = {
                     'oridata': {100: 3, 300: 4, 500: 5},
-                    'CDDM': {100: 7, 300: 7, 500: 7},
-                    'ours': {100: 15, 300: 15, 500: 15},
+                    'CDDM': {100: 10, 300: 12, 500: 15},
+                    'ours': {100: 10, 300: 12, 500: 15},
                     'ours_gen': {100: 6, 300: 8, 500: 10},
-                    'timegan': {100: 3, 300: 4, 500: 5},
-                    'cgan': {100: 3, 300: 4, 500: 5}
+                    'timegan': {100: 10, 300: 12, 500: 15},
+                    'cgan': {100: 10, 300: 12, 500: 15}
                 }
 
                 num_epochs = epoch_map.get(method, {}).get(sparsity, 8)
@@ -232,7 +232,7 @@ for test_folder in os.listdir(test_data_folder):
 
 # 保存所有结果到总 CSV
 if results_all:
-    output_dir = r'..\results\lstm_260405_2_result'
+    output_dir = r'..\results\lstm_260405_same_length_result'
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
     results_df = pd.DataFrame(results_all)
