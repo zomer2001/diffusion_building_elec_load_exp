@@ -55,9 +55,9 @@ methods_order = ['Real Data','TIMEGAN', 'CGAN', 'CDDM',  'OURS']
 df = df[df['Sparsity'].isin([100, 300, 500])]
 
 df['MAPE_original'] = df['MAPE'].copy()
-df['MAPE'] = df['MAPE'] / 8.0
+#df['MAPE'] = df['MAPE'] / 8.0
 
-modified_csv_path = '../../results/lstm_2160_all_0111/all_results_modified.csv'
+modified_csv_path = '../../results/lstm_260405_result/all_results_modified.csv'
 df.to_csv(modified_csv_path, index=False)
 
 grouped = df.groupby(['Sparsity', 'Method'])[['MAE', 'MSE', 'RMSE', 'MAPE']].mean().reset_index()
