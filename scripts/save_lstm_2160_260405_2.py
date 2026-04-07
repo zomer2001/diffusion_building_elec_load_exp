@@ -215,7 +215,7 @@ for test_folder in os.listdir(test_data_folder):
                         pbar.update(1)
 
                 # 保存训练曲线
-                #save_training_curve(history, building_name, sparsity, method)
+                save_training_curve(history, building_name, sparsity, method)
 
                 # 测试模型
                 model.eval()
