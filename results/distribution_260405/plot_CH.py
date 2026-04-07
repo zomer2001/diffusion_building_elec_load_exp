@@ -95,7 +95,7 @@ def create_academic_comparison_plot(dataframe, y_cols, titles, ylabels, file_pre
 
         # 子图标题
         ax.set_title(title, fontsize=22, weight='bold', pad=15)
-        ax.set_xlabel('数据可用比例（%）', labelpad=10, fontsize=20, weight='bold')
+        ax.set_xlabel('训练数据数量', labelpad=10, fontsize=20, weight='bold')
         ax.set_ylabel(ylabel, labelpad=10, fontsize=17, weight='bold')
 
         # 强制 ylabel 在左侧
@@ -103,7 +103,7 @@ def create_academic_comparison_plot(dataframe, y_cols, titles, ylabels, file_pre
         ax.yaxis.tick_left()
 
         ax.set_xticks(range(len(dataframe['Sparsity'].unique())))
-        ax.set_xticklabels(['1', '3', '5'], fontsize=19)
+        ax.set_xticklabels(['1个月', '3个月', '5个月'], fontsize=19)
         ax.tick_params(axis='both', labelsize=19)
         ax.yaxis.grid(True, linestyle='--', alpha=0.2)
 
