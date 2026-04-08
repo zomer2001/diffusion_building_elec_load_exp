@@ -48,10 +48,10 @@ COLOR_PALETTE = {
 }
 
 # 定义稀疏率和路径（保持不变）
-sparsity_rates = [300,500,700]
-base_dir = '../fakedata2'
-test_data_folder = '../testdata2'
-output_dir = '../results/tsne/ddpm_and_ours_lunwen2-CH'
+sparsity_rates = [70]
+base_dir = '../fakedata'
+test_data_folder = '../testdata'
+output_dir = '../results/tsne/ddpm_and_ours_lunwen2-CH-2'
 os.makedirs(output_dir, exist_ok=True)
 
 
