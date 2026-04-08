@@ -190,11 +190,14 @@ def plot_tsne(data_dict, building_name, sparsity):
         handles=handles,
         labels=labels,
         loc='upper center',
-        bbox_to_anchor=(0.5, 1.15),  # 往上移
-        ncol=4,  # 一行排开（4类数据）
+        bbox_to_anchor=(0.5, 1.15),
+        ncol=4,
         frameon=True,
         fontsize=16,
-        title=None
+        title=None,
+        markerscale=2.5,
+        handletextpad=0.8,
+        columnspacing=1.5
     )
 
     # 保存图像（保持不变）
