@@ -35,7 +35,7 @@ COLOR_PALETTE = {
 }
 
 # 定义稀疏率和路径（保持不变）
-sparsity_rates = [500]
+sparsity_rates = [500,300,700,100]
 base_dir = '../fakedata2'
 test_data_folder = '../testdata2'
 output_dir = '../results/tsne/260407_fill_nolegend'

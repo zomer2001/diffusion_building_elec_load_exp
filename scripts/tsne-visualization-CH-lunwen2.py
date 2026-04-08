@@ -92,7 +92,7 @@ def plot_tsne(data_dict, building_name, sparsity):
     for data_type in ['Traindata', 'Testdata', 'CDDM', 'OURS']:
         if data_type in data_dict and data_dict[data_type] is not None:
             # 修改点1：所有数据统一最多200
-            prepared_data = prepare_tsne_data(data_dict[data_type], max_samples=50)
+            prepared_data = prepare_tsne_data(data_dict[data_type], max_samples=300)
             if prepared_data is not None:
                 datasets.append(prepared_data)
                 data_types.append(data_type)
@@ -166,7 +166,20 @@ def plot_tsne(data_dict, building_name, sparsity):
     # )
     plt.xlabel('t-SNE 维度 1', fontsize=22, weight='bold')
     plt.ylabel('t-SNE 维度 2', fontsize=18, weight='bold')
-
+    handles, labels = ax.get_legend_handles_labels()
+    ax.legend(
+        handles=handles,
+        labels=labels,
+        loc='upper center',
+        bbox_to_anchor=(0.5, 1.15),
+        ncol=4,
+        frameon=True,
+        fontsize=16,
+        title=None,
+        markerscale=3,
+        handletextpad=0.8,
+        columnspacing=1.5
+    )
     # ax.legend(
     #     title='数据来源',
     #     title_fontsize=14,  # ↓ 标题变小
