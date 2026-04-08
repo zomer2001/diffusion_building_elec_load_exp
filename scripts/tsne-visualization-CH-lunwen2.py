@@ -222,11 +222,11 @@ for test_folder in os.listdir(test_data_folder):
         oridata = np.load(oridata_file)
         test_data = np.load(test_file)
 
-        ddpm_folder = os.path.join(base_dir, 'CDDM', str(sparsity), building_name)
+        ddpm_folder = os.path.join(base_dir, 'diffts-fft', str(sparsity), building_name)
         ddpm_data = load_generated_data(ddpm_folder)
         print(f"加载 DDPM 样本数: {len(ddpm_data) if ddpm_data is not None else 0}")
 
-        ours_folder = os.path.join(base_dir, 'ours', str(sparsity), building_name)
+        ours_folder = os.path.join(base_dir, 'ours_gen', str(sparsity), building_name)
         ours_data = load_generated_data(ours_folder)
         print(f"加载 OURS 样本数: {len(ours_data) if ours_data is not None else 0}")
 
