@@ -38,7 +38,7 @@ COLOR_PALETTE = {
 sparsity_rates = [500]
 base_dir = '../fakedata2'
 test_data_folder = '../testdata2'
-output_dir = '../results/tsne/260407'
+output_dir = '../results/tsne/260407_outline'
 os.makedirs(output_dir, exist_ok=True)
 
 
