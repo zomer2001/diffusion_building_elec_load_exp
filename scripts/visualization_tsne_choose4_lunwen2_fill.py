@@ -84,7 +84,7 @@ def plot_tsne(data_dict, building_name, sparsity):
     for data_type in ['Traindata', 'Testdata', 'CDDM', 'OURS']:
         if data_type in data_dict and data_dict[data_type] is not None:
             # 修改点1：所有数据统一最多200
-            prepared_data = prepare_tsne_data(data_dict[data_type], max_samples=50)
+            prepared_data = prepare_tsne_data(data_dict[data_type], max_samples=200)
             if prepared_data is not None:
                 datasets.append(prepared_data)
                 data_types.append(data_type)
