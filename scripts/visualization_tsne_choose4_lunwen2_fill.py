@@ -28,14 +28,14 @@ plt.rcParams.update({
 
 # 配色方案（保持不变）
 COLOR_PALETTE = {
-    'Traindata': '#1f77b4',  # 蓝色 - 原始数据
+    'Traindata': '#2ca02c',#2ca02c  # 蓝色 - 原始数据
     'Testdata': '#d62728',  # 红色 - 测试数据
     'CDDM': '#ff7f0e',  # 橙色 - DDPM方法
-    'OURS': '#2ca02c'  # 绿色 - OURS方法
+    'OURS': '#1f77b4'  # 绿色 - OURS方法
 }
 
 # 定义稀疏率和路径（保持不变）
-sparsity_rates = [700]
+sparsity_rates = [500]
 base_dir = '../fakedata2'
 test_data_folder = '../testdata2'
 output_dir = '../results/tsne/260407'
@@ -84,7 +84,7 @@ def plot_tsne(data_dict, building_name, sparsity):
         for data_type in ['Traindata', 'Testdata', 'CDDM', 'OURS']:
             if data_type in data_dict and data_dict[data_type] is not None:
                 # 修改点1：所有数据统一最多200
-                prepared_data = prepare_tsne_data(data_dict[data_type], max_samples=200)
+                prepared_data = prepare_tsne_data(data_dict[data_type], max_samples=50)
                 if prepared_data is not None:
                     datasets.append(prepared_data)
                     data_types.append(data_type)
@@ -116,35 +116,35 @@ def plot_tsne(data_dict, building_name, sparsity):
     ax = plt.gca()
 
     # 绘制散点图（点大小从120缩小到80）
-    # sns.scatterplot(
-    #     x='TSNE-1',
-    #     y='TSNE-2',
-    #     hue='Data Type',
-    #     style='Data Type',
-    #     data=tsne_df,
-    #     palette=[COLOR_PALETTE[dt] for dt in tsne_df['Data Type'].unique()],
-    #     s=120,
-    #     alpha=1.0,  # 空心点建议不透明
-    #     ax=ax,
-    #     markers={'Traindata': 'o', 'Testdata': 's', 'OURS': 'D', 'CDDM': '^'},
-    #     edgecolor='black',  # 边框颜色
-    #     facecolors='none',  # 关键：空心
-    #     linewidth=1.2  # 边框粗一点更清晰
-    # )
-    for data_type in tsne_df['Data Type'].unique():
-        subset = tsne_df[tsne_df['Data Type'] == data_type]
-
-        ax.scatter(
-            subset['TSNE-1'],
-            subset['TSNE-2'],
-            label=data_type,
-            marker={'Traindata': 'o', 'Testdata': 's', 'OURS': 'D', 'CDDM': '^'}[data_type],
-            s=120,
-            facecolors='none',  # 空心
-            edgecolors=COLOR_PALETTE[data_type],  # 用类别颜色作为边框
-            linewidths=1.2,
-            alpha=0.9
-        )
+    sns.scatterplot(
+        x='TSNE-1',
+        y='TSNE-2',
+        hue='Data Type',
+        style='Data Type',
+        data=tsne_df,
+        palette=[COLOR_PALETTE[dt] for dt in tsne_df['Data Type'].unique()],
+        s=120,
+        alpha=1.0,  # 空心点建议不透明
+        ax=ax,
+        markers={'Traindata': 'o', 'Testdata': 's', 'OURS': 'D', 'CDDM': '^'},
+        edgecolor='black',  # 边框颜色
+        facecolors='none',  # 关键：空心
+        linewidth=1.2  # 边框粗一点更清晰
+    )
+    # for data_type in tsne_df['Data Type'].unique():
+    #     subset = tsne_df[tsne_df['Data Type'] == data_type]
+    #
+    #     ax.scatter(
+    #         subset['TSNE-1'],
+    #         subset['TSNE-2'],
+    #         label=data_type,
+    #         marker={'Traindata': 'o', 'Testdata': 's', 'OURS': 'D', 'CDDM': '^'}[data_type],
+    #         s=120,
+    #         facecolors='none',  # 空心
+    #         edgecolors=COLOR_PALETTE[data_type],  # 用类别颜色作为边框
+    #         linewidths=1.2,
+    #         alpha=0.9
+    #     )
 
     # 标题字体进一步增大到20号（原18→20）
     plt.title(f't-SNE Distribution:{building_name}',
