@@ -80,14 +80,14 @@ def plot_tsne(data_dict, building_name, sparsity):
     datasets = []
     data_types = []
 
+
     for data_type in ['Traindata', 'Testdata', 'CDDM', 'OURS']:
-        for data_type in ['Traindata', 'Testdata', 'CDDM', 'OURS']:
-            if data_type in data_dict and data_dict[data_type] is not None:
-                # 修改点1：所有数据统一最多200
-                prepared_data = prepare_tsne_data(data_dict[data_type], max_samples=50)
-                if prepared_data is not None:
-                    datasets.append(prepared_data)
-                    data_types.append(data_type)
+        if data_type in data_dict and data_dict[data_type] is not None:
+            # 修改点1：所有数据统一最多200
+            prepared_data = prepare_tsne_data(data_dict[data_type], max_samples=50)
+            if prepared_data is not None:
+                datasets.append(prepared_data)
+                data_types.append(data_type)
 
     if len(datasets) < 2:
         print(f"数据不足，无法为{building_name}_{sparsity}生成t-SNE图")

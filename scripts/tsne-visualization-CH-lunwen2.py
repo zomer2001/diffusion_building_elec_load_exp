@@ -41,16 +41,16 @@ PALETTE = {
 
 # 配色方案（保持不变）
 COLOR_PALETTE = {
-    'Traindata': '#1f77b4',
-    'Testdata': '#d62728',
-    'CDDM': '#ff7f0e',
-    'OURS': '#2ca02c'
+    'Traindata': '#2ca02c',#2ca02c  # 蓝色 - 原始数据
+    'Testdata': '#d62728',  # 红色 - 测试数据
+    'CDDM': '#ff7f0e',  # 橙色 - DDPM方法
+    'OURS': '#1f77b4'  # 绿色 - OURS方法
 }
 
 # 定义稀疏率和路径（保持不变）
-sparsity_rates = [70]
-base_dir = '../fakedata'
-test_data_folder = '../testdata'
+sparsity_rates = [300,500,700]
+base_dir = '../fakedata2'
+test_data_folder = '../testdata2'
 output_dir = '../results/tsne/ddpm_and_ours_lunwen2-CH'
 os.makedirs(output_dir, exist_ok=True)
 
@@ -91,8 +91,8 @@ def plot_tsne(data_dict, building_name, sparsity):
 
     for data_type in ['Traindata', 'Testdata', 'CDDM', 'OURS']:
         if data_type in data_dict and data_dict[data_type] is not None:
-            max_samples = 500 if data_type in ['CDDM', 'OURS'] else None
-            prepared_data = prepare_tsne_data(data_dict[data_type], max_samples)
+            # 修改点1：所有数据统一最多200
+            prepared_data = prepare_tsne_data(data_dict[data_type], max_samples=50)
             if prepared_data is not None:
                 datasets.append(prepared_data)
                 data_types.append(data_type)
@@ -141,6 +141,21 @@ def plot_tsne(data_dict, building_name, sparsity):
             'CDDM': '^'
         },
         legend=False
+    )
+    sns.scatterplot(
+        x='TSNE-1',
+        y='TSNE-2',
+        hue='数据类型',
+        style='数据类型',
+        data=tsne_df,
+        palette=[COLOR_PALETTE[dt] for dt in tsne_df['数据类型'].unique()],
+        s=120,
+        alpha=1.0,  # 空心点建议不透明
+        ax=ax,
+        markers={'Traindata': 'o', 'Testdata': 's', 'OURS': 'D', 'CDDM': '^'},
+        edgecolor='black',  # 边框颜色
+        facecolors='none',  # 关键：空心
+        linewidth=1.2  # 边框粗一点更清晰
     )
 
     # plt.title(
@@ -207,11 +222,11 @@ for test_folder in os.listdir(test_data_folder):
         oridata = np.load(oridata_file)
         test_data = np.load(test_file)
 
-        ddpm_folder = os.path.join(base_dir, 'diffts-fft', str(sparsity), building_name)
+        ddpm_folder = os.path.join(base_dir, 'CDDM', str(sparsity), building_name)
         ddpm_data = load_generated_data(ddpm_folder)
         print(f"加载 DDPM 样本数: {len(ddpm_data) if ddpm_data is not None else 0}")
 
-        ours_folder = os.path.join(base_dir, 'ours_gen', str(sparsity), building_name)
+        ours_folder = os.path.join(base_dir, 'ours', str(sparsity), building_name)
         ours_data = load_generated_data(ours_folder)
         print(f"加载 OURS 样本数: {len(ours_data) if ours_data is not None else 0}")
 
