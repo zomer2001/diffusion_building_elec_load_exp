@@ -152,7 +152,7 @@ def plot_tsne(data_dict, building_name, sparsity):
         s=120,
         alpha=1.0,  # 空心点建议不透明
         ax=ax,
-        markers={'Traindata': 'o', 'Testdata': 's', 'OURS': 'D', 'CDDM': '^'},
+        markers={'Traindata': 'o', 'Testdata': 's', 'OURS': 'D', 'CDDM': '^'},legend=False,
         edgecolor='black',  # 边框颜色
         facecolors='none',  # 关键：空心
         linewidth=1.2  # 边框粗一点更清晰
