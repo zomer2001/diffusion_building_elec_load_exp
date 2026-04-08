@@ -38,7 +38,7 @@ COLOR_PALETTE = {
 sparsity_rates = [500]
 base_dir = '../fakedata2'
 test_data_folder = '../testdata2'
-output_dir = '../results/tsne/260407'
+output_dir = '../results/tsne/260407_fill_nolegend'
 os.makedirs(output_dir, exist_ok=True)
 
 
@@ -147,22 +147,24 @@ def plot_tsne(data_dict, building_name, sparsity):
     #     )
 
     # 标题字体进一步增大到20号（原18→20）
-    plt.title(f't-SNE Distribution:{building_name}',
-              fontsize=24, pad=15, weight='bold')
+    # plt.title(f't-SNE Distribution:{building_name}',
+    #           fontsize=24, pad=15, weight='bold')
     # 轴标签字体增大（原14→17，与全局设置一致）
     plt.xlabel('t-SNE Dimension 1', fontsize=22, weight='bold')
     plt.ylabel('t-SNE Dimension 2', fontsize=18, weight='bold')
 
     # 图例字体增大（与全局设置一致）
-    legend = ax.legend(
-        title='Data Type',
-        title_fontsize=18,  # 图例标题从14增大到16
-        fontsize=18,  # 图例内容从13增大到15
-        loc='best',
+    handles, labels = ax.get_legend_handles_labels()
+
+    ax.legend(
+        handles=handles,
+        labels=labels,
+        loc='upper center',
+        bbox_to_anchor=(0.5, 1.15),  # 往上移
+        ncol=4,  # 一行排开（4类数据）
         frameon=True,
-        framealpha=0.9,
-        edgecolor='black',
-        markerscale=2.0  # 图例标记比例不变，确保清晰
+        fontsize=16,
+        title=None
     )
 
     # 保存图像（保持不变）
