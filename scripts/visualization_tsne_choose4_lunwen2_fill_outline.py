@@ -35,7 +35,7 @@ COLOR_PALETTE = {
 }
 
 # 定义稀疏率和路径（保持不变）
-sparsity_rates = [500]
+sparsity_rates = [500,100,300]
 base_dir = '../fakedata2'
 test_data_folder = '../testdata2'
 output_dir = '../results/tsne/260407_outline'
@@ -126,7 +126,7 @@ def plot_tsne(data_dict, building_name, sparsity):
         s=120,
         alpha=0.5,  # 空心点建议不透明
         ax=ax,
-        markers={'Traindata': 'o', 'Testdata': 's', 'OURS': 'D', 'CDDM': '^'},
+        markers={'Traindata': 'o', 'Testdata': 's', 'OURS': 'D', 'CDDM': '^'},legend=False,
         edgecolor='black',  # 边框颜色
         facecolors='none',  # 关键：空心
         linewidth=1.2  # 边框粗一点更清晰
