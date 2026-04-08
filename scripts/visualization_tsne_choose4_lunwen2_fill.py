@@ -81,12 +81,13 @@ def plot_tsne(data_dict, building_name, sparsity):
     data_types = []
 
     for data_type in ['Traindata', 'Testdata', 'CDDM', 'OURS']:
-        if data_type in data_dict and data_dict[data_type] is not None:
-            max_samples = 200 if data_type in ['CDDM', 'OURS'] else None
-            prepared_data = prepare_tsne_data(data_dict[data_type], max_samples)
-            if prepared_data is not None:
-                datasets.append(prepared_data)
-                data_types.append(data_type)
+        for data_type in ['Traindata', 'Testdata', 'CDDM', 'OURS']:
+            if data_type in data_dict and data_dict[data_type] is not None:
+                # 修改点1：所有数据统一最多200
+                prepared_data = prepare_tsne_data(data_dict[data_type], max_samples=200)
+                if prepared_data is not None:
+                    datasets.append(prepared_data)
+                    data_types.append(data_type)
 
     if len(datasets) < 2:
         print(f"数据不足，无法为{building_name}_{sparsity}生成t-SNE图")
@@ -122,10 +123,13 @@ def plot_tsne(data_dict, building_name, sparsity):
         style='Data Type',
         data=tsne_df,
         palette=[COLOR_PALETTE[dt] for dt in tsne_df['Data Type'].unique()],
-        s=120,  # 点大小缩小（原120→80）
-        alpha=0.8,  # 透明度不变，确保点重叠时仍可区分
+        s=120,
+        alpha=1.0,  # 空心点建议不透明
         ax=ax,
-        markers={'Traindata': 'o', 'Testdata': 's', 'OURS': 'D', 'CDDM': '^'}
+        markers={'Traindata': 'o', 'Testdata': 's', 'OURS': 'D', 'CDDM': '^'},
+        edgecolor='black',  # 边框颜色
+        facecolors='none',  # 关键：空心
+        linewidth=1.2  # 边框粗一点更清晰
     )
 
     # 标题字体进一步增大到20号（原18→20）
