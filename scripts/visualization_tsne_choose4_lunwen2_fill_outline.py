@@ -131,12 +131,17 @@ def plot_tsne(data_dict, building_name, sparsity):
         facecolors='none',  # 关键：空心
         linewidth=1.2  # 边框粗一点更清晰
     )
-    # ==================== 画每一类的外包线（Convex Hull）====================
+    # ==================== 画部分数据的外包线（只画OURS和Traindata）====================
     for data_type in tsne_df['Data Type'].unique():
+
+        # 只保留 Traindata 和 OURS
+        if data_type not in ['Traindata', 'OURS']:
+            continue
+
         subset = tsne_df[tsne_df['Data Type'] == data_type]
 
         if len(subset) < 3:
-            continue  # 少于3个点无法构成凸包
+            continue
 
         points = subset[['TSNE-1', 'TSNE-2']].values
 
@@ -144,18 +149,18 @@ def plot_tsne(data_dict, building_name, sparsity):
             hull = ConvexHull(points)
             hull_points = points[hull.vertices]
 
-            # 闭合多边形
+            # 闭合
             hull_points = np.vstack([hull_points, hull_points[0]])
 
             ax.plot(
                 hull_points[:, 0],
                 hull_points[:, 1],
                 color=COLOR_PALETTE[data_type],
-                linewidth=2.0,
-                alpha=0.9
+                linewidth=3.0,  # 加粗（原来2.0 → 3.0）
+                alpha=1.0
             )
         except:
-            pass  # 防止极端情况报错
+            pass
     # for data_type in tsne_df['Data Type'].unique():
     #     subset = tsne_df[tsne_df['Data Type'] == data_type]
     #
