@@ -28,36 +28,36 @@ plt.rcParams.update({
 })
 
 # ==================== 配色 ====================
+# 专业配色方案
 PALETTE = sns.color_palette([
     '#4C72B0',
     '#55A868',
-    '#C44E52',
     '#8172B2',
     '#CCB974',
     '#64B5CD'
 ])
 
 # ==================== 数据处理 ====================
-df = pd.read_csv('../../results/lstm_2160/all_results.csv')
+df = pd.read_csv('../../results/lstm_260405_result/all_results.csv')
 
 method_mapping = {
+    'oridata': 'Real Data',
     'timegan': 'TIMEGAN',
     'cgan': 'CGAN',
-    'wgan': 'VAEGAN',
-    'diffts': 'DDPM',
-    'diffts-fft': 'OURS',
-    'oridata': 'Real Data'
+    'ours': 'OURS',
+    'CDDM': 'CDDM'
+
 }
 df['Method'] = df['Method'].map(method_mapping)
 
-methods_order = ['TIMEGAN', 'CGAN', 'VAEGAN','DDPM',  'Real Data', 'OURS']
+methods_order = ['Real Data','TIMEGAN', 'CGAN', 'CDDM',  'OURS']
 
-df = df[df['Sparsity'].isin([30, 50, 70, 90])]
+df = df[df['Sparsity'].isin([100, 300, 500])]
 
 df['MAPE_original'] = df['MAPE'].copy()
-df['MAPE'] = df['MAPE'] / 8.0
+#df['MAPE'] = df['MAPE'] / 8.0
 
-modified_csv_path = '../../results/lstm_2160/all_results_modified.csv'
+modified_csv_path = '../../results/lstm_260405_result/all_results_modified.csv'
 df.to_csv(modified_csv_path, index=False)
 
 grouped = df.groupby(['Sparsity', 'Method'])[['MAE', 'MSE', 'RMSE', 'MAPE']].mean().reset_index()
@@ -71,12 +71,11 @@ titles = ['(a) MAE', '(b) MSE',
 fig, axes = plt.subplots(2, 2, figsize=(16, 14))
 
 hatch_pattern = '////'
+sparsity_order = [100, 300, 500]
 
 for ax, metric, name, title in zip(
         axes.flatten(),
-        metrics,
-        metric_names,
-        titles):
+        metrics, metric_names, titles):
 
     sns.barplot(
         data=grouped,
@@ -84,6 +83,7 @@ for ax, metric, name, title in zip(
         y=metric,
         hue='Method',
         hue_order=methods_order,
+        order=sparsity_order,
         ax=ax,
         palette=PALETTE,
         edgecolor='black',
@@ -93,25 +93,24 @@ for ax, metric, name, title in zip(
 
     # OURS 高亮
     for j, bar in enumerate(ax.patches):
-        method_idx = j // len(grouped['Sparsity'].unique())
-        method = methods_order[method_idx]
-        if method == 'OURS':
+        method_idx = j // len(sparsity_order)
+        if methods_order[method_idx] == 'OURS':
             bar.set_hatch(hatch_pattern)
             bar.set_edgecolor('black')
             bar.set_linewidth(1.5)
 
     ax.set_title(title, fontsize=20, pad=10)
-    ax.set_xlabel('Training Data Ratio(%)', fontsize=18)
-    ax.set_ylabel(name, fontsize=17)
+    ax.set_xlabel('Training Data Duration (Months)', fontsize=20)
+    ax.set_ylabel(name, fontsize=18)
 
-    ax.set_xticklabels(['30%', '50%', '70%', '90%'], fontsize=15)
-    ax.tick_params(axis='y', labelsize=14)
+    ax.set_xticklabels(['1', '3', '5'], fontsize=17)
+    ax.tick_params(axis='y', labelsize=15)
 
-    # 删除子图legend
+    # ❗删除所有子图 legend
     if ax.get_legend():
         ax.get_legend().remove()
 
-# ==================== 全局图例 ====================
+# ==================== 全局图例（关键新增） ====================
 legend_handles = []
 for j, label in enumerate(methods_order):
     color = PALETTE[j % len(PALETTE)]
@@ -142,59 +141,15 @@ legend = fig.legend(
     frameon=True
 )
 
+# OURS 加粗
 for text in legend.get_texts():
     if text.get_text() == 'OURS':
         text.set_fontweight('bold')
 
-# 留出顶部空间
+# 给 legend 留空间
 plt.tight_layout(rect=[0, 0, 1, 0.95])
 
 plt.savefig('performance_comparison_en.pdf', bbox_inches='tight', dpi=600)
 plt.savefig('performance_comparison_en.png', bbox_inches='tight', dpi=600)
 
-# ==================== 折线图 ====================
-plt.figure(figsize=(10, 8))
-ax = plt.gca()
-
-sns.lineplot(
-    data=grouped,
-    x='Sparsity',
-    y='MAE',
-    hue='Method',
-    hue_order=methods_order,
-    style='Method',
-    markers=True,
-    dashes=False,
-    markersize=10,
-    linewidth=3,
-    palette=PALETTE,
-    ax=ax
-)
-
-plt.title('')
-plt.xlabel('Training Data Ratio(%)', fontsize=15)
-plt.ylabel('MAE', fontsize=15)
-
-plt.xticks([30, 50, 70, 90], ['30%', '50%', '70%', '90%'])
-
-# 删除原 legend
-ax.get_legend().remove()
-
-# 全局 legend（折线图）
-legend = plt.gcf().legend(
-    methods_order,
-    loc='upper center',
-    bbox_to_anchor=(0.5, 1.02),
-    ncol=3,
-    fontsize=13,
-    frameon=True
-)
-
-plt.grid(True, linestyle=':', alpha=0.7)
-
-plt.tight_layout(rect=[0, 0, 1, 0.93])
-
-plt.savefig('mae_trends_en.pdf', bbox_inches='tight', dpi=600)
-plt.savefig('mae_trends_en.png', bbox_inches='tight', dpi=600)
-
-print("全部图已生成")
+print("已保存柱状图（全局顶部图例版本）")
