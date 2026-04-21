@@ -92,7 +92,7 @@ def create_combined_plot(stats_df, sample_size):
         alpha=0.9,
         edgecolor='white',
         linewidth=1.5,
-        label='建筑数量'
+        label='Number of Buildings'
     )
 
     for bar in bars:
@@ -129,7 +129,7 @@ def create_combined_plot(stats_df, sample_size):
         markeredgecolor='white',
         markeredgewidth=2.0,
         linewidth=3.0,
-        label='平均 MAE'
+        label='Average MAE'
     )
 
     for i, mae in enumerate(stats_df['MAE_Mean']):
