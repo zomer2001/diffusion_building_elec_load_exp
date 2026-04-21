@@ -126,7 +126,7 @@ def plot_tsne(data_dict, building_name, sparsity):
         s=120,
         alpha=1.0,  # 空心点建议不透明
         ax=ax,
-        markers={'Traindata': 'o', 'Testdata': 's', 'OURS': 'D', 'CDDM': '^'},
+        markers={'Traindata': 'o', 'Testdata': 's', 'OURS': 'D', 'DDPM': '^'},
         edgecolor='black',  # 边框颜色
         facecolors='none',  # 关键：空心
         linewidth=1.2  # 边框粗一点更清晰
@@ -207,7 +207,7 @@ for test_folder in os.listdir(test_data_folder):
         test_data = np.load(test_file)
 
         # 加载DDPM和OURS生成数据
-        ddpm_folder = os.path.join(base_dir, 'CDDM', str(sparsity), building_name)
+        ddpm_folder = os.path.join(base_dir, 'DDPM', str(sparsity), building_name)
         ddpm_data = load_generated_data(ddpm_folder)
         print(f"加载了 {len(ddpm_data) if ddpm_data is not None else 0} 个DDPM生成的样本")
 
@@ -219,7 +219,7 @@ for test_folder in os.listdir(test_data_folder):
         data_dict = {
             'Traindata': oridata,
             'Testdata': test_data,
-            'CDDM': ddpm_data,
+            'DDPM': ddpm_data,
             'OURS': ours_data
         }
         plot_tsne(data_dict, building_name, sparsity)
