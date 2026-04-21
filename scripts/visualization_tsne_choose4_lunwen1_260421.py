@@ -30,7 +30,7 @@ plt.rcParams.update({
 COLOR_PALETTE = {
     'Traindata': '#1f77b4',  # 蓝色 - 原始数据
     'Testdata': '#d62728',  # 红色 - 测试数据
-    'CDDM': '#ff7f0e',  # 橙色 - DDPM方法
+    'DDPM': '#ff7f0e',  # 橙色 - DDPM方法
     'OURS': '#2ca02c'  # 绿色 - OURS方法
 }
 
