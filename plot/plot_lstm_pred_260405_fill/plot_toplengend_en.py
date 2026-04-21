@@ -99,11 +99,11 @@ for ax, metric, name, title in zip(
             bar.set_edgecolor('black')
             bar.set_linewidth(1.5)
 
-    ax.set_title(title, fontsize=20, pad=10)
-    ax.set_xlabel('Amount of Imputed Data (Months)', fontsize=20)
+    ax.set_title(title, fontsize=20, pad=10,fontweight='bold')
+    ax.set_xlabel('Amount of Imputed Data (Months)', fontsize=20,fontweight='bold')
     ax.set_ylabel(name, fontsize=18)
 
-    ax.set_xticklabels(['1', '3', '5'], fontsize=17)
+    ax.set_xticklabels(['1', '3', '5'], fontsize=17,fontweight='bold')
     ax.tick_params(axis='y', labelsize=15)
 
     # ❗删除所有子图 legend
