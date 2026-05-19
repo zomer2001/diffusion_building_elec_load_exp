@@ -16,9 +16,9 @@ plt.rcParams.update({
     'font.size': 18,
     'axes.labelsize': 18,
     'axes.titlesize': 18,
-    'xtick.labelsize': 16,
-    'ytick.labelsize': 16,
-    'legend.fontsize': 16,
+    'xtick.labelsize': 19,
+    'ytick.labelsize': 19,
+    'legend.fontsize': 18,
     'font.family': [
         'Times New Roman',
         'SimSun',
@@ -46,7 +46,7 @@ methods = df['Method'].unique()
 method_name_map = {
     'ours': 'OURS',
     'timegan': 'TimeGAN',
-    'oridata': '真实数据',
+    'oridata': '训练数据',
     'diffts': 'CDDM',
     'cgan': 'DDPM'
 }
@@ -111,7 +111,7 @@ ax.axvspan(boundary_x, max_x,
 
 ax.text(boundary_x - 0.01, ax.get_ylim()[1] * 0.92,
         '分布内',
-        ha='right', fontsize=16,
+        ha='right', fontsize=18,
         color='gray', fontstyle='italic', zorder=8)
 
 ax.text(boundary_x + 0.01, ax.get_ylim()[1] * 0.92,
@@ -162,8 +162,8 @@ ax.axvline(boundary_x,
            alpha=0.4,
            zorder=7)
 
-ax.set_xlabel('分布偏移程度（MMD）')
-ax.set_ylabel('预测误差（MAE）')
+ax.set_xlabel('分布偏移程度MMD',fontsize=22, weight='bold')
+ax.set_ylabel('预测误差MAE',fontsize=22, weight='bold')
 #ax.set_title('模型泛化性能对比', fontweight='bold')
 
 # 限制横轴范围，避免右侧空白
