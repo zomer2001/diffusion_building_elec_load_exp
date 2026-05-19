@@ -162,8 +162,8 @@ ax.axvline(boundary_x,
            alpha=0.4,
            zorder=7)
 
-ax.set_xlabel('分布偏移程度MMD',fontsize=22, weight='bold')
-ax.set_ylabel('预测误差MAE',fontsize=22, weight='bold')
+ax.set_xlabel('分布偏移程度',fontsize=22, weight='bold')
+ax.set_ylabel('预测误差',fontsize=22, weight='bold')
 #ax.set_title('模型泛化性能对比', fontweight='bold')
 
 # 限制横轴范围，避免右侧空白
