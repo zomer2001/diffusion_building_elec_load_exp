@@ -3,6 +3,9 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
 from matplotlib.patches import Rectangle
+from matplotlib.ticker import MultipleLocator
+
+
 
 # ==================== 学术论文风格设置 ====================
 plt.rcParams.update({
@@ -12,7 +15,7 @@ plt.rcParams.update({
     'font.size': 16,
     'axes.titlesize': 20,
     'axes.labelsize': 17,
-    'xtick.labelsize': 17,
+    'xtick.labelsize': 19,
     'ytick.labelsize': 17,
     'legend.fontsize': 16,
 
@@ -96,10 +99,13 @@ def create_double_bar_plot_with_spaced_legend(dataframe, file_prefix, figsize=(1
     )
 
     #ax1.set_title('与原始数据的分布差异（MMD）', fontsize=22, weight='bold', pad=15)
-    ax1.set_xlabel('训练数据可用率（%）', fontsize=20, weight='bold', labelpad=10)
-    ax1.set_ylabel('与原始数据的分布差异（MMD）', fontsize=17, weight='bold', labelpad=10)
+    ax1.set_xlabel('训练数据可用率（%）', fontsize=22, weight='bold', labelpad=10)
+    ax1.set_title('与原始数据的分布差异', fontsize=21, weight='bold', pad=10)
     ax1.tick_params(axis='both', labelsize=18)
     ax1.yaxis.grid(True, linestyle='--', alpha=0.2)
+    ax1.set_ylabel('MMD',fontsize=21, weight='bold')
+    # ax1.yaxis.set_major_locator(MultipleLocator(0.05))
+
 
     # 右图
     sns.barplot(
@@ -117,10 +123,13 @@ def create_double_bar_plot_with_spaced_legend(dataframe, file_prefix, figsize=(1
     )
 
     #ax2.set_title('与测试数据的分布差异（MMD）', fontsize=22, weight='bold', pad=15)
-    ax2.set_xlabel('训练数据可用率（%）', fontsize=20, weight='bold', labelpad=10)
-    ax2.set_ylabel('与测试数据的分布差异（MMD）', fontsize=17, weight='bold', labelpad=10)
+    ax2.set_xlabel('训练数据可用率（%）', fontsize=22, weight='bold', labelpad=10)
+    ax2.set_title('与测试数据的分布差异', fontsize=21, weight='bold', pad=10)
     ax2.tick_params(axis='both', labelsize=18)
     ax2.yaxis.grid(True, linestyle='--', alpha=0.2)
+    # ax2.yaxis.set_major_locator(MultipleLocator(0.05))
+
+    ax2.set_ylabel('')
 
     # hatch + 去默认图例
     for ax in [ax1, ax2]:
@@ -157,7 +166,7 @@ def create_double_bar_plot_with_spaced_legend(dataframe, file_prefix, figsize=(1
         framealpha=0.6,
         edgecolor='0.5',
         fancybox=False,
-        fontsize=15,
+        fontsize=17,
         title_fontsize=16,
         handlelength=1.6,
         handleheight=1.6,

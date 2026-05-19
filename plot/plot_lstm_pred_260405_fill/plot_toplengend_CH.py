@@ -65,8 +65,8 @@ grouped = df.groupby(['Sparsity', 'Method'])[['MAE', 'MSE', 'RMSE', 'MAPE']].mea
 # ==================== 柱状图 ====================
 metrics = ['MAE', 'MSE', 'RMSE', 'MAPE']
 metric_names = ['MAE', 'MSE', 'RMSE', 'MAPE (%)']
-titles = ['(a) MAE 对比结果', '(b) MSE 对比结果',
-          '(c) RMSE 对比结果', '(d) MAPE 对比结果']
+titles = ['(a) MAE', '(b) MSE',
+          '(c) RMSE', '(d) MAPE']
 
 fig, axes = plt.subplots(2, 2, figsize=(16, 14))
 
@@ -100,11 +100,11 @@ for ax, metric, name, title in zip(
             bar.set_linewidth(1.5)
 
     ax.set_title(title, fontsize=20, pad=10)
-    ax.set_xlabel('填补月份数量', fontsize=20)
+    ax.set_xlabel('填补月份数量', fontsize=22)
     ax.set_ylabel(name, fontsize=18)
 
-    ax.set_xticklabels(['1', '3', '5'], fontsize=17)
-    ax.tick_params(axis='y', labelsize=15)
+    ax.set_xticklabels(['1个月', '3个月', '5个月'], fontsize=20)
+    ax.tick_params(axis='y', labelsize=17)
 
     # ❗删除所有子图 legend
     if ax.get_legend():
@@ -132,12 +132,12 @@ for j, label in enumerate(methods_order):
 legend = fig.legend(
     legend_handles,
     methods_order,
-    title='合成方法',
+    title='生成方法',
     loc='upper center',
     bbox_to_anchor=(0.5, 1.02),
     ncol=6,
-    fontsize=17,
-    title_fontsize=19,
+    fontsize=19,
+    title_fontsize=20,
     frameon=True
 )
 

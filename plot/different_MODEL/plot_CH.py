@@ -108,20 +108,20 @@ sns.lineplot(
 #     '不同预测模型在 70% 训练数据条件下的 MAE 对比',
 #     fontsize=24, pad=15, weight='bold'
 # )
-plt.xlabel('数据生成方法', weight='bold', fontsize=24)
-plt.ylabel('MAE', weight='bold', fontsize=24)
+plt.xlabel('数据生成方法', weight='bold', fontsize=26)
+plt.ylabel('MAE', weight='bold', fontsize=26)
 
 # ==================== 图例设置 ====================
 handles, labels = ax.get_legend_handles_labels()
 ax.legend(
     handles, labels,
     title='预测模型',
-    title_fontsize=16,
+    title_fontsize=18,
     frameon=True,
     shadow=True,
     fancybox=True,
     loc='upper right',
-    fontsize=16
+    fontsize=18
 )
 
 # ==================== 数值标注 ====================
@@ -133,7 +133,7 @@ for model in MODEL_PALETTE.keys():
             row['MAE'],
             f"{row['MAE']:.3f}",
             color=MODEL_PALETTE[model],
-            fontsize=16,
+            fontsize=18,
             ha='center',
             va='bottom',
             weight='bold'
@@ -141,8 +141,8 @@ for model in MODEL_PALETTE.keys():
 
 # ==================== 细节优化 ====================
 plt.grid(True, linestyle=':', alpha=0.5)
-plt.xticks(rotation=0, fontsize=18)
-plt.yticks(fontsize=18)
+plt.xticks(rotation=0, fontsize=20)
+plt.yticks(fontsize=20)
 
 # ==================== 保存结果 ====================
 plt.savefig('mae_comparison_across_models.pdf', bbox_inches='tight', dpi=600)

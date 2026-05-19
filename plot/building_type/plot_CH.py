@@ -103,7 +103,7 @@ def create_combined_plot(stats_df, sample_size):
             f'{int(height)}',
             ha='center',
             va='bottom',
-            fontsize=21,
+            fontsize=23,
             color='white',
             weight='bold',
             bbox=dict(
@@ -116,6 +116,7 @@ def create_combined_plot(stats_df, sample_size):
     ax1.set_xlabel('建筑类型', fontweight='semibold', color='black', fontsize=24)
     ax1.set_ylabel('建筑数量', fontweight='semibold', color='black', fontsize=21)
     ax1.yaxis.set_major_locator(MaxNLocator(integer=True))
+    ax1.tick_params(axis='y', labelsize=21)
 
     ax1.set_ylim(0, stats_df['Count'].max() * 1.25)
 
@@ -149,7 +150,7 @@ def create_combined_plot(stats_df, sample_size):
             )
         )
 
-    ax2.set_ylabel('平均 MAE', fontweight='semibold', color=PALETTE['text'], fontsize=19)
+    ax2.set_ylabel('平均 MAE', fontweight='semibold', color=PALETTE['text'], fontsize=20)
     ax2.set_ylim(0, stats_df['MAE_Mean'].max() * 1.3)
 
     lines1, labels1 = ax1.get_legend_handles_labels()
@@ -161,11 +162,11 @@ def create_combined_plot(stats_df, sample_size):
         frameon=True,
         fancybox=True,
         edgecolor='0.3',
-        fontsize=18
+        fontsize=19
     )
 
     ax1.set_xticklabels(stats_df['Building_Type'], fontsize=21)
-    plt.yticks(fontsize=21)
+    plt.yticks(fontsize=22)
 
     for spine in ax1.spines.values():
         spine.set_edgecolor('#b0b0b0')

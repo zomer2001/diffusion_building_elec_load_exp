@@ -65,8 +65,8 @@ grouped = df.groupby(['Sparsity', 'Method'])[['MAE', 'MSE', 'RMSE', 'MAPE']].mea
 # ==================== 柱状图 ====================
 metrics = ['MAE', 'MSE', 'RMSE', 'MAPE']
 metric_names = ['MAE', 'MSE', 'RMSE', 'MAPE (%)']
-titles = ['(a) MAE 对比结果', '(b) MSE 对比结果',
-          '(c) RMSE 对比结果', '(d) MAPE 对比结果']
+titles = ['(a) MAE', '(b) MSE',
+          '(c) RMSE', '(d) MAPE']
 
 fig, axes = plt.subplots(2, 2, figsize=(16, 14))
 
@@ -101,11 +101,11 @@ for ax, metric, name, title in zip(
             bar.set_linewidth(1.5)
 
     ax.set_title(title, fontsize=20, pad=10)
-    ax.set_xlabel('训练数据比例', fontsize=18)
-    ax.set_ylabel(name, fontsize=17)
+    ax.set_xlabel('训练数据比例', fontsize=22)
+    ax.set_ylabel(name, fontsize=19)
 
-    ax.set_xticklabels(['30%', '50%', '70%', '90%'], fontsize=15)
-    ax.tick_params(axis='y', labelsize=14)
+    ax.set_xticklabels(['30%', '50%', '70%', '90%'], fontsize=20)
+    ax.tick_params(axis='y', labelsize=18)
 
     # 删除子图legend
     if ax.get_legend():
@@ -133,12 +133,12 @@ for j, label in enumerate(methods_order):
 legend = fig.legend(
     legend_handles,
     methods_order,
-    title='合成方法',
+    title='生成方法',
     loc='upper center',
     bbox_to_anchor=(0.5, 1.02),
     ncol=6,
-    fontsize=17,
-    title_fontsize=19,
+    fontsize=19,
+    title_fontsize=20,
     frameon=True
 )
 
@@ -172,8 +172,8 @@ sns.lineplot(
 )
 
 plt.title('')
-plt.xlabel('训练数据比例 (%)', fontsize=15)
-plt.ylabel('MAE', fontsize=15)
+plt.xlabel('训练数据比例 (%)', fontsize=20)
+plt.ylabel('MAE', fontsize=18)
 
 plt.xticks([30, 50, 70, 90], ['30%', '50%', '70%', '90%'])
 
