@@ -84,7 +84,7 @@ def plot_tsne(data_dict, building_name, sparsity):
     for data_type in ['Traindata', 'Testdata', 'CDDM', 'OURS']:
         if data_type in data_dict and data_dict[data_type] is not None:
             # 修改点1：所有数据统一最多200
-            prepared_data = prepare_tsne_data(data_dict[data_type], max_samples=100)
+            prepared_data = prepare_tsne_data(data_dict[data_type], max_samples=200)
             if prepared_data is not None:
                 datasets.append(prepared_data)
                 data_types.append(data_type)
@@ -123,7 +123,7 @@ def plot_tsne(data_dict, building_name, sparsity):
         style='Data Type',
         data=tsne_df,
         palette=[COLOR_PALETTE[dt] for dt in tsne_df['Data Type'].unique()],
-        s=40,
+        s=60,
         alpha=1.0,  # 空心点建议不透明
         ax=ax,
         markers={'Traindata': 'o', 'Testdata': 's', 'OURS': 'D', 'CDDM': '^'},
