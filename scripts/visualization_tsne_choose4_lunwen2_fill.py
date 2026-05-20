@@ -123,7 +123,7 @@ def plot_tsne(data_dict, building_name, sparsity):
         style='Data Type',
         data=tsne_df,
         palette=[COLOR_PALETTE[dt] for dt in tsne_df['Data Type'].unique()],
-        s=60,
+        s=40,
         alpha=1.0,  # 空心点建议不透明
         ax=ax,
         markers={'Traindata': 'o', 'Testdata': 's', 'OURS': 'D', 'CDDM': '^'},
