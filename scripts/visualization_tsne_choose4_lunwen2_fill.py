@@ -38,7 +38,7 @@ COLOR_PALETTE = {
 sparsity_rates = [500,300,700,100]
 base_dir = '../fakedata2'
 test_data_folder = '../testdata2'
-output_dir = '../results/tsne/260407_fill_nolegend'
+output_dir = '../results/tsne/260520_lunwen2_s60_200'
 os.makedirs(output_dir, exist_ok=True)
 
 
@@ -123,7 +123,7 @@ def plot_tsne(data_dict, building_name, sparsity):
         style='Data Type',
         data=tsne_df,
         palette=[COLOR_PALETTE[dt] for dt in tsne_df['Data Type'].unique()],
-        s=120,
+        s=60,
         alpha=1.0,  # 空心点建议不透明
         ax=ax,
         markers={'Traindata': 'o', 'Testdata': 's', 'OURS': 'D', 'CDDM': '^'},
