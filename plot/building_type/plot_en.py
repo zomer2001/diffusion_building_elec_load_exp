@@ -153,7 +153,7 @@ def create_combined_plot(stats_df, sample_size):
             )
         )
 
-    ax2.set_ylabel('Average MAE', fontweight='semibold', color=PALETTE['text'], fontsize=19)
+    ax2.set_ylabel('Average MAE', fontweight='semibold', color=PALETTE['text'], fontsize=20)
     ax2.set_ylim(0, stats_df['MAE_Mean'].max() * 1.3)
 
     lines1, labels1 = ax1.get_legend_handles_labels()
@@ -168,8 +168,10 @@ def create_combined_plot(stats_df, sample_size):
         fontsize=18
     )
 
-    ax1.set_xticklabels(stats_df['Building_Type'], fontsize=21)
+    ax1.set_xticklabels(stats_df['Building_Type'], fontsize=23)
     plt.yticks(fontsize=21)
+    ax1.tick_params(axis='y', labelsize=21)  # 左侧：Number of Buildings
+    ax2.tick_params(axis='y', labelsize=21)  #
 
     for spine in ax1.spines.values():
         spine.set_edgecolor('#b0b0b0')

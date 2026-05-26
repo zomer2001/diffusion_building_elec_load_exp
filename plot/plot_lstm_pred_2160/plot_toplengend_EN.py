@@ -6,7 +6,7 @@ from matplotlib.patches import Rectangle
 
 # ==================== 全局样式设置 ====================
 plt.rcParams.update({
-    'font.family': ['Times New Roman', 'SimSun', 'Microsoft YaHei'],
+    'font.family': ['Arial Narrow','Times New Roman', 'SimSun', 'Microsoft YaHei'],
     'axes.unicode_minus': False,
 
     'font.size': 14,
@@ -101,10 +101,10 @@ for ax, metric, name, title in zip(
             bar.set_linewidth(1.5)
 
     ax.set_title(title, fontsize=20, pad=10)
-    ax.set_xlabel('Training Data Ratio(%)', fontsize=18)
-    ax.set_ylabel(name, fontsize=17)
+    ax.set_xlabel('Training Data Ratio(%)', fontsize=20)
+    ax.set_ylabel(name, fontsize=19)
 
-    ax.set_xticklabels(['30%', '50%', '70%', '90%'], fontsize=15)
+    ax.set_xticklabels(['30%', '50%', '70%', '90%'], fontsize=18)
     ax.tick_params(axis='y', labelsize=14)
 
     # 删除子图legend
@@ -137,7 +137,7 @@ legend = fig.legend(
     loc='upper center',
     bbox_to_anchor=(0.5, 1.02),
     ncol=6,
-    fontsize=17,
+    fontsize=19,
     title_fontsize=19,
     frameon=True
 )
@@ -172,8 +172,8 @@ sns.lineplot(
 )
 
 plt.title('')
-plt.xlabel('Training Data Ratio(%)', fontsize=15)
-plt.ylabel('MAE', fontsize=15)
+plt.xlabel('Training Data Ratio(%)', fontsize=18)
+plt.ylabel('MAE', fontsize=17)
 
 plt.xticks([30, 50, 70, 90], ['30%', '50%', '70%', '90%'])
 
