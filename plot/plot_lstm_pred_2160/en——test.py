@@ -6,7 +6,7 @@ from matplotlib.patches import Rectangle
 
 # ==================== 全局样式设置 ====================
 plt.rcParams.update({
-    'font.family': ['Times New Roman', 'SimSun', 'Microsoft YaHei'],
+    'font.family': ['Arial Narrow','Times New Roman', 'SimSun', 'Microsoft YaHei'],
     'axes.unicode_minus': False,
 
     'font.size': 14,
@@ -111,10 +111,10 @@ metric_names = [
 ]
 
 titles = [
-    '(a) MAE',
-    '(b) MSE',
-    '(c) RMSE',
-    '(d) MAPE'
+    '',
+    '',
+    '',
+    ''
 ]
 
 fig, axes = plt.subplots(2, 2, figsize=(16, 14))
@@ -141,31 +141,44 @@ for ax, metric, name, title in zip(
     )
 
     # OURS 高亮
-    for j, bar in enumerate(ax.patches):
+    num_methods = len(methods_order)
 
-        method_idx = j // len(grouped['Sparsity'].unique())
-        method = methods_order[method_idx]
+    for i, container in enumerate(ax.containers):
+
+        method = methods_order[i]
 
         if method == 'OURS':
-            bar.set_hatch(hatch_pattern)
-            bar.set_edgecolor('black')
-            bar.set_linewidth(1.5)
 
-    ax.set_title(title, fontsize=20, pad=10)
+            for bar in container:
+                bar.set_hatch(hatch_pattern)
+                bar.set_edgecolor('black')
+                bar.set_linewidth(1.5)
+    # for j, bar in enumerate(ax.patches):
+    #
+    #     method_idx = j // len(grouped['Sparsity'].unique())
+    #     method = methods_order[method_idx]
+    #
+    #     if method == 'OURS':
+    #         bar.set_hatch(hatch_pattern)
+    #         bar.set_edgecolor('black')
+    #         bar.set_linewidth(1.5)
+
+    ax.set_title(title, fontsize=22, pad=10,)
 
     ax.set_xlabel(
         'Training Data Ratio(%)',
-        fontsize=20
+        fontsize=22,
+        fontweight='bold'
     )
 
-    ax.set_ylabel(name, fontsize=19)
+    ax.set_ylabel(name, fontsize=19,fontweight='bold')
 
     ax.set_xticklabels(
         ['30%', '50%', '70%', '90%'],
-        fontsize=18
+        fontsize=19
     )
 
-    ax.tick_params(axis='y', labelsize=14)
+    ax.tick_params(axis='y', labelsize=17)
 
     if ax.get_legend():
         ax.get_legend().remove()
@@ -214,6 +227,7 @@ legend = fig.legend(
     title_fontsize=19,
     frameon=True
 )
+legend.get_title().set_fontweight('bold')
 
 for text in legend.get_texts():
 

@@ -8,7 +8,7 @@ from sklearn.preprocessing import StandardScaler
 
 # ==================== 全局样式设置（字体增大）====================
 plt.rcParams.update({
-    'font.family': 'Times New Roman',
+    'font.family': 'Arial',
     'font.size': 16,  # 基础字体从14增大到16
     'axes.titlesize': 18,  # 轴标题从16增大到18
     'axes.labelsize': 17,  # 轴标签从15增大到17
@@ -38,7 +38,7 @@ COLOR_PALETTE = {
 sparsity_rates = [30,50,70,90]
 base_dir = '../fakedata'
 test_data_folder = '../testdata'
-output_dir = '../results/tsne/260520_lunwen1_s60_200'
+output_dir = '../results/tsne/260526_lunwen1_s60_200'
 os.makedirs(output_dir, exist_ok=True)
 
 
