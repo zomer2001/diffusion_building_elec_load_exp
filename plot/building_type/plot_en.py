@@ -8,8 +8,13 @@ from matplotlib.ticker import MaxNLocator
 
 # ==================== 高级学术样式设置 ====================
 plt.rcParams.update({
-    'font.family': ['Times New Roman', 'SimSun', 'Microsoft YaHei'],
+    'font.family': ['Arial Narrow', 'SimSun', 'Microsoft YaHei'],
     'axes.unicode_minus': False,
+
+    'mathtext.fontset': 'custom',
+    'mathtext.rm': 'Arial Narrow',
+    'mathtext.it': 'Arial Narrow:italic',
+    'mathtext.bf': 'Arial Narrow:bold',
 
     'font.size': 14,
     'axes.titlesize': 16,
@@ -20,16 +25,15 @@ plt.rcParams.update({
 
     'figure.dpi': 1200,
     'savefig.dpi': 1200,
-    'mathtext.fontset': 'stix',
 
     'axes.grid': True,
     'grid.linestyle': ':',
     'grid.alpha': 0.4,
+
     'legend.frameon': True,
     'legend.framealpha': 0.8,
     'legend.loc': 'best',
 })
-
 
 # 专业学术配色方案
 PALETTE = {
