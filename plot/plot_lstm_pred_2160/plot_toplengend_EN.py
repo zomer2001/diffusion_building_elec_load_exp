@@ -6,7 +6,7 @@ from matplotlib.patches import Rectangle
 
 # ==================== 全局样式设置 ====================
 plt.rcParams.update({
-    'font.family': ['Times New Roman', 'SimSun', 'Microsoft YaHei'],
+    'font.family': ['Arial Narrow','Times New Roman', 'SimSun', 'Microsoft YaHei'],
     'axes.unicode_minus': False,
 
     'font.size': 14,

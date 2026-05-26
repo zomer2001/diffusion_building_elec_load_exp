@@ -8,7 +8,7 @@ from matplotlib.ticker import MaxNLocator
 
 # ==================== 高级学术样式设置 ====================
 plt.rcParams.update({
-    'font.family': ['Times New Roman', 'SimSun', 'Microsoft YaHei'],
+    'font.family': ['Arial Narrow', 'SimSun', 'Microsoft YaHei'],
     'axes.unicode_minus': False,
 
     'font.size': 14,
@@ -149,7 +149,7 @@ def create_combined_plot(stats_df, sample_size):
             )
         )
 
-    ax2.set_ylabel('Average MAE', fontweight='semibold', color=PALETTE['text'], fontsize=19)
+    ax2.set_ylabel('Average MAE', fontweight='semibold', color=PALETTE['text'], fontsize=20)
     ax2.set_ylim(0, stats_df['MAE_Mean'].max() * 1.3)
 
     lines1, labels1 = ax1.get_legend_handles_labels()

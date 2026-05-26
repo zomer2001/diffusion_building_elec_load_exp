@@ -6,7 +6,7 @@ import numpy as np
 # ==================== 全局样式设置 ====================
 # 核心原则：使用有顺序的字体列表，确保中英文都能正常显示
 plt.rcParams.update({
-    'font.family': ['Times New Roman', 'SimSun', 'Microsoft YaHei'],
+    'font.family': ['Arial Narrow','Times New Roman', 'SimSun', 'Microsoft YaHei'],
     'axes.unicode_minus': False,
 
     'font.size': 16,
