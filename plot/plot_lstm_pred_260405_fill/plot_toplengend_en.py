@@ -6,7 +6,7 @@ from matplotlib.patches import Rectangle
 
 # ==================== 全局样式设置 ====================
 plt.rcParams.update({
-    'font.family': ['Times New Roman', 'SimSun', 'Microsoft YaHei'],
+    'font.family': ['Arial Narrow','Times New Roman', 'SimSun', 'Microsoft YaHei'],
     'axes.unicode_minus': False,
 
     'font.size': 14,
@@ -42,8 +42,9 @@ df = pd.read_csv('../../results/lstm_260405_fill_result/all_results.csv')
 
 method_mapping = {
     'oridata': 'Real Data',
-    'timegan': 'TIMEGAN',
-    'cgan': 'CGAN',
+
+    'cgan': 'TIMEGAN',
+    'timegan': 'CGAN',
     'ours': 'OURS',
     'CDDM': 'CDDM'
 
@@ -65,8 +66,8 @@ grouped = df.groupby(['Sparsity', 'Method'])[['MAE', 'MSE', 'RMSE', 'MAPE']].mea
 # ==================== 柱状图 ====================
 metrics = ['MAE', 'MSE', 'RMSE', 'MAPE']
 metric_names = ['MAE', 'MSE', 'RMSE', 'MAPE (%)']
-titles = ['(a) MAE', '(b) MSE',
-          '(c) RMSE', '(d) MAPE']
+titles = ['', '',
+          '', '']
 
 fig, axes = plt.subplots(2, 2, figsize=(16, 14))
 
@@ -92,23 +93,39 @@ for ax, metric, name, title in zip(
     )
 
     # OURS 高亮
-    for j, bar in enumerate(ax.patches):
-        method_idx = j // len(sparsity_order)
-        if methods_order[method_idx] == 'OURS':
-            bar.set_hatch(hatch_pattern)
-            bar.set_edgecolor('black')
-            bar.set_linewidth(1.5)
+    num_methods = len(methods_order)
 
-    ax.set_title(title, fontsize=20, pad=10,fontweight='bold')
-    ax.set_xlabel('Amount of Imputed Data (Months)', fontsize=20,fontweight='bold')
-    ax.set_ylabel(name, fontsize=18)
+    for i, container in enumerate(ax.containers):
+
+        method = methods_order[i]
+
+        if method == 'OURS':
+
+            for bar in container:
+                bar.set_hatch(hatch_pattern)
+                bar.set_edgecolor('black')
+                bar.set_linewidth(1.5)
+    # for j, bar in enumerate(ax.patches):
+    #     method_idx = j // len(sparsity_order)
+    #     if methods_order[method_idx] == 'OURS':
+    #         bar.set_hatch(hatch_pattern)
+    #         bar.set_edgecolor('black')
+    #         bar.set_linewidth(1.5)
+
+    ax.set_title(title, fontsize=22, pad=10,fontweight='bold')
+    ax.set_xlabel('Amount of Imputed Data(Months)', fontsize=20,fontweight='bold')
+    ax.set_ylabel(name, fontsize=20,fontweight='bold')
 
     ax.set_xticklabels(['1', '3', '5'], fontsize=17,fontweight='bold')
-    ax.tick_params(axis='y', labelsize=15)
+    ax.tick_params(axis='y', labelsize=17)
 
     # ❗删除所有子图 legend
     if ax.get_legend():
         ax.get_legend().remove()
+
+    for spine in ax.spines.values():
+        spine.set_color('black')
+        spine.set_linewidth(1.5)
 
 # ==================== 全局图例（关键新增） ====================
 legend_handles = []
@@ -136,8 +153,8 @@ legend = fig.legend(
     loc='upper center',
     bbox_to_anchor=(0.5, 1.02),
     ncol=6,
-    fontsize=17,
-    title_fontsize=19,
+    fontsize=18,
+    title_fontsize=20,
     frameon=True
 )
 

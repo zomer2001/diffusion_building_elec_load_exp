@@ -10,7 +10,7 @@ matplotlib.use('TkAgg')
 
 def set_academic_style():
     plt.rcParams.update({
-        'font.family': 'Times New Roman',
+        'font.family': 'Arial Narrow',
         'font.size': 16,
         'axes.titlesize': 18,
         'axes.labelsize': 18,

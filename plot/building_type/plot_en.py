@@ -174,12 +174,12 @@ def create_combined_plot(stats_df, sample_size):
     ax2.tick_params(axis='y', labelsize=21)  #
 
     for spine in ax1.spines.values():
-        spine.set_edgecolor('#b0b0b0')
-        spine.set_linewidth(1.0)
+        spine.set_color('black')
+        spine.set_linewidth(2.0)
 
     for spine in ax2.spines.values():
-        spine.set_edgecolor('#b0b0b0')
-        spine.set_linewidth(1.0)
+        spine.set_color('black')
+        spine.set_linewidth(2.0)
 
     return fig
 

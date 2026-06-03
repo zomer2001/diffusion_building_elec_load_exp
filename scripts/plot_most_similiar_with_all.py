@@ -10,14 +10,14 @@ matplotlib.use('TkAgg')
 
 def set_academic_style():
     plt.rcParams.update({
-        'font.family': ['Times New Roman', 'SimSun', 'Microsoft YaHei'],
+        'font.family': ['Arial Narrow', 'SimSun', 'Microsoft YaHei'],
         'axes.unicode_minus': False,
         'font.size': 18,
         'axes.titlesize': 20,
         'axes.labelsize': 20,
-        'xtick.labelsize': 18,
-        'ytick.labelsize': 18,
-        'legend.fontsize': 15,
+        'xtick.labelsize': 19,
+        'ytick.labelsize': 19,
+        'legend.fontsize': 18,
         'lines.linewidth': 2.3,
         'axes.grid': True,
         'grid.alpha': 0.25,
@@ -31,9 +31,9 @@ def set_academic_style():
 # =========================
 base_dir = '../fakedata'
 test_data_folder = '../testdata'
-result_root = './result/SIMILAR/CH'
+result_root = './result/SIMILAR/260601'
 os.makedirs(result_root, exist_ok=True)
-sparsity_rates = [30,50,70]
+sparsity_rates = [30,50,70,90]
 
 
 # =========================
@@ -108,7 +108,7 @@ def plot_distribution_comparison(
         test_s.max(axis=0),
         color='#1f77b4',
         alpha=0.25,
-        label='测试数据分布'
+        label='Test Data Distribution'
     )
 
     # ---------- Generated data: faint individual curves ----------
@@ -128,7 +128,7 @@ def plot_distribution_comparison(
         gen_s.max(axis=0),
         color=gen_color,
         alpha=0.22,
-        label=f'{method_name} 合成数据分布'
+        label=f'{method_name} Generated Data Distribution'
     )
 
     # ---------- Reference curve ----------
@@ -137,16 +137,19 @@ def plot_distribution_comparison(
         ref_s,
         color='#2b2b2b',
         linewidth=3.6,
-        label='参考训练数据'
+        label='Training Reference'
     )
 
-    ax.set_xlabel('时间 (小时)')
-    ax.set_ylabel('负荷值')
-    ax.set_title(f'负荷曲线对比: 测试数据 vs {method_name}')
+    ax.set_xlabel('Time(hour)',weight='bold',fontsize=22)
+    ax.set_ylabel('Normalized Load',weight='bold',fontsize=22)
+    ax.set_title('')
     ax.legend(frameon=False)
+    for spine in ax.spines.values():
+        spine.set_color('black')
+        spine.set_linewidth(2.0)
 
     plt.tight_layout()
-    plt.savefig(save_path, dpi=300)
+    plt.savefig(save_path, dpi=600)
     plt.close()
 
 
@@ -161,11 +164,11 @@ for test_folder in os.listdir(test_data_folder):
         continue
 
     building_name = '_'.join(parts[:-1])
-    length = int(parts[-2])
+    #length = int(parts[-2])
     sparsity = int(parts[-1])
 
     key = f'{building_name}_{sparsity}'
-    if key in processed_buildings or length != 2160 or sparsity not in sparsity_rates:
+    if key in processed_buildings  or sparsity not in sparsity_rates:
         continue
 
     processed_buildings.add(key)
@@ -183,10 +186,10 @@ for test_folder in os.listdir(test_data_folder):
     )[:, :, 0]
 
     ours_data = load_generated_data(
-        os.path.join(base_dir, 'ours_gen', str(sparsity), building_name)
+        os.path.join(base_dir, 'DDPM', str(sparsity), building_name)
     )
     diffts_data = load_generated_data(
-        os.path.join(base_dir, 'diffts-fft', str(sparsity), building_name)
+        os.path.join(base_dir, 'ours', str(sparsity), building_name)
     )
 
     if ours_data is None or diffts_data is None:
@@ -208,7 +211,7 @@ for test_folder in os.listdir(test_data_folder):
 
         test_similar = find_most_similar_load(ref, testdata, 5)
         ours_similar = find_most_similar_load(ref, ours_load, 7)
-        diffts_similar = find_most_similar_load(ref, diffts_load, 4)
+        diffts_similar = find_most_similar_load(ref, diffts_load, 7)
 
         plot_distribution_comparison(
             ref, test_similar, ours_similar,

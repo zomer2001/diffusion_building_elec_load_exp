@@ -6,7 +6,7 @@ from matplotlib.patches import Rectangle
 
 # ==================== 学术论文风格设置 ====================
 plt.rcParams.update({
-    'font.family': ['Times New Roman', 'SimSun', 'Microsoft YaHei'],
+    'font.family': ['Arial Narrow','Times New Roman', 'SimSun', 'Microsoft YaHei'],
     'axes.unicode_minus': False,
 
     'font.size': 16,
@@ -42,15 +42,13 @@ NATURE_PALETTE = [
     '#d7e3f7',
     '#2166ac'# 稍深蓝（OURS）
 ]
-# MODERN_PALETTE = [
-#     '#b3cde3',
-#     '#deebf7',
-#     '#d1e5f0',
-#     '#92c5de',
-#     '#4393c3',
-#     '#2166ac'
-# ]
-MODERN_PALETTE = NATURE_PALETTE
+MODERN_PALETTE1 = [
+    '#55A868',
+    '#8172B2',
+    '#CCB974',
+    '#64B5CD'
+]
+MODERN_PALETTE = MODERN_PALETTE1
 
 # 设置图案标记 (仅 ours 使用斜纹)
 MARKER_CONFIG = {
@@ -65,7 +63,9 @@ df['Sparsity'] = pd.to_numeric(df['Sparsity'], errors='coerce')
 df.sort_values(by='Sparsity', inplace=True)
 
 methods_unique = [m for m in df['Method'].unique() if m.lower() != 'ours']
-methods_order = sorted(methods_unique) + ['ours']
+#methods_order = sorted(methods_unique) + ['ours']
+# 在这里手动写死你想要的柱子顺序！！！
+methods_order = ['cgan', 'timegan', 'CDDM', 'ours']
 methods_lower_order = [m.lower() for m in methods_order]
 
 # ==================== 绘图核心函数 ====================
@@ -95,17 +95,21 @@ def create_academic_comparison_plot(dataframe, y_cols, titles, ylabels, file_pre
 
         # 子图标题
         ax.set_title(title, fontsize=22, weight='bold', pad=15)
-        ax.set_xlabel('Training Data Duration (Months)', labelpad=10, fontsize=20, weight='bold')
-        ax.set_ylabel(ylabel, labelpad=10, fontsize=17, weight='bold')
+        ax.set_xlabel('Training Data Duration', labelpad=10, fontsize=22, weight='bold')
+        ax.set_title(ylabel, pad=10, fontsize=21, weight='bold')
 
         # 强制 ylabel 在左侧
         ax.yaxis.set_label_position("left")
         ax.yaxis.tick_left()
 
         ax.set_xticks(range(len(dataframe['Sparsity'].unique())))
-        ax.set_xticklabels(['1 month', '3 months', '5 months'], fontsize=19)
+        ax.set_xticklabels(['1 month', '3 months', '5 months'], fontsize=21)
         ax.tick_params(axis='both', labelsize=19)
         ax.yaxis.grid(True, linestyle='--', alpha=0.2)
+        if ax == ax1:
+            ax.set_ylabel('MMD', fontsize=21, weight='bold')
+        else:
+            ax.set_ylabel('')
 
         # 应用阴影图案 (仅 OURS)
         for i, container in enumerate(ax.containers):
@@ -117,6 +121,9 @@ def create_academic_comparison_plot(dataframe, y_cols, titles, ylabels, file_pre
 
         if ax.get_legend():
             ax.get_legend().remove()
+        for spine in ax.spines.values():
+            spine.set_color('black')
+            spine.set_linewidth(1.5)
 
     # 自定义图例
     legend_handles = []
@@ -134,14 +141,14 @@ def create_academic_comparison_plot(dataframe, y_cols, titles, ylabels, file_pre
     leg = fig.legend(
         handles=legend_handles,
         labels=[m.upper() for m in methods_order],
-        title='Methods',
+        title='Method',
         loc='upper center',
         bbox_to_anchor=(0.5, 1.05),
         frameon=True,
         framealpha=0.9,
         edgecolor='0.5',
         fancybox=False,
-        fontsize=16,
+        fontsize=19,
         title_fontsize='18',
         handlelength=1.8,
         handleheight=1.8,
@@ -164,7 +171,7 @@ create_academic_comparison_plot(
     df,
     ['MMD_oridata', 'MMD_testdata'],
     ['', ''],  # 两个子图都不显示标题
-    ['MMD to Training Data Distribution', 'MMD to Testing Data Distribution'],  # 左右不同 ylabel
+    ['Distribution Distance to Training Data', 'Distribution Distance to Test Data'],  # 左右不同 ylabel
     'mmd_comparison_spaced_en'
 )
 

@@ -8,7 +8,7 @@ from sklearn.preprocessing import StandardScaler
 
 # ==================== 全局样式设置（字体增大）====================
 plt.rcParams.update({
-    'font.family': 'Times New Roman',
+    'font.family': 'Arial Narrow',
     'font.size': 16,  # 基础字体从14增大到16
     'axes.titlesize': 18,  # 轴标题从16增大到18
     'axes.labelsize': 17,  # 轴标签从15增大到17
@@ -38,7 +38,7 @@ COLOR_PALETTE = {
 sparsity_rates = [500,300,700,100]
 base_dir = '../fakedata2'
 test_data_folder = '../testdata2'
-output_dir = '../results/tsne/260520_lunwen2_s60_200'
+output_dir = '../results/tsne/260526_lunwen2_s60_200'
 os.makedirs(output_dir, exist_ok=True)
 
 
@@ -98,7 +98,7 @@ def plot_tsne(data_dict, building_name, sparsity):
     scaled_data = StandardScaler().fit_transform(combined_data)
 
     # 运行t-SNE（保持不变）
-    tsne_results = TSNE(n_components=2, perplexity=30, n_iter=1000, random_state=42).fit_transform(scaled_data)
+    tsne_results = TSNE(n_components=2, perplexity=30, random_state=42).fit_transform(scaled_data)
 
     # 创建绘图数据框（保持不变）
     labels = []
@@ -150,7 +150,7 @@ def plot_tsne(data_dict, building_name, sparsity):
     # plt.title(f't-SNE Distribution:{building_name}',
     #           fontsize=24, pad=15, weight='bold')
     # 轴标签字体增大（原14→17，与全局设置一致）
-    plt.xlabel('t-SNE Dimension 1', fontsize=22, weight='bold')
+    plt.xlabel('t-SNE Dimension 1', fontsize=18, weight='bold')
     plt.ylabel('t-SNE Dimension 2', fontsize=18, weight='bold')
 
     # 图例字体增大（与全局设置一致）
@@ -169,6 +169,9 @@ def plot_tsne(data_dict, building_name, sparsity):
         handletextpad=0.8,
         columnspacing=1.5
     )
+    for spine in ax.spines.values():
+        spine.set_color('black')
+        spine.set_linewidth(2.0)
 
     # 保存图像（保持不变）
     filename = f"{building_name.replace(' ', '_').replace('/', '_')}_sparsity_{sparsity}_tsne.png"

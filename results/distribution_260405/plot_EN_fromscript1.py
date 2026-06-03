@@ -47,11 +47,10 @@ plt.rcParams.update({
 #     '#d7e3f7'   # 稍深蓝（OURS）
 # ]
 NATURE_PALETTE = [
-    '#4C72B0',
     '#55A868',
-    '#C44E52',
-    '#8172B2',  # 浅橙（timegan）
-    '#64B5CD'   # 稍深蓝（OURS）
+    '#8172B2',
+    '#CCB974',
+    '#64B5CD' # 稍深蓝（OURS）
 ]
 PALETTE = sns.color_palette([
     '#4C72B0',

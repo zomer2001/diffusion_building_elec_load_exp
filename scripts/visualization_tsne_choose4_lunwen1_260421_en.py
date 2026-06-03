@@ -98,7 +98,7 @@ def plot_tsne(data_dict, building_name, sparsity):
     scaled_data = StandardScaler().fit_transform(combined_data)
 
     # 运行t-SNE（保持不变）
-    tsne_results = TSNE(n_components=2, perplexity=30, n_iter=1000, random_state=42).fit_transform(scaled_data)
+    tsne_results = TSNE(n_components=2, perplexity=30, random_state=42).fit_transform(scaled_data)
 
     # 创建绘图数据框（保持不变）
     labels = []
@@ -150,7 +150,7 @@ def plot_tsne(data_dict, building_name, sparsity):
     # plt.title(f't-SNE Distribution:{building_name}',
     #           fontsize=24, pad=15, weight='bold')
     # 轴标签字体增大（原14→17，与全局设置一致）
-    plt.xlabel('t-SNE Dimension 1', fontsize=22, weight='bold')
+    plt.xlabel('t-SNE Dimension 1', fontsize=18, weight='bold')
     plt.ylabel('t-SNE Dimension 2', fontsize=18, weight='bold')
 
     # 图例字体增大（与全局设置一致）

@@ -182,6 +182,9 @@ for ax, metric, name, title in zip(
 
     if ax.get_legend():
         ax.get_legend().remove()
+    for spine in ax.spines.values():
+        spine.set_color('black')
+        spine.set_linewidth(1.5)
 
 # ==================== 全局图例 ====================
 
@@ -223,6 +226,7 @@ legend = fig.legend(
     loc='upper center',
     bbox_to_anchor=(0.5, 1.02),
     ncol=6,
+    edgecolor='0.5',
     fontsize=19,
     title_fontsize=19,
     frameon=True
@@ -291,6 +295,7 @@ legend = plt.gcf().legend(
     loc='upper center',
     bbox_to_anchor=(0.5, 1.02),
     ncol=3,
+    edgecolor='0',
     fontsize=13,
     frameon=True
 )
@@ -298,6 +303,9 @@ legend = plt.gcf().legend(
 plt.grid(True, linestyle=':', alpha=0.7)
 
 plt.tight_layout(rect=[0, 0, 1, 0.93])
+for spine in ax.spines.values():
+    spine.set_color('black')
+    spine.set_linewidth(2.0)
 
 plt.savefig(
     'mae_trends_en.pdf',

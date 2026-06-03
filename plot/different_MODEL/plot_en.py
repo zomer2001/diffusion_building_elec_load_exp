@@ -143,6 +143,9 @@ for model in MODEL_PALETTE.keys():
 plt.grid(True, linestyle=':', alpha=0.5)
 plt.xticks(rotation=0, fontsize=18)
 plt.yticks(fontsize=18)
+for spine in ax.spines.values():
+    spine.set_color('black')
+    spine.set_linewidth(2.0)
 
 # ==================== 保存结果 ====================
 plt.savefig('mae_comparison_across_models.pdf', bbox_inches='tight', dpi=600)
